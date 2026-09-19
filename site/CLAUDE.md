@@ -51,7 +51,8 @@ Rule from the research: a primary keyword is the *topic* of a page; use natural 
 - Wire the chat widget to an API.
 
 ## CMS (TinaCMS)
-- Edit UI at `/admin/`. `npm run dev` runs Tina + Astro together; saves write straight to the repo files.
+- Edit UI at `/admin/`. `npm run dev` runs Tina + Astro together on :4321; saves write straight to the repo files.
 - Collections in `tina/config.ts`: blog posts (`src/content/blog/*.md`), free resources (`src/data/resources.json`), services (`src/data/services.json`). Uploads go to `public/uploads/`.
-- Production editing needs a free TinaCloud project (app.tina.io) connected to the GitHub repo; set `TINA_CLIENT_ID` and `TINA_TOKEN` on the host and use `npm run build:cms` as the build command. Without them, `npm run build` still builds the site (no admin).
+- Production: Hostinger runs `npm run build` = `tina/build.mjs`. With `TINA_CLIENT_ID` + `TINA_TOKEN` set in hPanel it builds the /admin editor against TinaCloud (project: evergreenconsulting, client id 39ee25b5-…), then the static site. Without them it builds the site only. No SSR, no adapter; /admin is a static SPA that talks to TinaCloud.
 - Blog: `src/pages/blog/`. Three posts seeded from Andrea's old Ivy & Quill blog; ~40 more in `../waybackmachine/.../content-markdown/`.
+- evergreenadmissions.com is also owned; not wired up yet (redirect it to .co later).
