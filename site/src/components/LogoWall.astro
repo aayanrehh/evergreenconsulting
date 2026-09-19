@@ -7,7 +7,7 @@ const track = [...logos, ...logos];
   <ul class="logo-marquee__track">
     {track.map(([name, file], i) => (
       <li aria-hidden={i >= logos.length ? 'true' : undefined}>
-        <img src={`/logos/${file}.png`} alt={i >= logos.length ? '' : name} title={name} width="64" height="64" loading="lazy" />
+        <img src={`/logos/${file}.png`} alt={i >= logos.length ? '' : name} title={name} width="112" height="112" loading="lazy" />
         <span>{name}</span>
       </li>
     ))}
@@ -16,10 +16,10 @@ const track = [...logos, ...logos];
 
 <style>
   .logo-marquee { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
-  .logo-marquee__track { list-style: none; margin: 0; padding: 0.5rem 0; display: flex; gap: 2.5rem; width: max-content; animation: logos 70s linear infinite; }
+  .logo-marquee__track { list-style: none; margin: 0; padding: 0.5rem 0; display: flex; gap: 2rem; width: max-content; animation: logos 80s linear infinite; }
   .logo-marquee:hover .logo-marquee__track { animation-play-state: paused; }
-  .logo-marquee__track li { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 110px; text-align: center; font-size: 0.75rem; line-height: 1.25; color: var(--sage); }
-  .logo-marquee__track img { width: 64px; height: 64px; object-fit: contain; background: #fff; border-radius: 50%; padding: 7px; }
-  @keyframes logos { to { transform: translateX(calc(-50% - 1.25rem)); } }
+  .logo-marquee__track li { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; width: 150px; text-align: center; font-size: 0.8rem; line-height: 1.25; color: var(--sage); }
+  .logo-marquee__track img { width: 112px; height: 112px; object-fit: contain; background: #fff; border-radius: 50%; padding: 12px; }
+  @keyframes logos { to { transform: translateX(calc(-50% - 1rem)); } }
   @media (prefers-reduced-motion: reduce) { .logo-marquee__track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; } .logo-marquee__track li[aria-hidden] { display: none; } }
 </style>

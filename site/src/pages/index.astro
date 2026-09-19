@@ -137,22 +137,6 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
     </div>
   </section>
 
-  <section class="section" id="b2b">
-    <div class="wrap cols">
-      <h2 data-reveal>For independent educational consultants</h2>
-      <div>
-        <p>
-          Hand off the writing. Andrea is the college essay editing partner behind the scenes for consulting agencies and IECs in the U.S. and Asia, from a one-time language edit to full essay coaching. You keep the client. Your students get someone who has done this twenty thousand times.
-        </p>
-        <p><a class="btn" href="/services/#b2b">B2B editing and consulting</a></p>
-        <figure class="photo">
-          <img src="/andrea-workshop.jpg" alt="Andrea leading an essay workshop for a group of students in China" width="1280" height="960" loading="lazy" />
-          <figcaption>Essay workshop with an agency's students in China.</figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
-
   <section class="section section--linen">
     <div class="wrap">
       <h2 data-reveal>Start with a conversation.</h2>
@@ -196,14 +180,13 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
   .press__inner p { margin: 0; }
   .press__list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2.25rem; }
   .press__list li { margin: 0; }
-  .press__list img { height: 34px; width: auto; filter: grayscale(1); opacity: 0.6; }
-  .press__list img:hover { filter: none; opacity: 1; }
+  .press__list img { height: 34px; width: auto; }
   .press__list li[aria-hidden] { display: none; }
   @media (max-width: 640px) {
     .press__inner { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
     .press__list { flex-wrap: nowrap; width: max-content; gap: 2.25rem; animation: press 28s linear infinite; }
     .press__list li[aria-hidden] { display: block; }
-    .press__list img { height: 26px; filter: grayscale(1); opacity: 0.7; }
+    .press__list img { height: 26px; }
     .press { overflow: hidden; }
     .press .wrap { width: 100%; }
     .press__inner p { padding-left: var(--gutter); }
@@ -237,7 +220,6 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
   .band .section__head { margin-bottom: 1.5rem; }
 </style>
 <style>
-  .photo { margin: 2.5rem 0 0; max-width: 620px; }
   .photo--aside { margin-top: 1.5rem; max-width: 380px; }
   .photo--aside img { aspect-ratio: 1; object-fit: cover; }
   @media (min-width: 800px) { .how__aside { position: sticky; top: 6rem; } }
