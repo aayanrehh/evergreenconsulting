@@ -1,0 +1,60 @@
+---
+// Google reviews, Trustpilot-style: score header, then a snap-scrolling row of cards.
+import data from '../data/reviews.json';
+const { rating, count, url, reviews } = data;
+const month = (ym: string) => new Date(ym + '-01T12:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+const Star = '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M10 1.6l2.6 5.4 5.9.8-4.3 4.1 1.1 5.9L10 15l-5.3 2.8 1.1-5.9L1.5 7.8l5.9-.8z" fill="currentColor"/></svg>';
+---
+<section class="section reviews" id="reviews">
+  <div class="wrap reviews__head">
+    <div>
+      <h2 data-reveal>What families say</h2>
+      <p class="muted">Every review Andrea has, straight from Google.</p>
+    </div>
+    <a class="score" href={url} target="_blank" rel="noopener">
+      <span class="score__num">{rating.toFixed(1)}</span>
+      <span class="score__stars" aria-label={`${rating} out of 5 stars`}>{[1, 2, 3, 4, 5].map(() => <Fragment set:html={Star} />)}</span>
+      <span class="score__meta">Rated Excellent · {count} reviews on Google</span>
+    </a>
+  </div>
+  <div class="reviews__scroller">
+    <ul class="reviews__track">
+      {reviews.map((r) => (
+        <li class="review">
+          <div class="review__stars" aria-label="5 out of 5 stars">{[1, 2, 3, 4, 5].map(() => <Fragment set:html={Star} />)}</div>
+          <blockquote>{r.text}</blockquote>
+          <footer>
+            <strong>{r.name}</strong>
+            <span>{r.role} · {month(r.when)}</span>
+          </footer>
+        </li>
+      ))}
+    </ul>
+  </div>
+  <div class="wrap">
+    <p class="small"><a href={url} target="_blank" rel="noopener">Read all reviews on Google</a></p>
+  </div>
+</section>
+
+<style>
+  .reviews__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1.5rem 3rem; margin-bottom: 2rem; }
+  .reviews__head h2, .reviews__head p { margin: 0; }
+  .reviews__head p { margin-top: 0.4rem; }
+  .score { display: grid; grid-template-columns: auto 1fr; gap: 0.1rem 0.9rem; align-items: center; text-decoration: none; color: inherit; padding: 1rem 1.25rem; border: 1px solid var(--rule); background: #fff; }
+  .score__num { grid-row: 1 / 3; font-family: var(--serif); font-size: 2.6rem; line-height: 1; color: var(--evergreen); }
+  .score__stars { display: flex; gap: 2px; color: var(--evergreen); }
+  .score__meta { font-size: var(--step--1); color: #3a4a42; }
+
+  /* native horizontal scroll, snapping; no JS */
+  .reviews__scroller { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 0.5rem; }
+  .reviews__scroller::-webkit-scrollbar { display: none; }
+  .reviews__track { list-style: none; margin: 0; padding: 0 max(var(--gutter), (100% - var(--measure)) / 2); display: flex; gap: 1rem; width: max-content; }
+  .review { margin: 0; scroll-snap-align: start; width: min(340px, 82vw); display: flex; flex-direction: column; gap: 0.8rem; padding: 1.4rem; background: #fff; border: 1px solid var(--rule); }
+  .review__stars { display: flex; gap: 2px; color: var(--evergreen); }
+  .review__stars :global(svg) { width: 15px; height: 15px; }
+  .review blockquote { margin: 0; font-size: var(--step--1); line-height: 1.55; color: var(--ink); display: -webkit-box; -webkit-line-clamp: 7; -webkit-box-orient: vertical; overflow: hidden; }
+  .review footer { margin-top: auto; display: grid; font-size: var(--step--1); }
+  .review footer strong { font-weight: 500; color: var(--evergreen); }
+  .review footer span { color: #5a6a62; font-size: 0.8rem; }
+  .reviews .wrap:last-child { margin-top: 1.25rem; }
+</style>

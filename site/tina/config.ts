@@ -54,6 +54,29 @@ export default defineConfig({
         ],
       },
       {
+        name: 'reviews',
+        label: 'Reviews',
+        path: 'src/data',
+        match: { include: 'reviews' },
+        format: 'json',
+        ui: { allowedActions: { create: false, delete: false }, router: () => '/#reviews' },
+        fields: [
+          { type: 'number', name: 'rating', label: 'Google rating (e.g. 5)' },
+          { type: 'number', name: 'count', label: 'Number of Google reviews' },
+          { type: 'string', name: 'url', label: 'Google reviews link' },
+          {
+            type: 'object', name: 'reviews', label: 'Reviews', list: true,
+            ui: { itemProps: (item) => ({ label: item?.name }) },
+            fields: [
+              { type: 'string', name: 'name', label: 'Name', required: true },
+              { type: 'string', name: 'role', label: 'Who they are (Parent, Student, Consultant…)' },
+              { type: 'string', name: 'when', label: 'Month (YYYY-MM)' },
+              { type: 'string', name: 'text', label: 'Review', ui: { component: 'textarea' }, required: true },
+            ],
+          },
+        ],
+      },
+      {
         name: 'services',
         label: 'Services',
         path: 'src/data',

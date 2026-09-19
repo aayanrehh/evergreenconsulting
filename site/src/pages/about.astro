@@ -66,9 +66,21 @@ const experience = [
   <section class="section">
     <div class="wrap cols">
       <h2 data-reveal>Experience</h2>
-      <ul class="exp">
-        {experience.map((e) => <li>{e}</li>)}
-      </ul>
+      <div>
+        <ul class="exp">
+          {experience.map((e) => <li>{e}</li>)}
+        </ul>
+        <div class="photos">
+          <figure>
+            <img src="/andrea-speaking.jpg" alt="Andrea speaking at an educational consulting conference" width="1254" height="1254" loading="lazy" />
+            <figcaption>Keynote at an educational consulting conference in China.</figcaption>
+          </figure>
+          <figure>
+            <img src="/andrea-workshop.jpg" alt="Andrea leading a workshop with students" width="1280" height="960" loading="lazy" />
+            <figcaption>Personal statement workshop with agency students.</figcaption>
+          </figure>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -108,6 +120,11 @@ const experience = [
   .creds dd { margin: 0.2rem 0 0; }
   .exp { padding-left: 1.1em; }
   .exp li { margin-bottom: 0.75em; max-width: 60ch; }
+  .photos { display: grid; gap: 1.25rem; margin-top: 2.5rem; }
+  @media (min-width: 640px) { .photos { grid-template-columns: 1fr 1fr; align-items: start; } }
+  .photos figure { margin: 0; }
+  .photos img { border: 1px solid var(--rule); aspect-ratio: 4 / 3; object-fit: cover; }
+  .photos figcaption { margin-top: 0.5rem; font-size: var(--step--1); color: #5a6a62; }
   .press { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem 2.5rem; }
   .press li { margin: 0; }
   .press img { height: 44px; width: auto; }

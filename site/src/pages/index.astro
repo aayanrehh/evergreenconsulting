@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import LogoWall from '../components/LogoWall.astro';
 import Resources from '../components/Resources.astro';
+import Reviews from '../components/Reviews.astro';
 import data from '../data/services.json';
 const services = data.services;
 import press from '../data/press.json';
@@ -105,6 +106,8 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
     </div>
   </section>
 
+  <Reviews />
+
   <section class="section section--linen">
     <div class="wrap">
       <div class="section__head">
@@ -135,6 +138,10 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
           Hand off the writing. Andrea is the college essay editing partner behind the scenes for consulting agencies and IECs in the U.S. and Asia, from a one-time language edit to full essay coaching. You keep the client. Your students get someone who has done this twenty thousand times.
         </p>
         <p><a class="btn" href="/services/#b2b">B2B editing and consulting</a></p>
+        <figure class="photo">
+          <img src="/andrea-workshop.jpg" alt="Andrea leading an essay workshop for a group of students in China" width="1280" height="960" loading="lazy" />
+          <figcaption>Essay workshop with an agency's students in China.</figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -221,4 +228,9 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
   .promises strong { font-weight: 500; color: var(--evergreen); }
   .band-foot { margin-top: 2.5rem; margin-bottom: 0; }
   .band .section__head { margin-bottom: 1.5rem; }
+</style>
+<style>
+  .photo { margin: 2.5rem 0 0; max-width: 620px; }
+  .photo img { border: 1px solid var(--rule); }
+  .photo figcaption { margin-top: 0.6rem; font-size: var(--step--1); color: #5a6a62; }
 </style>
