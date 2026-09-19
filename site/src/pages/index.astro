@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import LogoWall from '../components/LogoWall.astro';
 import Resources from '../components/Resources.astro';
 import Reviews from '../components/Reviews.astro';
+import ContactForm from '../components/ContactForm.astro';
 import data from '../data/services.json';
 const services = data.services;
 import press from '../data/press.json';
@@ -137,11 +138,18 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
     </div>
   </section>
 
-  <section class="section section--linen">
-    <div class="wrap">
-      <h2 data-reveal>Start with a conversation.</h2>
-      <p class="lede">Tell Andrea where your child is applying and where you are in the process. You will hear back within one business day, and it will not be a sales pitch.</p>
-      <p><a class="btn btn--solid" href="/contact/">Contact Andrea</a></p>
+  <section class="section" id="contact">
+    <div class="wrap cols">
+      <div>
+        <h2 data-reveal>Start with a conversation.</h2>
+        <p class="lede">Tell Andrea where your child is applying and where you are in the process. You will hear back within one business day, and it will not be a sales pitch.</p>
+        <dl class="ways">
+          <dt>Email</dt><dd><a href="mailto:andrea@evergreenconsulting.co">andrea@evergreenconsulting.co</a></dd>
+          <dt>WhatsApp or phone</dt><dd><a href="https://wa.me/12037032710">+1 203-703-2710</a></dd>
+          <dt>WeChat</dt><dd><a href="/contact/#wechat">Scan the code on the contact page</a></dd>
+        </dl>
+      </div>
+      <ContactForm compact />
     </div>
   </section>
 </Base>
@@ -217,6 +225,9 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
   .promises p { margin: 0; font-size: var(--step--1); max-width: 40ch; }
   .promises strong { font-weight: 500; color: var(--evergreen); }
   .band-foot { margin-top: 2.5rem; margin-bottom: 0; }
+  .ways { margin: 1.5rem 0 0; }
+  .ways dt { font-size: var(--step--1); color: #5a6a62; margin-top: 0.9rem; }
+  .ways dd { margin: 0.1rem 0 0; padding: 0; }
   .band .section__head { margin-bottom: 1.5rem; }
 </style>
 <style>
