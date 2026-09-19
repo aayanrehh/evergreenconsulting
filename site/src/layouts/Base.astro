@@ -7,8 +7,10 @@ interface Props {
   description: string;
   /** JSON-LD objects appended to the default ProfessionalService graph */
   schema?: Record<string, unknown>[];
+  /** Title shown on link previews (iMessage, WhatsApp, LinkedIn). Defaults to the page title. */
+  ogTitle?: string;
 }
-const { title, description, schema = [] } = Astro.props;
+const { title, description, schema = [], ogTitle = title } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const siteName = 'Evergreen Consulting';
 
@@ -75,11 +77,17 @@ const graph = [business, person, ...schema];
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={siteName} />
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={ogTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL("/andrea.jpg", Astro.site)} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={new URL("/og.png", Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Evergreen Consulting" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={ogTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL("/og.png", Astro.site)} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="icon" href="/favicon.png" type="image/png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
