@@ -1,0 +1,114 @@
+---
+import Base from '../layouts/Base.astro';
+import press from '../data/press.json';
+
+const credentials = [
+  ['Harvard University', 'M.Ed., Harvard Graduate School of Education, 2014'],
+  ['Cornell University', 'B.A. in French Literature, 2010'],
+  ['Université de Paris', 'French Literature, 2008 to 2009'],
+];
+const experience = [
+  'College admissions consultant and essay coach since 2014. Students in New York, Connecticut, across the U.S. and throughout Asia.',
+  'Co-founder of Ivy & Quill, an editing service for independent educational consultants. Nearly 4,000 essays a year, 20,000 and counting.',
+  'High-school English, ESL and SAT teacher at private and charter schools in New York City.',
+  'Professor at a college in Jiangxi, China.',
+  'Keynote speaker at educational consulting conferences in China. Leads writing and literary-analysis workshops worldwide.',
+  'Author of published SAT and GRE prep books and an SAT vocabulary app.',
+  'Member of the International Association of Professional Writers & Editors.',
+  "Poetry and short fiction in Bards Annual, ALANA (Harvard's annual anthology) and The Public Journal (Cornell).",
+];
+---
+
+<Base
+  title="About Andrea Schiralli, College Admissions Consultant | Evergreen Consulting"
+  description="Andrea Schiralli holds an M.Ed. from Harvard and a B.A. from Cornell. A former English teacher, published poet and SAT/GRE author, she has coached college applications since 2014."
+>
+  <section class="section page-head">
+    <div class="wrap cols">
+      <div>
+        <h1>Andrea Schiralli</h1>
+        <p class="lede">Teacher first, editor second, consultant because families kept asking.</p>
+      </div>
+      <figure class="portrait">
+        <img src="/andrea.jpg" alt="Andrea Schiralli" width="1000" height="1020" loading="eager" />
+      </figure>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap cols">
+      <h2 data-reveal>The short version</h2>
+      <div>
+        <p>
+          Andrea taught high-school English, ESL and SAT prep in New York City, then spent a year as a professor at a college in Jiangxi, China. In 2014 she finished her master's at Harvard and started coaching college essays full time. Families in New York and Hong Kong found her, independent college consultants found her, and she has been booked every fall since. Her students have gone on to every Ivy League school, Stanford, MIT, Oxford, and a few hundred places in between.
+        </p>
+        <p>
+          She reads a lot of essays. Twenty thousand or so at last count. The ones that work have a student in them who is curious about something and honest about it. Her job is to get that on the page and then get out of the way.
+        </p>
+        <p>
+          When she is not editing, she writes poetry, publishes SAT and GRE books, and tries to convince teenagers that Flaubert is worth their time. Results on that last one are mixed.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--linen">
+    <div class="wrap cols">
+      <h2 data-reveal>Education</h2>
+      <dl class="creds">
+        {credentials.map(([school, detail]) => (
+          <div><dt>{school}</dt><dd>{detail}</dd></div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap cols">
+      <h2 data-reveal>Experience</h2>
+      <ul class="exp">
+        {experience.map((e) => <li>{e}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--linen">
+    <div class="wrap cols">
+      <h2 data-reveal>Featured by</h2>
+      <ul class="press">
+        {press.map(([name, file]) => (
+          <li><img src={`/press/${file}`} alt={name} loading="lazy" /></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--evergreen">
+    <div class="wrap cols">
+      <h2 data-reveal>A note to parents</h2>
+      <div>
+        <p class="lede lede--dark">
+          The application process is confusing for parents too. You will know where every essay stands, what is due when, and whether a draft is good yet. Andrea will not write a word your child cannot own, and she will tell you the truth about a draft even when it is not what you want to hear.
+        </p>
+        <p><a class="btn btn--paper" href="/contact/">Talk with Andrea</a></p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head { padding-bottom: 0; }
+  .page-head + .section { border-top: 0; }
+  .portrait { margin: 0; max-width: 380px; justify-self: end; width: 100%; }
+  .portrait img { border: 1px solid var(--rule); padding: 6px; background: #fff; }
+  @media (max-width: 799px) { .portrait { justify-self: start; max-width: 280px; } }
+  .creds { margin: 0; display: grid; gap: 1.25rem; }
+  .creds div { padding-bottom: 1.25rem; border-bottom: 1px solid var(--rule); }
+  .creds dt { font-family: var(--serif); font-size: var(--step-1); color: var(--evergreen); }
+  .creds dd { margin: 0.2rem 0 0; }
+  .exp { padding-left: 1.1em; }
+  .exp li { margin-bottom: 0.75em; max-width: 60ch; }
+  .press { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem 2.5rem; }
+  .press li { margin: 0; }
+  .press img { height: 44px; width: auto; }
+</style>

@@ -1,0 +1,15 @@
+---
+import logos from '../data/logos.json';
+---
+<ul class="logos" aria-label="Selected acceptances">
+  {logos.map(([name, file]) => (
+    <li><img src={`/logos/${file}.png`} alt={name} title={name} width="72" height="72" loading="lazy" /><span>{name}</span></li>
+  ))}
+</ul>
+
+<style>
+  .logos { list-style: none; margin: 0 0 2.5rem; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1.5rem 1rem; }
+  .logos li { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 0.6rem; text-align: center; font-size: 0.8rem; line-height: 1.25; }
+  .logos img { width: 72px; height: 72px; object-fit: contain; background: #fff; border-radius: 50%; padding: 8px; }
+  :global(.section--evergreen) .logos li { color: var(--sage); }
+</style>

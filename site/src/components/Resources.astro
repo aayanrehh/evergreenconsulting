@@ -1,0 +1,81 @@
+---
+// Downloads live here; quick reads link to sections of /resources. Add to either list and the grid grows.
+const docs = [
+  {
+    href: '/resources/writing-successful-college-application-essays.docx',
+    kind: 'Guide',
+    title: 'Writing Successful College Application Essays',
+    blurb: 'Every 2026–27 Common App prompt, the UC questions, the usual supplements, and how to build a personal narrative. About 40 pages.',
+    cta: 'Download the guide',
+  },
+  {
+    href: '/resources/writing-the-personal-statement.pdf',
+    kind: 'Workshop slides',
+    title: 'Writing the Personal Statement',
+    blurb: "Andrea's workshop deck: do's and don'ts, topics to avoid, structure, style, and the brainstorming questions she asks first. 36 slides.",
+    cta: 'Download the slides',
+  },
+];
+const reads = [
+  ['Six things to do before you write a word', '/resources/#dos'],
+  ['Six essay topics to avoid, and why', '/resources/#avoid'],
+  ['The 2026–27 Common App prompts, explained', '/resources/#prompts'],
+  ['Brainstorming questions for the personal statement', '/resources/#brainstorm'],
+  ['Structuring a personal narrative', '/resources/#structure'],
+  ['Stylistic tips: what to cut', '/resources/#style'],
+];
+---
+<section class="section section--linen resources" id="resources">
+  <div class="wrap">
+    <div class="resources__head">
+      <h2 data-reveal>Free resources</h2>
+      <p class="lede">Everything Andrea teaches in her workshops, written down and shared freely. Guides, slides, prompt breakdowns, checklists. No email address required, and more added every season.</p>
+    </div>
+    <div class="resources__grid">
+      {docs.map((d) => (
+        <a class="doc" href={d.href} download>
+          <span class="doc__cover" aria-hidden="true">
+            <span class="doc__kind">{d.kind}</span>
+            <span class="doc__title">{d.title}</span>
+            <span class="doc__author">Andrea Schiralli</span>
+          </span>
+          <span class="doc__body">
+            <span class="doc__blurb">{d.blurb}</span>
+            <span class="doc__cta">{d.cta}</span>
+          </span>
+        </a>
+      ))}
+    </div>
+    <div class="reads">
+      <h3>Quick reads</h3>
+      <ul class="reads__list">
+        {reads.map(([t, href]) => <li><a href={href}>{t}</a></li>)}
+      </ul>
+    </div>
+    <p><a class="btn" href="/resources/">Browse all free resources</a></p>
+  </div>
+</section>
+
+<style>
+  .resources__head { max-width: 62ch; margin-bottom: 2.5rem; }
+  .resources__grid { display: grid; gap: 1.5rem; margin-bottom: 2.5rem; }
+  @media (min-width: 760px) { .resources__grid { grid-template-columns: 1fr 1fr; } }
+  .doc { display: grid; grid-template-columns: 150px 1fr; gap: 1.5rem; align-items: stretch; text-decoration: none; color: inherit; background: var(--paper); border: 1px solid var(--rule); padding: 1.5rem; transition: background-color 160ms ease; }
+  .doc:hover { background: #fff; }
+  .doc__cover { display: flex; flex-direction: column; justify-content: space-between; aspect-ratio: 3 / 4; background: var(--evergreen); color: var(--paper); padding: 0.9rem; border-left: 4px solid var(--brass); box-shadow: 2px 2px 0 var(--rule); }
+  .doc__kind { font-size: 0.7rem; color: var(--sage); }
+  .doc__title { font-family: var(--serif); font-size: 1rem; line-height: 1.2; font-weight: 400; }
+  .doc__author { font-size: 0.7rem; color: var(--sage); }
+  .doc__body { display: flex; flex-direction: column; justify-content: space-between; gap: 1rem; }
+  .doc__blurb { font-size: var(--step--1); color: #3a4a42; line-height: 1.5; }
+  .doc__cta { color: var(--evergreen); font-weight: 500; font-size: var(--step--1); text-decoration: underline; text-underline-offset: 0.18em; }
+  @media (max-width: 480px) { .doc { grid-template-columns: 110px 1fr; gap: 1rem; padding: 1rem; } .doc__title { font-size: 0.85rem; } }
+  .reads { margin-bottom: 2rem; }
+  .reads h3 { margin-bottom: 0.75rem; }
+  .reads__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--rule); }
+  @media (min-width: 720px) { .reads__list { grid-template-columns: 1fr 1fr; column-gap: 3rem; } }
+  .reads__list li { margin: 0; border-bottom: 1px solid var(--rule); }
+  .reads__list a { display: flex; justify-content: space-between; gap: 1rem; padding: 0.8rem 0; text-decoration: none; color: var(--ink); font-size: var(--step--1); }
+  .reads__list a::after { content: '↗'; color: var(--brass); }
+  .reads__list a:hover { color: var(--evergreen); }
+</style>

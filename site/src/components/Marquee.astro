@@ -1,0 +1,22 @@
+---
+// CSS-only marquee. Duplicates its items so the loop is seamless; static when reduced-motion is on.
+interface Props { items: string[]; speed?: number; dark?: boolean }
+const { items, speed = 40, dark = false } = Astro.props;
+---
+<div class:list={['marquee', { 'marquee--dark': dark }]} style={`--dur: ${speed}s`} aria-label={items.join(', ')}>
+  <ul class="marquee__track">
+    {[...items, ...items].map((t, i) => <li aria-hidden={i >= items.length ? 'true' : undefined}>{t}</li>)}
+  </ul>
+</div>
+
+<style>
+  .marquee { overflow: hidden; border-block: 1px solid var(--rule); padding-block: 0.9rem; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .marquee__track { list-style: none; margin: 0; padding: 0; display: flex; gap: 3rem; width: max-content; animation: scroll var(--dur) linear infinite; }
+  .marquee:hover .marquee__track { animation-play-state: paused; }
+  .marquee__track li { margin: 0; white-space: nowrap; font-family: var(--serif); font-size: var(--step-1); font-weight: 300; color: var(--evergreen); }
+  .marquee__track li::after { content: '·'; margin-left: 3rem; color: var(--brass); }
+  .marquee--dark { border-color: rgba(250, 250, 247, 0.18); }
+  .marquee--dark li { color: var(--paper); }
+  @keyframes scroll { to { transform: translateX(calc(-50% - 1.5rem)); } }
+  @media (prefers-reduced-motion: reduce) { .marquee__track { animation: none; flex-wrap: wrap; width: auto; } .marquee__track li[aria-hidden] { display: none; } }
+</style>

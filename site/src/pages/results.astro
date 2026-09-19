@@ -1,0 +1,70 @@
+---
+import Base from '../layouts/Base.astro';
+import results from '../data/results.json';
+import LogoWall from '../components/LogoWall.astro';
+
+const years = Object.keys(results).sort((a, b) => Number(b) - Number(a));
+const order = [
+  'Graduate School Acceptances',
+  'Top-100 Schools: Undergraduate Acceptances',
+  'Undergraduate Acceptances',
+  'Additional Undergraduate Acceptances',
+  'International Undergraduate Acceptances',
+  'Independent School Acceptances',
+  'Pre-College Summer Programs',
+];
+const label = (c: string) => c.replace('Top-100 Schools: Undergraduate Acceptances', 'Top-100 national universities').replace(' Acceptances', '');
+---
+
+<Base
+  title="Results: College, Graduate & Independent School Acceptances | Evergreen Consulting"
+  description="Acceptances earned by students Andrea Schiralli has coached since 2015: Harvard, Yale, Princeton, Stanford, Columbia, MIT, Oxford, the UCs, and hundreds more, listed by year."
+>
+  <section class="section page-head">
+    <div class="wrap">
+      <h1>Results</h1>
+      <p class="lede">Every acceptance since 2015 for students Andrea coached, on her own and through partner consultants. About 900 schools, from the Ivy League to the UCs to graduate programs, listed by year.</p>
+      <p class="small muted">
+        Rankings follow U.S. News Best National Universities for the year listed. An essay is one part of a holistic review. Nobody can guarantee an admission, and anyone who does is selling something.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <LogoWall />
+      {years.map((y, i) => (
+        <details class="year" open={i === 0}>
+          <summary><h2>{y}</h2><span class="year__count">{Object.values(results[y]).flat().length} acceptances</span></summary>
+          {order.filter((c) => results[y][c]).map((c) => (
+            <div class="group">
+              <h3>{label(c)}</h3>
+              <ul class="schools">
+                {results[y][c].map((s: string) => <li>{s}</li>)}
+              </ul>
+            </div>
+          ))}
+        </details>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head { padding-bottom: 0; }
+  .page-head + .section { border-top: 0; }
+  .year { border-top: 1px solid var(--rule); }
+  .year:last-child { border-bottom: 1px solid var(--rule); }
+  .year summary { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding-block: 1.25rem; cursor: pointer; list-style: none; }
+  .year summary::-webkit-details-marker { display: none; }
+  .year summary h2 { margin: 0; font-size: var(--step-2); }
+  .year summary::after { content: '+'; font-family: var(--serif); font-size: var(--step-2); color: var(--evergreen); line-height: 1; }
+  .year[open] summary::after { content: '–'; }
+  .year__count { margin-left: auto; font-size: var(--step--1); color: #5a6a62; }
+  .group { padding-bottom: 2rem; }
+  .group h3 { margin-bottom: 0.75rem; }
+  .schools { list-style: none; padding: 0; margin: 0; columns: 2; column-gap: 2rem; font-size: var(--step--1); }
+  @media (min-width: 640px) { .schools { columns: 3; } }
+  @media (min-width: 1000px) { .schools { columns: 4; } }
+  .schools li { break-inside: avoid; padding: 0.3rem 0; border-bottom: 1px solid var(--rule); margin: 0; }
+</style>

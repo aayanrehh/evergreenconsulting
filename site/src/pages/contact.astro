@@ -1,0 +1,104 @@
+---
+import Base from '../layouts/Base.astro';
+// ponytail: static form. Point `action` at Formspree/Netlify Forms/Basin once hosting is chosen.
+const FORM_ACTION = '#';
+const EMAIL = 'andrea@evergreenconsulting.co';
+---
+
+<Base
+  title="Contact Andrea Schiralli | Evergreen Consulting"
+  description="Contact Andrea Schiralli about college admissions packages, essay editing or B2B partnerships. Email, WhatsApp or WeChat. Replies within one business day."
+>
+  <section class="section page-head">
+    <div class="wrap">
+      <h1>Get in touch</h1>
+      <p class="lede">Tell Andrea where your child is applying and where you are in the process. You will hear back within one business day.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap cols">
+      <div class="ways">
+        <h2 data-reveal>Reach Andrea</h2>
+        <dl>
+          <dt>Email</dt>
+          <dd><a href={`mailto:${EMAIL}`}>{EMAIL}</a></dd>
+          <dt>WhatsApp or phone</dt>
+          <dd><a href="https://wa.me/12037032710">+1 203-703-2710</a></dd>
+          <dt>WeChat</dt>
+          <dd>
+            <img class="qr" src="/wechat-qr.jpg" alt="WeChat QR code for Andrea Schiralli" width="160" height="163" loading="lazy" />
+            <span class="small muted">Scan to add Andrea. 微信扫码添加。</span>
+          </dd>
+          <dt>Based in</dt>
+          <dd>New Canaan, Connecticut. Sessions are by video, so time zones are the only real limit, and Andrea keeps odd hours for Asia.</dd>
+        </dl>
+        <p class="small muted">Consultants and agencies: mention your typical volume and Andrea will send partnership terms.</p>
+        <p class="small muted">Quick question? The chat button in the corner answers the common ones.</p>
+      </div>
+      <form class="form" action={FORM_ACTION} method="post">
+        <label>
+          <span>Name</span>
+          <input name="name" type="text" autocomplete="name" required />
+        </label>
+        <label>
+          <span>Email</span>
+          <input name="email" type="email" autocomplete="email" required />
+        </label>
+        <label>
+          <span>I am a</span>
+          <select name="role" required>
+            <option value="">Choose one</option>
+            <option>Parent</option>
+            <option>Student</option>
+            <option>Independent educational consultant or agency</option>
+            <option>School or organization</option>
+          </select>
+        </label>
+        <label>
+          <span>Interested in</span>
+          <select name="service">
+            <option>The Golden Ticket (full package)</option>
+            <option>Quick Silver (essentials package)</option>
+            <option>À la carte, per school</option>
+            <option>Essay commenting and editing</option>
+            <option>Graduate school statements</option>
+            <option>Résumé development</option>
+            <option>Interview preparation</option>
+            <option>B2B editing for consultants</option>
+            <option>Workshops or teaching</option>
+            <option>Not sure yet</option>
+          </select>
+        </label>
+        <label>
+          <span>Earliest deadline, if you know it</span>
+          <input name="deadline" type="date" />
+        </label>
+        <label>
+          <span>Message</span>
+          <textarea name="message" rows="6" placeholder="Where they're applying, what's written so far, and what kind of help you're after." required></textarea>
+        </label>
+        <button class="btn btn--solid" type="submit">Send message</button>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head { padding-bottom: 0; }
+  .page-head + .section { border-top: 0; }
+  .ways dl { margin: 0 0 1.5rem; }
+  .ways dt { font-size: var(--step--1); color: #5a6a62; margin-top: 1rem; }
+  .ways dd { margin: 0.15rem 0 0; }
+  .qr { width: 140px; height: auto; border: 1px solid var(--rule); padding: 4px; background: #fff; margin: 0.4rem 0; }
+  .ways dd .small { display: block; }
+  .form { display: grid; gap: 1.1rem; max-width: 560px; }
+  .form label { display: grid; gap: 0.35rem; font-size: var(--step--1); }
+  .form span { color: var(--evergreen); }
+  .form input, .form select, .form textarea {
+    font: inherit; font-size: var(--step-0); color: var(--ink);
+    padding: 0.65em 0.8em; background: #fff; border: 1px solid var(--rule); border-radius: 2px; width: 100%;
+  }
+  .form input:focus, .form select:focus, .form textarea:focus { border-color: var(--evergreen); outline: none; box-shadow: 0 0 0 3px rgba(31, 74, 60, 0.12); }
+  .form button { justify-self: start; }
+</style>

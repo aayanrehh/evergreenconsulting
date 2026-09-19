@@ -1,0 +1,19 @@
+[
+  ["Harvard University", "harvard"],
+  ["Yale University", "yale"],
+  ["Princeton University", "princeton"],
+  ["Stanford University", "stanford"],
+  ["Columbia University", "columbia"],
+  ["MIT", "mit"],
+  ["University of Pennsylvania", "upenn"],
+  ["Cornell University", "cornell"],
+  ["Brown University", "brown"],
+  ["University of Chicago", "uchicago"],
+  ["Duke University", "duke"],
+  ["Johns Hopkins University", "jhu"],
+  ["Northwestern University", "northwestern"],
+  ["UC Berkeley", "berkeley"],
+  ["UCLA", "ucla"],
+  ["University of Oxford", "oxford"],
+  ["McGill University", "mcgill"]
+]

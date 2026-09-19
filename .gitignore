@@ -1,0 +1,7 @@
+# never commit: old WordPress dump has DB credentials + customer emails
+waybackmachine/
+.DS_Store
+site/node_modules/
+site/dist/
+site/.astro/
+.claude/

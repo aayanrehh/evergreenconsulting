@@ -1,0 +1,135 @@
+---
+// Floating chat. Today it answers from a small FAQ; later, point `ask()` at an API.
+---
+
+<div class="chat" id="chat">
+  <button class="chat__toggle" type="button" aria-expanded="false" aria-controls="chat-panel">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg>
+    <span>Ask a question</span>
+  </button>
+  <section class="chat__panel" id="chat-panel" hidden aria-label="Chat with Evergreen Consulting">
+    <header class="chat__head">
+      <div>
+        <strong>Evergreen Consulting</strong>
+        <span class="small muted">Quick answers now. Andrea replies to anything else within a business day.</span>
+      </div>
+      <button class="chat__close" type="button" aria-label="Close chat">×</button>
+    </header>
+    <ol class="chat__log" aria-live="polite">
+      <li class="chat__msg chat__msg--bot">Hi. Ask about services, turnaround, pricing, or how to get started.</li>
+    </ol>
+    <div class="chat__chips">
+      <button type="button">What do packages include?</button>
+      <button type="button">How fast is turnaround?</button>
+      <button type="button">How do I get started?</button>
+    </div>
+    <form class="chat__form">
+      <label class="sr-only" for="chat-input">Your question</label>
+      <input id="chat-input" type="text" autocomplete="off" placeholder="Type a question" required />
+      <button class="btn btn--solid" type="submit">Send</button>
+    </form>
+  </section>
+</div>
+
+<script>
+  const root = document.getElementById('chat')!;
+  const toggle = root.querySelector<HTMLButtonElement>('.chat__toggle')!;
+  const panel = root.querySelector<HTMLElement>('.chat__panel')!;
+  const log = root.querySelector<HTMLOListElement>('.chat__log')!;
+  const form = root.querySelector<HTMLFormElement>('.chat__form')!;
+  const input = root.querySelector<HTMLInputElement>('#chat-input')!;
+
+  // ponytail: keyword FAQ. Replace the body of ask() with a fetch to your API and keep the signature.
+  const faq: [RegExp, string][] = [
+    [/package|golden|silver|include/i, 'Two packages. The Golden Ticket covers up to 15 schools: résumé, every essay, five video sessions and two hours of mock interviews. Quick Silver covers up to 8 schools with three sessions and one mock interview. Anything else is à la carte, per school. Details are on the Services page.'],
+    [/turnaround|how fast|how long|deadline|rush/i, 'Edits and comments come back within 72 hours, usually sooner. Peak season is October to early January, so earlier is better.'],
+    [/price|pricing|cost|fee|how much|rate/i, 'Pricing depends on the service, the number of schools and the timeline. Send Andrea your school list and deadline through the contact form and you will get a quote, not a sales call.'],
+    [/start|begin|first step|book|consult/i, 'Use the contact form or email andrea@evergreenconsulting.co with where you are applying and where you are in the process. Andrea replies within one business day.'],
+    [/b2b|consultant|agency|partner|white/i, 'Yes, Andrea works behind the scenes for independent educational consultants and agencies. Pick a level per student: language edit, content comments, or full coaching. Mention your typical volume and she will send partnership terms.'],
+    [/grad|mba|law|med|phd|master|statement of purpose/i, 'Yes. Andrea edits statements of purpose and personal statements for master\'s, MBA, law, medical and PhD applications, with the same comment-then-edit process.'],
+    [/free|guide|resource|download|pdf/i, 'Two free guides, no email required: Writing Successful College Application Essays and the Writing the Personal Statement workshop slides. Both are on the Free resources page.'],
+    [/wechat|whatsapp|phone|call|china|chinese/i, 'You can reach Andrea on WhatsApp at +1 203-703-2710 or scan the WeChat code on the Contact page.'],
+    [/ai|chatgpt/i, 'Andrea does not use AI to write or rewrite student essays, and she can usually tell when a student has. Admissions officers can too.'],
+  ];
+  async function ask(q: string): Promise<string> {
+    const hit = faq.find(([re]) => re.test(q));
+    return hit ? hit[1] : 'Good question, and one for Andrea. Send it through the contact form or email andrea@evergreenconsulting.co and she will answer within a business day.';
+  }
+
+  function add(text: string, who: 'bot' | 'you') {
+    const li = document.createElement('li');
+    li.className = `chat__msg chat__msg--${who}`;
+    li.textContent = text;
+    log.append(li);
+    log.scrollTop = log.scrollHeight;
+    return li;
+  }
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  let busy = false;
+  async function send(q: string) {
+    if (busy) return;
+    busy = true;
+    add(q, 'you');
+    const li = add('', 'bot');
+    li.classList.add('chat__msg--typing');
+    li.innerHTML = '<i></i><i></i><i></i>';
+    const [answer] = await Promise.all([ask(q), wait(reduced ? 0 : 700 + Math.random() * 500)]);
+    li.classList.remove('chat__msg--typing');
+    li.textContent = '';
+    if (reduced) {
+      li.textContent = answer;
+    } else {
+      // type by word, so it reads like a person rather than a teleprinter
+      for (const w of answer.split(' ')) {
+        li.textContent += (li.textContent ? ' ' : '') + w;
+        log.scrollTop = log.scrollHeight;
+        await wait(28 + Math.random() * 40);
+      }
+    }
+    busy = false;
+  }
+
+  function open(o: boolean) {
+    panel.hidden = !o;
+    toggle.setAttribute('aria-expanded', String(o));
+    if (o) input.focus();
+  }
+  toggle.addEventListener('click', () => open(panel.hidden));
+  root.querySelector('.chat__close')!.addEventListener('click', () => open(false));
+  root.querySelectorAll<HTMLButtonElement>('.chat__chips button').forEach((b) => b.addEventListener('click', () => send(b.textContent!)));
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const q = input.value.trim();
+    if (!q) return;
+    input.value = '';
+    send(q);
+  });
+</script>
+
+<style is:global>
+  .chat { position: fixed; right: 1rem; bottom: 1rem; z-index: 60; display: flex; flex-direction: column; align-items: flex-end; gap: 0.75rem; }
+  .chat__toggle { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1rem; background: var(--evergreen); color: var(--paper); border: 0; border-radius: 999px; font: inherit; font-size: var(--step--1); font-weight: 500; cursor: pointer; box-shadow: 0 6px 20px rgba(20, 32, 27, 0.18); }
+  .chat__toggle:hover { background: var(--ink); }
+  .chat__panel[hidden] { display: none; }
+  .chat__panel { width: min(360px, calc(100vw - 2rem)); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; box-shadow: 0 12px 40px rgba(20, 32, 27, 0.16); display: flex; flex-direction: column; overflow: hidden; }
+  .chat__head { display: flex; justify-content: space-between; gap: 0.5rem; padding: 0.9rem 1rem; background: var(--linen); border-bottom: 1px solid var(--rule); }
+  .chat__head strong { display: block; font-family: var(--serif); font-weight: 400; font-size: var(--step-0); }
+  .chat__head span { display: block; line-height: 1.35; }
+  .chat__close { background: none; border: 0; font-size: 1.5rem; line-height: 1; cursor: pointer; color: var(--evergreen); }
+  .chat__log { list-style: none; margin: 0; padding: 1rem; max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; }
+  .chat__msg { margin: 0; padding: 0.55rem 0.8rem; border-radius: 6px; font-size: var(--step--1); line-height: 1.45; max-width: 90%; }
+  .chat__msg--bot { background: var(--linen); align-self: flex-start; }
+  .chat__msg--typing { display: flex; gap: 4px; align-items: center; padding: 0.8rem 0.9rem; }
+  .chat__msg--typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--moss); animation: blink 1.2s infinite ease-in-out; }
+  .chat__msg--typing i:nth-child(2) { animation-delay: 0.2s; }
+  .chat__msg--typing i:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%, 80%, 100% { opacity: 0.25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-2px); } }
+  .chat__msg--you { background: var(--evergreen); color: var(--paper); align-self: flex-end; }
+  .chat__chips { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0 1rem 0.75rem; }
+  .chat__chips button { font: inherit; font-size: 0.8rem; padding: 0.35rem 0.7rem; border: 1px solid var(--rule); background: #fff; border-radius: 999px; cursor: pointer; color: var(--evergreen); }
+  .chat__chips button:hover { border-color: var(--evergreen); }
+  .chat__form { display: flex; gap: 0.5rem; padding: 0.75rem 1rem 1rem; border-top: 1px solid var(--rule); }
+  .chat__form input { flex: 1; font: inherit; font-size: var(--step--1); padding: 0.55em 0.75em; border: 1px solid var(--rule); border-radius: 2px; background: #fff; min-width: 0; }
+  .chat__form .btn { padding: 0.55em 0.9em; }
+</style>

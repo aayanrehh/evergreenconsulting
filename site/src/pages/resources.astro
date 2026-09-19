@@ -1,0 +1,213 @@
+---
+import Base from '../layouts/Base.astro';
+import Marquee from '../components/Marquee.astro';
+
+const guideSections = [
+  "General do's and don'ts, including essay topics to avoid",
+  'Tips for every 2026–2027 Common App personal statement prompt',
+  'Developing a personal narrative essay: introduction, body, conclusion and alternative structures',
+  'Stylistic tips: what to avoid',
+  'The eight University of California Personal Insight Questions',
+  'Common supplemental essay types: favorite activity, why this school, intellectual curiosity, diversity, problem solving and more',
+];
+const dos = [
+  'Start early. Revising is where essays get good, and revising takes time.',
+  'Brainstorm and outline first. Write down the strengths, interests and quirks you want admissions officers to know about.',
+  'Make it your own. Write about what you care about, not what you think they want to hear.',
+  'Stay on one theme. The prompt may be broad; your answer should be narrow and specific.',
+  'Ignore the word count on the first draft. Cut later.',
+  'Rewrite, then ask one person whose opinion you trust, not six.',
+];
+const avoid = [
+  'Heroism',
+  'Death, divorce, depression',
+  'The travel itinerary',
+  'Religious or political issues',
+  'Dating and relationships',
+  'Anything you would not want an admissions officer to know',
+];
+const prompts = [
+  ['Background, identity, interest or talent', 'The open door. Works when the thing is specific and you can show it in scenes, not list it.'],
+  ['A challenge, setback or failure', 'The lesson matters more than the failure. Keep the setback to a paragraph and spend the rest on what changed.'],
+  ['Questioning or challenging a belief', 'Not a debate essay. What did you believe, what cracked it, and what do you do differently now?'],
+  ['Gratitude that surprised you', 'Small and specific beats big and vague. One person, one moment.'],
+  ['An accomplishment or realization that sparked growth', 'The realization is the essay. The accomplishment is the setup.'],
+  ['A topic that makes you lose track of time', 'Careful with jargon. The reader should feel the pull, not sit an exam on it.'],
+  ['Any topic of your choice', 'Fine to use, but a great answer to another prompt is usually a great answer here too.'],
+];
+const brainstorm = [
+  'What is my favorite academic subject, and what memory first sparked it?',
+  'What is my greatest success so far? What steps got me there, and how did it feel?',
+  'What is my greatest challenge so far? How did I get through it, or how am I getting through it?',
+  'What is one talent people would not guess I have? How did I find out?',
+  'The activity I pursue with real passion is… and I do it because…',
+  'What are my best three character traits, and where do they show up?',
+  'How has my family life shaped who I am?',
+  'How has my background, culture or country of origin shaped who I am?',
+  'The three things (people, places, animals count) that affect me most are… because…',
+  'The biggest lesson I have learned so far is… I learned it by… and it made me more…',
+];
+const structure = [
+  ['Introduction', 'A hook, the scene, and a hint of the thesis. Start inside the story, not with a definition of courage.'],
+  ['Body', 'Scenes, not summaries. Show the emotion through action. Skip the bus ride home with a transition and get to the moment that matters.'],
+  ['Conclusion', 'What changed. Or, increasingly, nothing: end the story and let the actions carry the reflection. Most great short stories do.'],
+  ['Alternatives', 'A diary format for a story that spans days. A manifesto. A pivotal essay that opens on the conflict. Structure should fit the story, not the other way round.'],
+];
+const style = [
+  ['Wordiness', 'Most students can cut a quarter of the essay and lose nothing. Try it.'],
+  ['Vague language', '"Stuff", "things", "this aspect of society". Admissions officers are not mind readers.'],
+  ['Clichés', '"One in a million." "My global perspective." "My potential as a future leader." If you must use one, put a spin on it.'],
+  ['Too much "I"', 'More than once a sentence is too much. Rearrange the sentence and it usually disappears.'],
+  ['Adverbs', '"She ran quickly" is "she sprinted". Every adverb is a strong verb waiting to happen.'],
+  ['Expletive constructions', '"There were two girls who struggled with math" is "two girls struggled with math".'],
+  ['Flowery language', 'Too many adjectives suffocate a paragraph. One precise noun ("a Yorkie") beats three vague ones.'],
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'DigitalDocument',
+    name: 'Writing Successful College Application Essays',
+    author: { '@id': `${Astro.site}#andrea` },
+    encodingFormat: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    url: `${Astro.site}resources/writing-successful-college-application-essays.docx`,
+    isAccessibleForFree: true,
+    about: 'College application essays, Common App prompts 2026–2027, UC Personal Insight Questions, supplemental essays',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'DigitalDocument',
+    name: 'Writing the Personal Statement',
+    author: { '@id': `${Astro.site}#andrea` },
+    encodingFormat: 'application/pdf',
+    url: `${Astro.site}resources/writing-the-personal-statement.pdf`,
+    isAccessibleForFree: true,
+    about: 'Personal statement workshop: structure, style, brainstorming, Common App prompts',
+  },
+];
+---
+
+<Base
+  title="Free College Essay Resources: Guide, Workshop Slides, 2026–27 Prompts | Evergreen Consulting"
+  description="Free college application resources from Andrea Schiralli: a full essay-writing guide, her personal statement workshop slides, the 2026–27 Common App prompts explained, brainstorming questions, structure and style tips."
+  schema={schema}
+>
+  <section class="section page-head">
+    <div class="wrap">
+      <h1>Free resources</h1>
+      <p class="lede">Everything Andrea teaches in her workshops, written down and shared freely. Download what is useful, send it to your students, come back for more.</p>
+    </div>
+  </section>
+
+  <Marquee items={['Common App prompts 2026–27', 'Personal statement structure', 'Topics to avoid', 'Brainstorming questions', 'UC Personal Insight Questions', 'Supplemental essays', 'Style tips', 'Interview prep']} speed={45} />
+
+  <section class="section" id="downloads">
+    <div class="wrap cols">
+      <h2 data-reveal>Downloads</h2>
+      <div class="downloads">
+        <article>
+          <h3>Writing Successful College Application Essays</h3>
+          <p>
+            A complete guide to the written part of the U.S. college application. It covers how admissions officers read essays, what a personal narrative needs, and how to handle each prompt your child will face this cycle. Parents tend to read it first and then hand it over.
+          </p>
+          <ul class="small">
+            {guideSections.map((s) => <li>{s}</li>)}
+          </ul>
+          <p><a class="btn btn--solid" href="/resources/writing-successful-college-application-essays.docx" download>Download the guide (Word, 4.3 MB)</a></p>
+        </article>
+        <article>
+          <h3>Writing the Personal Statement</h3>
+          <p>
+            The deck from Andrea's personal statement workshop, updated July 2026. Thirty-six slides: do's and don'ts, topics to avoid, how to build an introduction, body and conclusion, writing strategies from verb tense to pacing, the 2026 to 2027 Common App prompts, and the brainstorming questions she asks students first.
+          </p>
+          <p><a class="btn btn--solid" href="/resources/writing-the-personal-statement.pdf" download>Download the slides (PDF, 1.2 MB)</a></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--linen" id="dos">
+    <div class="wrap cols cols--even">
+      <div>
+        <h2 data-reveal>Six things to do</h2>
+        <ul class="tips">
+          {dos.map((d) => <li>{d}</li>)}
+        </ul>
+      </div>
+      <div id="avoid">
+        <h2 data-reveal>Six topics to avoid</h2>
+        <ul class="tips">
+          {avoid.map((d) => <li>{d}</li>)}
+        </ul>
+        <p class="small muted">Not because they are bad subjects. Thousands of other applicants chose them this year, and it is hard to be specific about a trip to Costa Rica in 650 words.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="prompts">
+    <div class="wrap cols">
+      <h2 data-reveal>The 2026–27 Common App prompts</h2>
+      <div>
+        <p>Seven prompts, 650 words, one essay. The prompts are doors into the same room; pick the one that lets your story walk in naturally.</p>
+        <dl class="defs">
+          {prompts.map(([t, d], i) => (<div><dt>{i + 1}. {t}</dt><dd>{d}</dd></div>))}
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--linen" id="brainstorm">
+    <div class="wrap cols">
+      <h2 data-reveal>Brainstorming questions</h2>
+      <div>
+        <p>Answer these in a page or two, fast and messy. Three or four essay topics usually fall out. Then, for each one, ask: is this mostly about me? Is there a beginning, middle and end? Does it show my best self?</p>
+        <ol class="tips">
+          {brainstorm.map((q) => <li>{q}</li>)}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="structure">
+    <div class="wrap cols">
+      <h2 data-reveal>Structuring a personal narrative</h2>
+      <dl class="defs">
+        {structure.map(([t, d]) => (<div><dt>{t}</dt><dd>{d}</dd></div>))}
+      </dl>
+    </div>
+  </section>
+
+  <section class="section section--linen" id="style">
+    <div class="wrap cols">
+      <h2 data-reveal>Style: what to cut</h2>
+      <dl class="defs">
+        {style.map(([t, d]) => (<div><dt>{t}</dt><dd>{d}</dd></div>))}
+      </dl>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2>Read it all, wrote a draft, want a second opinion?</h2>
+      <p class="lede">Andrea reads drafts and sends back detailed comments within 72 hours.</p>
+      <p><a class="btn btn--solid" href="/services/#essay-editing">Essay commenting and editing</a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head { padding-bottom: 2.5rem; }
+  .downloads { display: grid; gap: 2.5rem; }
+  .downloads article { padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .downloads article:last-child { border-bottom: 0; padding-bottom: 0; }
+  .downloads h3 { font-family: var(--serif); font-size: var(--step-2); font-weight: 400; }
+  .downloads p:last-child { margin: 0; }
+  .tips { padding-left: 1.1em; }
+  .tips li { margin-bottom: 0.6em; max-width: 52ch; }
+  .defs { margin: 0; display: grid; gap: 1rem; }
+  .defs div { padding-bottom: 1rem; border-bottom: 1px solid var(--rule); }
+  .defs dt { font-weight: 500; color: var(--evergreen); }
+  .defs dd { margin: 0.2rem 0 0; max-width: 60ch; font-size: var(--step--1); }
+  section[id] { scroll-margin-top: 5rem; }
+  div[id] { scroll-margin-top: 6rem; }
+</style>

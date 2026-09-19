@@ -1,0 +1,179 @@
+---
+import '../styles/global.css';
+import Chat from '../components/Chat.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** JSON-LD objects appended to the default ProfessionalService graph */
+  schema?: Record<string, unknown>[];
+}
+const { title, description, schema = [] } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const siteName = 'Evergreen Consulting';
+
+const nav = [
+  ['/services/', 'Services'],
+  ['/results/', 'Results'],
+  ['/resources/', 'Free resources'],
+  ['/about/', 'About Andrea'],
+  ['/contact/', 'Contact'],
+];
+const current = Astro.url.pathname;
+
+const business = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  '@id': `${Astro.site}#business`,
+  name: siteName,
+  alternateName: "Andie's Consulting",
+  description:
+    'College admissions essay consulting and editing by Andrea Schiralli, a Harvard-trained educator. Personal statements, supplemental essays, résumés, and interview preparation for undergraduate and graduate applicants worldwide.',
+  url: Astro.site?.toString(),
+  areaServed: 'Worldwide',
+  email: 'andrea@evergreenconsulting.co',
+  telephone: '+1-203-703-2710',
+  address: { '@type': 'PostalAddress', addressLocality: 'New Canaan', addressRegion: 'CT', addressCountry: 'US' },
+  image: `${Astro.site}andrea.jpg`,
+  founder: { '@id': `${Astro.site}#andrea` },
+  knowsAbout: [
+    'college admissions essay editing',
+    'personal statement review',
+    'Common App essays',
+    'supplemental essays',
+    'graduate school statement of purpose',
+    'college application résumé editing',
+    'college admissions interview preparation',
+  ],
+};
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': `${Astro.site}#andrea`,
+  name: 'Andrea Schiralli',
+  jobTitle: 'College Admissions Consultant',
+  image: `${Astro.site}andrea.jpg`,
+  worksFor: { '@id': `${Astro.site}#business` },
+  alumniOf: [
+    { '@type': 'CollegeOrUniversity', name: 'Harvard University', description: "M.Ed., 2014" },
+    { '@type': 'CollegeOrUniversity', name: 'Cornell University', description: 'B.A. French Literature, 2010' },
+  ],
+  sameAs: ['https://www.linkedin.com/in/andrea-schiralli-19529683/'],
+};
+const graph = [business, person, ...schema];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL("/andrea.jpg", Astro.site)} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..500,30;1,9..144,300..500,30&family=Albert+Sans:wght@300;400;500&display=swap"
+    />
+    {graph.map((g) => <script type="application/ld+json" set:html={JSON.stringify(g)} />)}
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap site-header__inner">
+        <a class="brand" href="/" aria-label="Evergreen Consulting home">
+          <img class="brand__mark" src="/logo-mark.png" alt="" width="34" height="34" />
+          <span>Evergreen Consulting</span>
+        </a>
+        <input type="checkbox" id="nav-toggle" class="sr-only" />
+        <label for="nav-toggle" class="nav-toggle" aria-label="Menu">
+          <span></span><span></span>
+        </label>
+        <nav class="nav" aria-label="Primary">
+          {nav.map(([href, label]) => (
+            <a href={href} aria-current={current === href ? 'page' : undefined}>{label}</a>
+          ))}
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Chat />
+
+    <footer class="site-footer">
+      <div class="wrap site-footer__grid">
+        <div>
+          <img class="site-footer__logo" src="/logo.png" alt="Evergreen Consulting" width="220" height="73" loading="lazy" />
+          <p class="small">
+            College admissions consulting, essay coaching and editing. New Canaan, Connecticut, and anywhere with a video connection.
+          </p>
+        </div>
+        <nav aria-label="Footer">
+          {nav.map(([href, label]) => <a href={href}>{label}</a>)}
+          <a href="/services/#b2b">Partner with Andrea</a>
+        </nav>
+        <div class="small">
+          <p>Andrea Schiralli, M.Ed. (Harvard), B.A. (Cornell)</p>
+          <p><a href="mailto:andrea@evergreenconsulting.co">andrea@evergreenconsulting.co</a><br /><a href="https://wa.me/12037032710">WhatsApp +1 203-703-2710</a><br /><a href="https://www.linkedin.com/in/andrea-schiralli-19529683/" rel="me noopener">LinkedIn</a></p>
+          <p class="muted">© {new Date().getFullYear()} Evergreen Consulting. Students write their own essays. Andrea makes sure they are good.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // ponytail: one IntersectionObserver; elements opt in with data-reveal.
+      const io = new IntersectionObserver(
+        (entries) => entries.forEach((e) => e.isIntersecting && (e.target.classList.add('is-visible'), io.unobserve(e.target))),
+        { rootMargin: '0px 0px -10% 0px' },
+      );
+      document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>
+
+<style>
+  .skip { position: absolute; left: -999px; top: 0; background: var(--evergreen); color: var(--paper); padding: 0.5rem 1rem; z-index: 100; }
+  .skip:focus { left: 1rem; top: 1rem; }
+
+  .site-header { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule); }
+  .site-header__inner { display: flex; align-items: center; justify-content: space-between; min-height: 4.25rem; gap: 1rem; }
+  .brand { display: inline-flex; align-items: center; gap: 0.55rem; font-family: var(--serif); font-size: 1.25rem; color: var(--evergreen); text-decoration: none; }
+  .brand__mark { width: 34px; height: 34px; object-fit: contain; }
+
+  .nav { display: flex; gap: clamp(1rem, 2.5vw, 2rem); }
+  .nav a { text-decoration: none; font-size: var(--step--1); color: var(--ink); padding-block: 0.25rem; border-bottom: 1px solid transparent; }
+  .nav a:hover, .nav a[aria-current='page'] { border-bottom-color: var(--brass); }
+
+  .nav-toggle { display: none; width: 2.25rem; height: 2.25rem; flex-direction: column; justify-content: center; gap: 6px; cursor: pointer; }
+  .nav-toggle span { display: block; height: 1px; background: var(--ink); }
+
+  @media (max-width: 800px) {
+    .nav-toggle { display: flex; }
+    .nav { display: none; position: absolute; inset: 100% 0 auto 0; flex-direction: column; gap: 0; background: var(--paper); border-bottom: 1px solid var(--rule); padding: 0.5rem var(--gutter) 1rem; }
+    .nav a { padding: 0.75rem 0; border-bottom: 1px solid var(--rule); font-size: var(--step-0); }
+    #nav-toggle:checked ~ .nav { display: flex; }
+  }
+
+  .site-footer { background: var(--evergreen); color: var(--paper); padding-block: 3.5rem 2.5rem; margin-top: 4rem; }
+  .site-footer a { color: var(--paper); }
+  .site-footer__grid { display: grid; gap: 2rem; }
+  @media (min-width: 800px) { .site-footer__grid { grid-template-columns: 1.4fr 0.8fr 1.2fr; } }
+  .site-footer__logo { width: 200px; height: auto; margin-bottom: 1rem; filter: brightness(0) invert(1); opacity: 0.95; }
+  .site-footer nav { display: flex; flex-direction: column; gap: 0.4rem; font-size: var(--step--1); }
+  .site-footer .muted { color: var(--sage); }
+</style>
