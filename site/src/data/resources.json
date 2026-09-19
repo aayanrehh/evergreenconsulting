@@ -1,0 +1,44 @@
+{
+  "downloads": [
+    {
+      "title": "Writing Successful College Application Essays",
+      "kind": "Guide",
+      "file": "/resources/writing-successful-college-application-essays.docx",
+      "blurb": "Every 2026–27 Common App prompt, the UC questions, the usual supplements, and how to build a personal narrative. About 40 pages.",
+      "cta": "Download the guide"
+    },
+    {
+      "title": "Writing the Personal Statement",
+      "kind": "Workshop slides",
+      "file": "/resources/writing-the-personal-statement.pdf",
+      "blurb": "Andrea's workshop deck: do's and don'ts, topics to avoid, structure, style, and the brainstorming questions she asks first. 36 slides.",
+      "cta": "Download the slides"
+    }
+  ],
+  "reads": [
+    {
+      "title": "Six things to do before you write a word",
+      "href": "/resources/#dos"
+    },
+    {
+      "title": "Six essay topics to avoid, and why",
+      "href": "/resources/#avoid"
+    },
+    {
+      "title": "The 2026–27 Common App prompts, explained",
+      "href": "/resources/#prompts"
+    },
+    {
+      "title": "Brainstorming questions for the personal statement",
+      "href": "/resources/#brainstorm"
+    },
+    {
+      "title": "Structuring a personal narrative",
+      "href": "/resources/#structure"
+    },
+    {
+      "title": "Style tips: what to cut",
+      "href": "/resources/#style"
+    }
+  ]
+}

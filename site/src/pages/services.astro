@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
-import services from '../data/services.json';
+import data from '../data/services.json';
+const services = data.services;
 
 const packages = services.filter((s) => s.tag);
 const rest = services.filter((s) => !s.tag);

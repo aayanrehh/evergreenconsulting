@@ -1,0 +1,47 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Base
+  title="Blog: College Essays, Interviews and Applications | Evergreen Consulting"
+  description="Andrea Schiralli on college essays, personal statements, supplements, interviews and the application process. Practical, specific, from twenty thousand essays."
+>
+  <section class="section page-head">
+    <div class="wrap">
+      <h1>Blog</h1>
+      <p class="lede">Notes from twenty thousand essays. Practical, specific, and usually shorter than the essay you are working on.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <ul class="posts">
+        {posts.map((p) => (
+          <li>
+            <a href={`/blog/${p.id}/`}>
+              <time datetime={p.data.date.toISOString()}>{fmt(p.data.date)}</time>
+              <h2>{p.data.title}</h2>
+              <p>{p.data.description}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head { padding-bottom: 0; }
+  .page-head + .section { border-top: 0; }
+  .posts { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+  .posts li { margin: 0; border-bottom: 1px solid var(--rule); }
+  .posts a { display: grid; gap: 0.35rem; padding: 1.75rem 0; text-decoration: none; color: inherit; max-width: 70ch; }
+  .posts time { font-size: var(--step--1); color: #5a6a62; }
+  .posts h2 { font-size: var(--step-2); margin: 0; color: var(--evergreen); }
+  .posts p { margin: 0; color: #3a4a42; }
+  .posts a:hover h2 { color: var(--ink); }
+</style>

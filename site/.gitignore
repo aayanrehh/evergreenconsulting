@@ -22,3 +22,13 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# TinaCMS
+public/admin/
+tina/__generated__/
+.env
+
+# TinaCMS
+public/admin/
+tina/__generated__/
+.env

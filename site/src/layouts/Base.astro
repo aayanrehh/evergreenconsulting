@@ -16,6 +16,8 @@ const nav = [
   ['/services/', 'Services'],
   ['/results/', 'Results'],
   ['/resources/', 'Free resources'],
+  ['/blog/', 'Blog'],
+  ['/blog/', 'Blog'],
   ['/about/', 'About Andrea'],
   ['/contact/', 'Contact'],
 ];
@@ -103,7 +105,7 @@ const graph = [business, person, ...schema];
         </label>
         <nav class="nav" aria-label="Primary">
           {nav.map(([href, label]) => (
-            <a href={href} aria-current={current === href ? 'page' : undefined}>{label}</a>
+            <a href={href} aria-current={current === href || (href !== '/' && current.startsWith(href)) ? 'page' : undefined}>{label}</a>
           ))}
         </nav>
       </div>

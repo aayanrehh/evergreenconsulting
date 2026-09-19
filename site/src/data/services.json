@@ -1,68 +1,70 @@
-[
-  {
-    "id": "golden-ticket",
-    "name": "The Golden Ticket",
-    "tag": "Full application package",
-    "summary": "Everything written in the application, coached one-on-one. Up to fifteen schools.",
-    "detail": "Five 60-minute video sessions plus unlimited document exchange by email. Andrea starts with college application strategy (which schools, which essays, what order) and a résumé (your child's teachers will want it for recommendation letters anyway), then runs the essay process for the Common App and every supplement on the list: topic brainstorm, outline, drafts, comments, edits. It ends with two hours of college interview practice and honest notes. UC and USC count as two schools each. Extra schools are available à la carte.",
-    "keywords": "college admissions consulting, college application package, college essay coaching"
-  },
-  {
-    "id": "quick-silver",
-    "name": "Quick Silver",
-    "tag": "Essentials package",
-    "summary": "The essays and one mock interview. Up to eight schools.",
-    "detail": "Three 60-minute video sessions plus document exchange. Same essay process as the Golden Ticket, for a shorter school list: brainstorm, structure, drafts, comments and final edits on the personal statement and supplements, then a one-hour interview simulation. A good fit for students who already have a résumé and a clear list.",
-    "keywords": "college essay coaching package, personal statement coaching"
-  },
-  {
-    "id": "a-la-carte",
-    "name": "À la carte",
-    "tag": "Per school",
-    "summary": "One school at a time. One 45-minute call, two rounds of comments, one round of edits per essay.",
-    "detail": "For a single supplement, a transfer application, a scholarship essay, or a school added late in the season. Also how packages extend past their school limit.",
-    "keywords": "supplemental essay help, why this school essay"
-  },
-  {
-    "id": "essay-editing",
-    "name": "Essay commenting and editing",
-    "summary": "Already have a draft? Send it for a college application review. Comments back within 72 hours.",
-    "detail": "College essay editing at two levels. Commenting covers content and structure: what works, what is missing, what to cut, and why. Editing covers language, style and grammar on a draft the student has already revised. Most families do both, in that order. Works for the Common App personal statement, UC Personal Insight Questions, supplements, and graduate school statements of purpose.",
-    "keywords": "college admissions essay editing, personal statement review, statement of purpose editing"
-  },
-  {
-    "id": "graduate",
-    "name": "Graduate school statements",
-    "summary": "Statements of purpose and personal statements for master's, MBA, law, medical and PhD programs.",
-    "detail": "Graduate school admissions consulting for the written part of the application: MBA essays, law school personal statements, medical school personal statements and secondaries, and statements of purpose for master's and PhD programs. Committees want fit and direction, not a résumé rewritten as paragraphs. Andrea helps applicants connect their background, their work and their goals into a statement that reads like a plan. Same comment-then-edit process.",
-    "keywords": "graduate school admission essay editing, MBA essay editing, law school personal statement"
-  },
-  {
-    "id": "resume",
-    "name": "Résumé development",
-    "summary": "A clean one-page college application resume, or a graduate school resume review for applicants who already have one.",
-    "detail": "Built from scratch or tightened from a draft, and formatted so the strongest experience is impossible to miss. It also feeds the Common App activities list and the essays, so everything tells one story.",
-    "keywords": "college application resume editing"
-  },
-  {
-    "id": "interview-prep",
-    "name": "Interview preparation",
-    "summary": "College interview prep over video: mock alumni and admissions interviews, with notes afterward.",
-    "detail": "Students practice the questions they will get, the ones they should ask, and how to talk about themselves without sounding rehearsed. Especially useful for international applicants interviewing in English.",
-    "keywords": "college admissions interview prep, college interview questions"
-  },
-  {
-    "id": "b2b",
-    "name": "B2B editing for consultants",
-    "summary": "White-label commenting, editing and coaching for independent educational consultants and agencies.",
-    "detail": "Since 2015 Andrea has handled the writing component for consulting companies in the U.S. and Asia, reviewing and editing thousands of essays a year on their behalf. Pick a level per student: a one-time language and style edit, content comments before edits, or full coaching from brainstorm to final draft. You keep the client relationship. She keeps the 72-hour turnaround.",
-    "keywords": "B2B essay editing, independent educational consultant partner, white-label essay editing"
-  },
-  {
-    "id": "workshops",
-    "name": "Workshops and teaching",
-    "summary": "Intensive writing and literary-analysis workshops for schools, agencies and small groups.",
-    "detail": "Andrea teaches personal statement workshops around the world and keynotes educational consulting conferences in China. Workshops also cover the academic writing students need once they get to campus.",
-    "keywords": "college essay workshop, personal statement workshop"
-  }
-]
+{
+  "services": [
+    {
+      "id": "golden-ticket",
+      "name": "The Golden Ticket",
+      "tag": "Full application package",
+      "summary": "Everything written in the application, coached one-on-one. Up to fifteen schools.",
+      "detail": "Five 60-minute video sessions plus unlimited document exchange by email. Andrea starts with college application strategy (which schools, which essays, what order) and a résumé (your child's teachers will want it for recommendation letters anyway), then runs the essay process for the Common App and every supplement on the list: topic brainstorm, outline, drafts, comments, edits. It ends with two hours of college interview practice and honest notes. UC and USC count as two schools each. Extra schools are available à la carte.",
+      "keywords": "college admissions consulting, college application package, college essay coaching"
+    },
+    {
+      "id": "quick-silver",
+      "name": "Quick Silver",
+      "tag": "Essentials package",
+      "summary": "The essays and one mock interview. Up to eight schools.",
+      "detail": "Three 60-minute video sessions plus document exchange. Same essay process as the Golden Ticket, for a shorter school list: brainstorm, structure, drafts, comments and final edits on the personal statement and supplements, then a one-hour interview simulation. A good fit for students who already have a résumé and a clear list.",
+      "keywords": "college essay coaching package, personal statement coaching"
+    },
+    {
+      "id": "a-la-carte",
+      "name": "À la carte",
+      "tag": "Per school",
+      "summary": "One school at a time. One 45-minute call, two rounds of comments, one round of edits per essay.",
+      "detail": "For a single supplement, a transfer application, a scholarship essay, or a school added late in the season. Also how packages extend past their school limit.",
+      "keywords": "supplemental essay help, why this school essay"
+    },
+    {
+      "id": "essay-editing",
+      "name": "Essay commenting and editing",
+      "summary": "Already have a draft? Send it for a college application review. Comments back within 72 hours.",
+      "detail": "College essay editing at two levels. Commenting covers content and structure: what works, what is missing, what to cut, and why. Editing covers language, style and grammar on a draft the student has already revised. Most families do both, in that order. Works for the Common App personal statement, UC Personal Insight Questions, supplements, and graduate school statements of purpose.",
+      "keywords": "college admissions essay editing, personal statement review, statement of purpose editing"
+    },
+    {
+      "id": "graduate",
+      "name": "Graduate school statements",
+      "summary": "Statements of purpose and personal statements for master's, MBA, law, medical and PhD programs.",
+      "detail": "Graduate school admissions consulting for the written part of the application: MBA essays, law school personal statements, medical school personal statements and secondaries, and statements of purpose for master's and PhD programs. Committees want fit and direction, not a résumé rewritten as paragraphs. Andrea helps applicants connect their background, their work and their goals into a statement that reads like a plan. Same comment-then-edit process.",
+      "keywords": "graduate school admission essay editing, MBA essay editing, law school personal statement"
+    },
+    {
+      "id": "resume",
+      "name": "Résumé development",
+      "summary": "A clean one-page college application resume, or a graduate school resume review for applicants who already have one.",
+      "detail": "Built from scratch or tightened from a draft, and formatted so the strongest experience is impossible to miss. It also feeds the Common App activities list and the essays, so everything tells one story.",
+      "keywords": "college application resume editing"
+    },
+    {
+      "id": "interview-prep",
+      "name": "Interview preparation",
+      "summary": "College interview prep over video: mock alumni and admissions interviews, with notes afterward.",
+      "detail": "Students practice the questions they will get, the ones they should ask, and how to talk about themselves without sounding rehearsed. Especially useful for international applicants interviewing in English.",
+      "keywords": "college admissions interview prep, college interview questions"
+    },
+    {
+      "id": "b2b",
+      "name": "B2B editing for consultants",
+      "summary": "White-label commenting, editing and coaching for independent educational consultants and agencies.",
+      "detail": "Since 2015 Andrea has handled the writing component for consulting companies in the U.S. and Asia, reviewing and editing thousands of essays a year on their behalf. Pick a level per student: a one-time language and style edit, content comments before edits, or full coaching from brainstorm to final draft. You keep the client relationship. She keeps the 72-hour turnaround.",
+      "keywords": "B2B essay editing, independent educational consultant partner, white-label essay editing"
+    },
+    {
+      "id": "workshops",
+      "name": "Workshops and teaching",
+      "summary": "Intensive writing and literary-analysis workshops for schools, agencies and small groups.",
+      "detail": "Andrea teaches personal statement workshops around the world and keynotes educational consulting conferences in China. Workshops also cover the academic writing students need once they get to campus.",
+      "keywords": "college essay workshop, personal statement workshop"
+    }
+  ]
+}

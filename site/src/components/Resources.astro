@@ -1,29 +1,6 @@
 ---
-// Downloads live here; quick reads link to sections of /resources. Add to either list and the grid grows.
-const docs = [
-  {
-    href: '/resources/writing-successful-college-application-essays.docx',
-    kind: 'Guide',
-    title: 'Writing Successful College Application Essays',
-    blurb: 'Every 2026–27 Common App prompt, the UC questions, the usual supplements, and how to build a personal narrative. About 40 pages.',
-    cta: 'Download the guide',
-  },
-  {
-    href: '/resources/writing-the-personal-statement.pdf',
-    kind: 'Workshop slides',
-    title: 'Writing the Personal Statement',
-    blurb: "Andrea's workshop deck: do's and don'ts, topics to avoid, structure, style, and the brainstorming questions she asks first. 36 slides.",
-    cta: 'Download the slides',
-  },
-];
-const reads = [
-  ['Six things to do before you write a word', '/resources/#dos'],
-  ['Six essay topics to avoid, and why', '/resources/#avoid'],
-  ['The 2026–27 Common App prompts, explained', '/resources/#prompts'],
-  ['Brainstorming questions for the personal statement', '/resources/#brainstorm'],
-  ['Structuring a personal narrative', '/resources/#structure'],
-  ['Stylistic tips: what to cut', '/resources/#style'],
-];
+import data from '../data/resources.json';
+const { downloads: docs, reads } = data;
 ---
 <section class="section section--linen resources" id="resources">
   <div class="wrap">
@@ -33,7 +10,7 @@ const reads = [
     </div>
     <div class="resources__grid">
       {docs.map((d) => (
-        <a class="doc" href={d.href} download>
+        <a class="doc" href={d.file} download>
           <span class="doc__cover" aria-hidden="true">
             <span class="doc__kind">{d.kind}</span>
             <span class="doc__title">{d.title}</span>
@@ -49,7 +26,7 @@ const reads = [
     <div class="reads">
       <h3>Quick reads</h3>
       <ul class="reads__list">
-        {reads.map(([t, href]) => <li><a href={href}>{t}</a></li>)}
+        {reads.map((q) => <li><a href={q.href}>{q.title}</a></li>)}
       </ul>
     </div>
     <p><a class="btn" href="/resources/">Browse all free resources</a></p>

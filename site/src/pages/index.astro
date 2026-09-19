@@ -4,7 +4,8 @@ import LogoWall from '../components/LogoWall.astro';
 import Resources from '../components/Resources.astro';
 import Marquee from '../components/Marquee.astro';
 import logos from '../data/logos.json';
-import services from '../data/services.json';
+import data from '../data/services.json';
+const services = data.services;
 import press from '../data/press.json';
 
 const packages = services.filter((s) => s.tag);

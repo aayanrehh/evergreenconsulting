@@ -49,3 +49,9 @@ Rule from the research: a primary keyword is the *topic* of a page; use natural 
 - Testimonials page (none collected yet).
 - Blog: 40+ Ivy & Quill posts in the wayback folder are Andrea's own writing and can be republished under `/blog/` for SEO/GEO.
 - Wire the chat widget to an API.
+
+## CMS (TinaCMS)
+- Edit UI at `/admin/`. `npm run dev` runs Tina + Astro together; saves write straight to the repo files.
+- Collections in `tina/config.ts`: blog posts (`src/content/blog/*.md`), free resources (`src/data/resources.json`), services (`src/data/services.json`). Uploads go to `public/uploads/`.
+- Production editing needs a free TinaCloud project (app.tina.io) connected to the GitHub repo; set `TINA_CLIENT_ID` and `TINA_TOKEN` on the host and use `npm run build:cms` as the build command. Without them, `npm run build` still builds the site (no admin).
+- Blog: `src/pages/blog/`. Three posts seeded from Andrea's old Ivy & Quill blog; ~40 more in `../waybackmachine/.../content-markdown/`.
