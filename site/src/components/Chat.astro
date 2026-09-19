@@ -2,10 +2,9 @@
 // Floating chat. Today it answers from a small FAQ; later, point `ask()` at an API.
 ---
 
-<div class="chat" id="chat">
-  <button class="chat__toggle" type="button" aria-expanded="false" aria-controls="chat-panel">
+<div class="chat" id="chat" data-hidden>
+  <button class="chat__toggle" type="button" aria-expanded="false" aria-controls="chat-panel" aria-label="Ask a question" title="Ask a question">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg>
-    <span>Ask a question</span>
   </button>
   <section class="chat__panel" id="chat-panel" hidden aria-label="Chat with Evergreen Consulting">
     <header class="chat__head">
@@ -95,6 +94,10 @@
     toggle.setAttribute('aria-expanded', String(o));
     if (o) input.focus();
   }
+  // stay out of the way until the visitor has scrolled past the hero
+  const reveal = () => { if (scrollY > 360) { root.removeAttribute('data-hidden'); removeEventListener('scroll', reveal); } };
+  addEventListener('scroll', reveal, { passive: true });
+  reveal();
   toggle.addEventListener('click', () => open(panel.hidden));
   root.querySelector('.chat__close')!.addEventListener('click', () => open(false));
   root.querySelectorAll<HTMLButtonElement>('.chat__chips button').forEach((b) => b.addEventListener('click', () => send(b.textContent!)));
@@ -108,9 +111,11 @@
 </script>
 
 <style is:global>
-  .chat { position: fixed; right: 1rem; bottom: 1rem; z-index: 60; display: flex; flex-direction: column; align-items: flex-end; gap: 0.75rem; }
-  .chat__toggle { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1rem; background: var(--evergreen); color: var(--paper); border: 0; border-radius: 999px; font: inherit; font-size: var(--step--1); font-weight: 500; cursor: pointer; box-shadow: 0 6px 20px rgba(20, 32, 27, 0.18); }
-  .chat__toggle:hover { background: var(--ink); }
+  .chat { position: fixed; right: 1rem; bottom: 1rem; z-index: 60; display: flex; flex-direction: column; align-items: flex-end; gap: 0.75rem; transition: opacity 300ms ease, transform 300ms ease; }
+  .chat[data-hidden] { opacity: 0; transform: translateY(8px); pointer-events: none; }
+  .chat__toggle { width: 46px; height: 46px; display: inline-flex; align-items: center; justify-content: center; background: var(--evergreen); color: var(--paper); border: 0; border-radius: 50%; cursor: pointer; box-shadow: 0 4px 14px rgba(20, 32, 27, 0.16); opacity: 0.9; }
+  .chat__toggle:hover, .chat__toggle[aria-expanded='true'] { opacity: 1; background: var(--ink); }
+  .chat__toggle svg { width: 20px; height: 20px; }
   .chat__panel[hidden] { display: none; }
   .chat__panel { width: min(360px, calc(100vw - 2rem)); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; box-shadow: 0 12px 40px rgba(20, 32, 27, 0.16); display: flex; flex-direction: column; overflow: hidden; }
   .chat__head { display: flex; justify-content: space-between; gap: 0.5rem; padding: 0.9rem 1rem; background: var(--linen); border-bottom: 1px solid var(--rule); }

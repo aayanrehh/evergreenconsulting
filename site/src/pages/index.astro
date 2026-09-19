@@ -2,8 +2,6 @@
 import Base from '../layouts/Base.astro';
 import LogoWall from '../components/LogoWall.astro';
 import Resources from '../components/Resources.astro';
-import Marquee from '../components/Marquee.astro';
-import logos from '../data/logos.json';
 import data from '../data/services.json';
 const services = data.services;
 import press from '../data/press.json';
@@ -55,10 +53,23 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
     <div class="wrap press__inner">
       <p class="small muted">Featured by</p>
       <ul class="press__list">
-        {press.map(([name, file]) => (
-          <li><img src={`/press/${file}`} alt={name} loading="lazy" height="40" /></li>
+        {[...press, ...press].map(([name, file], i) => (
+          <li aria-hidden={i >= press.length ? 'true' : undefined}><img src={`/press/${file}`} alt={i >= press.length ? '' : name} loading="lazy" height="40" /></li>
         ))}
       </ul>
+    </div>
+  </section>
+
+  <section class="section section--evergreen band">
+    <div class="wrap">
+      <div class="section__head">
+        <h2 data-reveal>Where students have gone</h2>
+        <p class="lede lede--dark">Acceptances every year since 2015. About 900 schools so far.</p>
+      </div>
+    </div>
+    <LogoWall />
+    <div class="wrap">
+      <p class="band-foot"><a class="btn btn--paper" href="/results/">See acceptances by year</a></p>
     </div>
   </section>
 
@@ -113,20 +124,6 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
         Also on offer: {also.map((s, i) => (<><a href={`/services/#${s.id}`}>{s.name.toLowerCase()}</a>{i < also.length - 1 ? ', ' : '.'}</>))}
       </p>
       <p><a class="btn" href="/services/">All services and how the process works</a></p>
-    </div>
-  </section>
-
-  <section class="section section--evergreen">
-    <div class="wrap">
-      <div class="section__head">
-        <h2 data-reveal>Where students have gone</h2>
-        <p class="lede lede--dark">Acceptances every year since 2015. The full list runs to about 900 schools.</p>
-      </div>
-      <LogoWall />
-    </div>
-    <Marquee items={logos.map(([n]) => n)} dark speed={50} />
-    <div class="wrap">
-      <p class="band-foot"><a class="btn btn--paper" href="/results/">See acceptances by year</a></p>
     </div>
   </section>
 
@@ -187,12 +184,18 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
   .press__list li { margin: 0; }
   .press__list img { height: 34px; width: auto; filter: grayscale(1); opacity: 0.6; }
   .press__list img:hover { filter: none; opacity: 1; }
+  .press__list li[aria-hidden] { display: none; }
   @media (max-width: 640px) {
-    .press__inner { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
-    .press__list { flex-wrap: nowrap; overflow-x: auto; width: 100%; padding-bottom: 0.5rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-    .press__list::-webkit-scrollbar { display: none; }
-    .press__list img { height: 28px; }
+    .press__inner { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+    .press__list { flex-wrap: nowrap; width: max-content; gap: 2.25rem; animation: press 28s linear infinite; }
+    .press__list li[aria-hidden] { display: block; }
+    .press__list img { height: 26px; filter: grayscale(1); opacity: 0.7; }
+    .press { overflow: hidden; }
+    .press .wrap { width: 100%; }
+    .press__inner p { padding-left: var(--gutter); }
+    @keyframes press { to { transform: translateX(calc(-50% - 1.125rem)); } }
   }
+  @media (prefers-reduced-motion: reduce) { .press__list { animation: none; flex-wrap: wrap; width: auto; } .press__list li[aria-hidden] { display: none; } }
 
   .section__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 2rem; margin-bottom: 2rem; }
   .section__head h2 { margin: 0; }
@@ -216,5 +219,6 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
   @media (min-width: 720px) { .promises { grid-template-columns: 1fr 1fr; } }
   .promises p { margin: 0; font-size: var(--step--1); max-width: 40ch; }
   .promises strong { font-weight: 500; color: var(--evergreen); }
-  .band-foot { margin-top: 2rem; }
+  .band-foot { margin-top: 2.5rem; margin-bottom: 0; }
+  .band .section__head { margin-bottom: 1.5rem; }
 </style>
