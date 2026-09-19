@@ -19,8 +19,8 @@ const Star = '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"
   </div>
   <div class="reviews__scroller">
     <ul class="reviews__track">
-      {reviews.map((r) => (
-        <li class="review">
+      {[...reviews, ...reviews].map((r, i) => (
+        <li class="review" aria-hidden={i >= reviews.length ? 'true' : undefined}>
           <div class="review__stars" aria-label="5 out of 5 stars">{[1, 2, 3, 4, 5].map(() => <Fragment set:html={Star} />)}</div>
           <blockquote>{r.text}</blockquote>
           <footer>
@@ -45,11 +45,18 @@ const Star = '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"
   .score__stars { display: flex; gap: 2px; color: var(--evergreen); }
   .score__meta { font-size: var(--step--1); color: #3a4a42; }
 
-  /* native horizontal scroll, snapping; no JS */
-  .reviews__scroller { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 0.5rem; }
-  .reviews__scroller::-webkit-scrollbar { display: none; }
-  .reviews__track { list-style: none; margin: 0; padding: 0 max(var(--gutter), (100% - var(--measure)) / 2); display: flex; gap: 1rem; width: max-content; }
-  .review { margin: 0; scroll-snap-align: start; width: min(340px, 82vw); display: flex; flex-direction: column; gap: 0.8rem; padding: 1.4rem; background: #fff; border: 1px solid var(--rule); }
+  /* auto-rotating row; pauses on hover/touch, plain scroll for reduced-motion */
+  .reviews__scroller { overflow: hidden; padding-bottom: 0.5rem; mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+  .reviews__track { list-style: none; margin: 0; padding: 0 1rem; display: flex; gap: 1rem; width: max-content; animation: reviews 90s linear infinite; }
+  .reviews__scroller:hover .reviews__track, .reviews__scroller:focus-within .reviews__track { animation-play-state: paused; }
+  @keyframes reviews { to { transform: translateX(calc(-50% - 0.5rem)); } }
+  @media (prefers-reduced-motion: reduce) {
+    .reviews__scroller { overflow-x: auto; scroll-snap-type: x mandatory; mask-image: none; }
+    .reviews__track { animation: none; padding-inline: var(--gutter); }
+    .review { scroll-snap-align: start; }
+    .review[aria-hidden] { display: none; }
+  }
+  .review { margin: 0; width: min(340px, 82vw); display: flex; flex-direction: column; gap: 0.8rem; padding: 1.4rem; background: #fff; border: 1px solid var(--rule); }
   .review__stars { display: flex; gap: 2px; color: var(--evergreen); }
   .review__stars :global(svg) { width: 15px; height: 15px; }
   .review blockquote { margin: 0; font-size: var(--step--1); line-height: 1.55; color: var(--ink); display: -webkit-box; -webkit-line-clamp: 7; -webkit-box-orient: vertical; overflow: hidden; }

@@ -79,7 +79,13 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
 
   <section class="section">
     <div class="wrap cols">
-      <h2 data-reveal>How Andrea works</h2>
+      <div class="how__aside">
+        <h2 data-reveal>How Andrea works</h2>
+        <figure class="photo photo--aside">
+          <img src="/andrea-speaking.jpg" alt="Andrea Schiralli speaking at an educational consulting conference" width="1254" height="1254" loading="lazy" />
+          <figcaption>Keynote at an educational consulting conference in China.</figcaption>
+        </figure>
+      </div>
       <div>
         <p class="lede">Admissions officers read thousands of essays written to impress them. They remember the ones written by a person.</p>
         <p>
@@ -232,6 +238,9 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
 </style>
 <style>
   .photo { margin: 2.5rem 0 0; max-width: 620px; }
+  .photo--aside { margin-top: 1.5rem; max-width: 380px; }
+  .photo--aside img { aspect-ratio: 1; object-fit: cover; }
+  @media (min-width: 800px) { .how__aside { position: sticky; top: 6rem; } }
   .photo img { border: 1px solid var(--rule); }
   .photo figcaption { margin-top: 0.6rem; font-size: var(--step--1); color: #5a6a62; }
 </style>
