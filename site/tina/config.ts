@@ -1,8 +1,6 @@
 import { defineConfig } from 'tinacms';
 import { BlogCollectionManager } from './components/BlogCollectionManager';
 
-const isPreview = process.env.TINA_PREVIEW === 'true';
-
 // Ensure the admin editor automatically stays in side-by-side visual preview mode
 // by default and when navigating between pages or clicking breadcrumbs, so the
 // right-side live website preview is never unexpectedly removed.
@@ -90,8 +88,8 @@ export default defineConfig({
         format: 'json',
         ui: {
           allowedActions: { create: false, delete: false },
-          global: !isPreview,
-          ...(isPreview ? { router: () => '/' } : {}),
+          global: false,
+          router: () => '/',
         },
         fields: [
           { type: 'string', name: 'titlePrefix', label: 'Hero Headline (Prefix)' },
@@ -155,8 +153,8 @@ export default defineConfig({
         format: 'json',
         ui: {
           allowedActions: { create: false, delete: false },
-          global: !isPreview,
-          ...(isPreview ? { router: () => '/about/' } : {}),
+          global: false,
+          router: () => '/about/',
         },
         fields: [
           { type: 'string', name: 'name', label: 'Headline / Name', required: true },
@@ -199,8 +197,8 @@ export default defineConfig({
         format: 'json',
         ui: {
           allowedActions: { create: false, delete: false },
-          global: !isPreview,
-          ...(isPreview ? { router: () => '/services/' } : {}),
+          global: false,
+          router: () => '/services/',
         },
         fields: [
           { type: 'string', name: 'pageHeading', label: 'Page Heading' },
@@ -245,8 +243,8 @@ export default defineConfig({
         format: 'json',
         ui: {
           allowedActions: { create: false, delete: false },
-          global: !isPreview,
-          ...(isPreview ? { router: () => '/resources/' } : {}),
+          global: false,
+          router: () => '/resources/',
         },
         fields: [
           {
@@ -292,8 +290,8 @@ export default defineConfig({
         format: 'json',
         ui: {
           allowedActions: { create: false, delete: false },
-          global: !isPreview,
-          ...(isPreview ? { router: () => '/contact/' } : {}),
+          global: false,
+          router: () => '/contact/',
         },
         fields: [
           { type: 'string', name: 'heading', label: 'Page Heading', required: true },
@@ -317,8 +315,8 @@ export default defineConfig({
         format: 'json',
         ui: {
           allowedActions: { create: false, delete: false },
-          global: !isPreview,
-          ...(isPreview ? { router: () => '/results/' } : {}),
+          global: false,
+          router: () => '/results/',
         },
         fields: [
           { type: 'string', name: 'heading', label: 'Page Heading' },
@@ -334,8 +332,8 @@ export default defineConfig({
         format: 'json',
         ui: {
           allowedActions: { create: false, delete: false },
-          global: !isPreview,
-          ...(isPreview ? { router: () => '/blog/' } : {}),
+          global: false,
+          router: () => '/blog/',
         },
         fields: [
           {
@@ -356,7 +354,7 @@ export default defineConfig({
         path: 'src/content/blog',
         format: 'md',
         ui: {
-          ...(isPreview ? { router: ({ document }) => `/blog/${document._sys.filename}/` } : {}),
+          router: ({ document }) => `/blog/${document._sys.filename}/`,
         },
         fields: [
           { type: 'string', name: 'title', label: 'Title', isTitle: true, required: true },
@@ -374,8 +372,8 @@ export default defineConfig({
         format: 'json',
         ui: {
           allowedActions: { create: false, delete: false },
-          global: !isPreview,
-          ...(isPreview ? { router: () => '/#reviews' } : {}),
+          global: false,
+          router: () => '/#reviews',
         },
         fields: [
           { type: 'number', name: 'rating', label: 'Google rating (e.g. 5)' },
