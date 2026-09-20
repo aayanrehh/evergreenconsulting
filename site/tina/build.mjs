@@ -2,32 +2,8 @@
 // With TINA_CLIENT_ID + TINA_TOKEN set, builds the /admin editor against TinaCloud first.
 // Without them, skips the editor and builds the site alone, so a missing secret never takes the site down.
 import { spawnSync } from 'node:child_process';
-import net from 'node:net';
 
 const { TINA_CLIENT_ID, TINA_TOKEN } = process.env;
-
-// Find an available TCP port in the given range by attempting to bind.
-// Returns the first port that binds successfully, or null if none available.
-function findAvailablePort(start, end) {
-  return new Promise((resolve) => {
-    const tryPort = (port) => {
-      if (port > end) {
-        resolve(null);
-        return;
-      }
-      const server = net.createServer();
-      server.once('error', () => {
-        server.close();
-        tryPort(port + 1);
-      });
-      server.once('listening', () => {
-        server.close(() => resolve(port));
-      });
-      server.listen(port, '127.0.0.1');
-    };
-    tryPort(start);
-  });
-}
 
 // Run tinacms build with a specific datalayer port.
 // Captures stdout/stderr while also emitting them to the build log.
@@ -78,9 +54,11 @@ async function buildTinaWithPortRetry() {
   const PORT_END = 9199;
 
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-    const port = await findAvailablePort(PORT_START, PORT_END);
-    if (!port) {
-      throw new Error(`tina: no available ports in range ${PORT_START}-${PORT_END}`);
+    // Use Tina itself as the authoritative port-availability test.
+    // Each attempt uses a distinct port; a collision on one port advances to the next.
+    const port = PORT_START + attempt - 1;
+    if (port > PORT_END) {
+      throw new Error(`tina: exhausted port range ${PORT_START}-${PORT_END}`);
     }
 
     const result = runTinaBuild(port);
