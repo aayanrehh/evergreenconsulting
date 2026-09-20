@@ -28,7 +28,7 @@ const label = (c: string) => c.replace('Top-100 Schools: Undergraduate Acceptanc
 ---
 
 <Base
-  title="Results: College, Graduate & Independent School Acceptances | Evergreen Consulting"
+  title="Results: College, Graduate & Independent School Acceptances | Evergreen Admissions Consulting"
   description="Acceptances earned by students Andrea Schiralli has coached since 2015: Harvard, Yale, Princeton, Stanford, Columbia, MIT, Oxford, the UCs, and hundreds more, listed by year."
 >
   {isPreview ? (
@@ -57,6 +57,35 @@ const label = (c: string) => c.replace('Top-100 Schools: Undergraduate Acceptanc
       ))}
     </div>
   </section>
+
+  <section class="section section--linen">
+    <div class="wrap cols">
+      <div>
+        <h2>{results.methodologyHeading || 'Honest admissions guidance, zero manufactured guarantees'}</h2>
+      </div>
+      <div>
+        <p>{results.methodologyText}</p>
+        <p class="small muted">
+          Andrea advises students locally in <a href="/new-canaan-ct/">New Canaan</a>, across <a href="/fairfield-county-ct/">Fairfield County</a>, and nationwide through comprehensive packages and per-school coaching.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--evergreen">
+    <div class="wrap">
+      <div class="cta-banner">
+        <h2>{results.ctaHeading || 'Start with a conversation'}</h2>
+        <p class="lede lede--dark">
+          {results.ctaLede || 'Tell Andrea where your child is applying and where you are in the application timeline.'}
+        </p>
+        <p>
+          <a class="btn btn--paper" href={results.ctaButtonHref || '/contact/'}>{results.ctaButtonText || 'Schedule a consultation'}</a>
+          <a class="btn" style="margin-left: 0.5rem; color: var(--paper); border-color: rgba(255,255,255,0.4);" href="/services/">Explore packages</a>
+        </p>
+      </div>
+    </div>
+  </section>
 </Base>
 
 <style>
@@ -69,4 +98,6 @@ const label = (c: string) => c.replace('Top-100 Schools: Undergraduate Acceptanc
   .group { padding-block: 1rem; border-top: 1px dashed var(--rule); }
   .group h3 { font-size: var(--step-0); margin: 0 0 0.5rem; color: var(--evergreen); }
   .schools { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.25rem 1.5rem; font-size: var(--step--1); }
+  .cta-banner { max-width: 60ch; }
+  .cta-banner h2 { color: var(--paper); }
 </style>

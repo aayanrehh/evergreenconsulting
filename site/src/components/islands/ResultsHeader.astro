@@ -1,24 +1,55 @@
 ---
-import { tinaField } from 'tinacms/dist/react';
+import { tinaField } from '@tinacms/astro/tina-field';
 
 interface Props {
   results: {
     heading?: string;
     lede?: string;
+    stats?: { number: string; label: string }[];
+    highlights?: { tier: string; description: string }[];
     disclaimer?: string;
   };
 }
 
 const { results } = Astro.props;
+const {
+  heading = 'Results',
+  lede = 'Every acceptance since 2015 for students Andrea coached, on her own and through partner consultants. About 900 schools, from the Ivy League to the UCs to graduate programs, listed by year.',
+  stats = [],
+  highlights = [],
+  disclaimer = '',
+} = results || {};
 ---
 
 <section class="section page-head">
   <div class="wrap">
-    <h1 data-tina-field={tinaField(results, 'heading') || undefined}>{results?.heading || 'Results'}</h1>
-    <p class="lede" data-tina-field={tinaField(results, 'lede') || undefined}>{results?.lede}</p>
-    {results?.disclaimer && (
-      <p class="small muted" data-tina-field={tinaField(results, 'disclaimer') || undefined}>
-        {results.disclaimer}
+    <h1 data-tina-field={tinaField(results, 'heading') || undefined}>{heading}</h1>
+    <p class="lede" data-tina-field={tinaField(results, 'lede') || undefined}>{lede}</p>
+
+    {stats && stats.length > 0 && (
+      <div class="facts" aria-label="Admissions Track Record">
+        {stats.map((stat, i) => (
+          <span data-tina-field={tinaField(results, 'stats', i) || undefined}>
+            <strong>{stat.number}</strong> {stat.label}
+          </span>
+        ))}
+      </div>
+    )}
+
+    {highlights && highlights.length > 0 && (
+      <div class="highlights-grid">
+        {highlights.map((h, i) => (
+          <div class="highlight-card" data-tina-field={tinaField(results, 'highlights', i) || undefined}>
+            <h3>{h.tier}</h3>
+            <p>{h.description}</p>
+          </div>
+        ))}
+      </div>
+    )}
+
+    {disclaimer && (
+      <p class="small muted disclaimer" data-tina-field={tinaField(results, 'disclaimer') || undefined}>
+        {disclaimer}
       </p>
     )}
   </div>
@@ -26,4 +57,11 @@ const { results } = Astro.props;
 
 <style>
   .page-head { padding-bottom: 0; }
+  .facts { margin-top: 1.75rem; margin-bottom: 2rem; }
+  .highlights-grid { display: grid; gap: 1rem; margin-block: 1.5rem; }
+  @media (min-width: 768px) { .highlights-grid { grid-template-columns: 1fr 1fr; } }
+  .highlight-card { padding: 1.25rem 1.5rem; border: 1px solid var(--rule); border-radius: 2px; background: var(--paper); }
+  .highlight-card h3 { font-size: var(--step-0); color: var(--evergreen); margin-bottom: 0.35rem; }
+  .highlight-card p { margin: 0; font-size: var(--step--1); line-height: 1.5; color: #3a4a42; }
+  .disclaimer { margin-top: 1.5rem; max-width: 70ch; }
 </style>
