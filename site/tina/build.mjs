@@ -8,7 +8,7 @@ const { TINA_CLIENT_ID, TINA_TOKEN } = process.env;
 
 if (TINA_CLIENT_ID && TINA_TOKEN) {
   console.log('tina: building /admin against TinaCloud');
-  run('npx tinacms build');
+  run('npx tinacms build --datalayer-port 9100');
 } else {
   console.warn('tina: TINA_CLIENT_ID / TINA_TOKEN not set, skipping /admin build');
 }
