@@ -3,9 +3,12 @@ import { defineMiddleware } from 'astro:middleware';
 export const onRequest = defineMiddleware(async (context, next) => {
   const { pathname } = context.url;
 
-  // Intercept /robots.txt in preview mode to guarantee disallowing all crawling
+  // Intercept /robots.txt in preview mode
   if (pathname === '/robots.txt') {
-    return new Response('User-agent: *\nDisallow: /\n', {
+    // Allow: / so crawlers can fetch pages and see the noindex directives.
+    // Blocking in robots.txt would prevent Google from seeing noindex and
+    // could allow the URL to remain indexed.
+    return new Response('User-agent: *\nAllow: /\n', {
       status: 200,
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',

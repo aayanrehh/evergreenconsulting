@@ -59,7 +59,7 @@ const previewEndpoints = () => ({
                     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
                     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive, nosnippet');
                     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
-                    res.end('User-agent: *\nDisallow: /\n');
+                    res.end('User-agent: *\nAllow: /\n');
                     return;
                   }
                   if (
