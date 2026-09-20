@@ -1,15 +1,37 @@
 ---
 import Base from '../layouts/Base.astro';
-import LogoWall from '../components/LogoWall.astro';
 import Resources from '../components/Resources.astro';
 import Reviews from '../components/Reviews.astro';
-import ContactForm from '../components/ContactForm.astro';
-import data from '../data/services.json';
-const services = data.services;
 import press from '../data/press.json';
+import home from '../data/home.json';
 
-const packages = services.filter((s) => s.tag);
-const also = services.filter((s) => !s.tag && s.id !== 'b2b');
+import HomeHero from '../components/islands/HomeHero.astro';
+import HomeBand from '../components/islands/HomeBand.astro';
+import HomeHow from '../components/islands/HomeHow.astro';
+import HomePackages from '../components/islands/HomePackages.astro';
+import HomeContact from '../components/islands/HomeContact.astro';
+import HomeReviews from '../components/islands/HomeReviews.astro';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
+
+const isPreview = process.env.TINA_PREVIEW === 'true';
+
+let frontData = home;
+let reviewsData: any = undefined;
+
+if (isPreview) {
+  try {
+    const { getHome, getReviews } = await import('../lib/tina/data');
+    const [homeRes, reviewsRes] = await Promise.allSettled([getHome(), getReviews()]);
+    if (homeRes.status === 'fulfilled' && (homeRes.value as any)?.data?.front) {
+      frontData = (homeRes.value as any).data.front;
+    }
+    if (reviewsRes.status === 'fulfilled' && (reviewsRes.value as any)?.data?.reviews) {
+      reviewsData = (reviewsRes.value as any).data.reviews;
+    }
+  } catch (e) {
+    console.warn('[@tinacms/astro] Failed to load preview data, using fallback', e);
+  }
+}
 ---
 
 <Base
@@ -17,40 +39,15 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
   ogTitle="Evergreen Consulting | Harvard-Trained College Admissions Consulting"
   description="Andrea Schiralli, Harvard M.Ed. and Cornell B.A., has coached 20,000+ college essays since 2014. Students admitted to Harvard, Yale, Princeton, Stanford, MIT, Oxford and 900 more schools. New Canaan, CT and worldwide."
 >
-  <section class="hero">
-    <div class="wrap hero__grid">
-      <div>
-        <h1 class="hero__title">
-          The college application,
-          <span class="edit">
-            <s class="edit__strike">survived</s>
-            <span class="edit__insert">done well.</span>
-          </span>
-        </h1>
-        <p class="lede">
-          Andrea Schiralli coaches students through every essay, the résumé and the interviews, and keeps parents in the loop the whole way. Harvard M.Ed. Cornell B.A. More than 20,000 essays since 2014.
-        </p>
-        <div class="hero__actions">
-          <a class="btn btn--solid" href="/contact/">Talk to Andrea</a>
-          <a class="btn" href="/resources/">Get the free essay guide</a>
-        </div>
-      </div>
-      <figure class="hero__photo">
-        <div class="frame">
-        <img src="/andrea.jpg" alt="Andrea Schiralli" width="1122" height="1402" loading="eager" fetchpriority="high" />
-        </div>
-        <figcaption>Andrea Schiralli, founder</figcaption>
-      </figure>
-    </div>
-    <div class="wrap">
-      <div class="facts" aria-label="At a glance">
-        <span><strong>20,000+</strong> essays coached and edited</span>
-        <span><strong>72 hrs</strong> or less to get edits back</span>
-        <span><strong>12 yrs</strong> consulting, 2014 to today</span>
-        <span><strong>1</strong> business day to hear back</span>
-      </div>
-    </div>
-  </section>
+  {isPreview ? (
+    <TinaIsland name="hero" wrapper={{ tag: 'section', className: 'hero' }} primary>
+      <HomeHero front={frontData} />
+    </TinaIsland>
+  ) : (
+    <section class="hero">
+      <HomeHero front={frontData} />
+    </section>
+  )}
 
   <section class="press">
     <div class="wrap press__inner">
@@ -63,126 +60,59 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
     </div>
   </section>
 
-  <section class="section section--evergreen band">
-    <div class="wrap">
-      <div class="section__head">
-        <h2 data-reveal>Where students have gone</h2>
-        <p class="lede lede--dark">Acceptances every year since 2015. About 900 schools so far.</p>
-      </div>
-    </div>
-    <LogoWall />
-    <div class="wrap">
-      <p class="band-foot"><a class="btn btn--paper" href="/results/">See acceptances by year</a></p>
-    </div>
-  </section>
+  {isPreview ? (
+    <TinaIsland name="home-band" wrapper={{ tag: 'section', className: 'section section--evergreen band' }}>
+      <HomeBand front={frontData} />
+    </TinaIsland>
+  ) : (
+    <section class="section section--evergreen band">
+      <HomeBand front={frontData} />
+    </section>
+  )}
 
   <Resources />
 
-  <section class="section">
-    <div class="wrap cols">
-      <div class="how__aside">
-        <h2 data-reveal>How Andrea works</h2>
-        <figure class="photo photo--aside">
-          <img src="/andrea-speaking.jpg" alt="Andrea Schiralli speaking at an educational consulting conference" width="1254" height="1254" loading="lazy" />
-          <figcaption>Keynote at an educational consulting conference in China.</figcaption>
-        </figure>
-      </div>
-      <div>
-        <p class="lede">Admissions officers read thousands of essays written to impress them. They remember the ones written by a person.</p>
-        <p>
-          So Andrea starts with the student, not the prompt. A conversation about what they care about turns into a shortlist of topics that are theirs. Then an outline, a first draft written by the student, margin comments that say exactly what to change and why, and a final edit for language and polish. Repeat for every school on the list.
-        </p>
-        <p>
-          She taught high-school English in New York City before this, and it shows. Feedback is specific, deadlines are real, and she will tell a student when a draft is not there yet. Students write their own essays. Andrea makes sure they are good.
-        </p>
-      </div>
-    </div>
-    <div class="wrap">
-      <ol class="steps">
-        <li><strong>Brainstorm</strong><span>One conversation. Out of it, three or four topics that could only be this student's.</span></li>
-        <li><strong>Outline and draft</strong><span>A structure first, then a real first draft. The student writes it. Andrea is on call while they do.</span></li>
-        <li><strong>Comment</strong><span>Margin notes on content, structure and reflection. What works, what is missing, what to cut, and why.</span></li>
-        <li><strong>Edit and finalize</strong><span>Line edits for language and grammar, a last read for word count, and it is ready to submit.</span></li>
-      </ol>
-      <div class="promises">
-        <p><strong>72 hours.</strong> Comments and edits come back within three days, usually sooner.</p>
-        <p><strong>Parents in the loop.</strong> You will know what is due, what is done, and whether a draft is good yet.</p>
-        <p><strong>No AI.</strong> Andrea does not use it on student work, and she can usually tell when a student has. So can admissions officers.</p>
-        <p><strong>One story.</strong> The résumé, the activities list and every essay are edited together so the application reads as one person.</p>
-      </div>
-      <p><a href="/about/">More about Andrea</a></p>
-    </div>
-  </section>
+  {isPreview ? (
+    <TinaIsland name="home-how" wrapper={{ tag: 'section', className: 'section' }}>
+      <HomeHow front={frontData} />
+    </TinaIsland>
+  ) : (
+    <section class="section">
+      <HomeHow front={frontData} />
+    </section>
+  )}
 
-  <Reviews />
+  {isPreview ? (
+    <TinaIsland name="home-reviews" wrapper={{ tag: 'section', className: 'section reviews' }}>
+      <HomeReviews reviewsData={reviewsData} />
+    </TinaIsland>
+  ) : (
+    <Reviews />
+  )}
 
-  <section class="section section--linen">
-    <div class="wrap">
-      <div class="section__head">
-        <h2 data-reveal>Packages</h2>
-        <p class="muted">Pick a package by the length of the school list, or go school by school.</p>
-      </div>
-      <div class="cards cards--3">
-        {packages.map((s) => (
-          <a class="card card--link" href={`/services/#${s.id}`}>
-            <span class="card__meta">{s.tag}</span>
-            <h3>{s.name}</h3>
-            <p>{s.summary}</p>
-          </a>
-        ))}
-      </div>
-      <p class="also">
-        Also on offer: {also.map((s, i) => (<><a href={`/services/#${s.id}`}>{s.name.toLowerCase()}</a>{i < also.length - 1 ? ', ' : '.'}</>))}
-      </p>
-      <p><a class="btn" href="/services/">All services and how the process works</a></p>
-    </div>
-  </section>
+  {isPreview ? (
+    <TinaIsland name="home-packages" wrapper={{ tag: 'section', className: 'section section--linen' }}>
+      <HomePackages front={frontData} />
+    </TinaIsland>
+  ) : (
+    <section class="section section--linen">
+      <HomePackages front={frontData} />
+    </section>
+  )}
 
-  <section class="section" id="contact">
-    <div class="wrap cols">
-      <div>
-        <h2 data-reveal>Start with a conversation.</h2>
-        <p class="lede">Tell Andrea where your child is applying and where you are in the process. You will hear back within one business day, and it will not be a sales pitch.</p>
-        <dl class="ways">
-          <dt>Email</dt><dd><a href="mailto:andrea@evergreenconsulting.co">andrea@evergreenconsulting.co</a></dd>
-          <dt>WhatsApp or phone</dt><dd><a href="https://wa.me/12037032710">+1 203-703-2710</a></dd>
-          <dt>WeChat</dt><dd><a href="/contact/#wechat">Scan the code on the contact page</a></dd>
-        </dl>
-      </div>
-      <ContactForm compact />
-    </div>
-  </section>
+  {isPreview ? (
+    <TinaIsland name="home-contact" wrapper={{ tag: 'section', className: 'section' }}>
+      <HomeContact front={frontData} />
+    </TinaIsland>
+  ) : (
+    <section class="section" id="contact">
+      <HomeContact front={frontData} />
+    </section>
+  )}
 </Base>
 
 <style>
   .hero { padding-block: clamp(3rem, 8vw, 6rem) 0; }
-  .hero__grid { display: grid; gap: 2.5rem; align-items: start; }
-  @media (min-width: 860px) { .hero__grid { grid-template-columns: 7fr 4fr; gap: clamp(2rem, 6vw, 6rem); } }
-  .hero__title { max-width: 16ch; margin-bottom: 1.25rem; }
-  .hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.75rem 0 0; }
-  .hero__photo { margin: 0; max-width: 400px; padding-top: 0.35rem; }
-  .frame { position: relative; margin-right: 14px; }
-  .frame img { position: relative; z-index: 1; border: 1px solid var(--evergreen); padding: 8px; background: var(--paper); }
-  .frame::before { content: ''; position: absolute; inset: 0; transform: translate(14px, 14px); background: var(--evergreen); }
-  .hero__photo figcaption { margin-top: 0.6rem; font-size: var(--step--1); color: #5a6a62; }
-  .hero .facts { margin-top: clamp(2.5rem, 5vw, 4rem); border-bottom: 0; }
-
-  /* The edit: one strike, one insertion, once. */
-  .edit { display: inline; margin-left: 0.22em; }
-  .edit__strike { position: relative; text-decoration: none; color: var(--sage); white-space: nowrap; }
-  .edit__strike::after {
-    content: ''; position: absolute; left: -0.03em; right: -0.03em; top: 55%; height: 0.06em;
-    background: var(--brass); transform-origin: left; transform: scaleX(0);
-    animation: strike 500ms cubic-bezier(.4,0,.2,1) 900ms forwards;
-  }
-  .edit__insert { position: relative; display: inline-block; color: var(--evergreen); font-family: var(--sans); font-weight: 500; letter-spacing: -0.02em; opacity: 0; animation: insert 600ms ease 1500ms forwards; }
-  @keyframes strike { to { transform: scaleX(1); } }
-  @keyframes insert { from { opacity: 0; transform: translateY(0.15em); } to { opacity: 1; transform: none; } }
-  @media (prefers-reduced-motion: reduce) {
-    .edit__strike::after { animation: none; transform: none; }
-    .edit__insert { animation: none; opacity: 1; }
-  }
-
   .press { padding-block: 1.5rem; }
   .press__inner { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2.5rem; }
   .press__inner p { margin: 0; }
@@ -201,39 +131,4 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
     @keyframes press { to { transform: translateX(calc(-50% - 1.125rem)); } }
   }
   @media (prefers-reduced-motion: reduce) { .press__list { animation: none; flex-wrap: wrap; width: auto; } .press__list li[aria-hidden] { display: none; } }
-
-  .section__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 2rem; margin-bottom: 2rem; }
-  .section__head h2 { margin: 0; }
-  .section__head p { margin: 0; max-width: 46ch; }
-  .also { margin: 1.75rem 0 1.5rem; max-width: none; }
-
-  .card--link { text-decoration: none; color: inherit; transition: background-color 160ms ease; }
-  .card--link:hover { background: #fff; }
-  .card--link h3 { color: var(--evergreen); font-family: var(--serif); font-size: var(--step-2); font-weight: 400; }
-  .card--link .card__meta { font-family: var(--sans); font-size: var(--step--1); color: #5a6a62; }
-</style>
-
-<style>
-  .steps { list-style: none; counter-reset: step; margin: 3rem 0 2.5rem; padding: 0; display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
-  @media (min-width: 720px) { .steps { grid-template-columns: repeat(4, 1fr); } }
-  .steps li { counter-increment: step; margin: 0; background: var(--paper); padding: 1.5rem; display: grid; gap: 0.5rem; align-content: start; }
-  .steps li::before { content: counter(step); font-family: var(--serif); font-size: var(--step-2); color: var(--brass); line-height: 1; }
-  .steps strong { font-weight: 500; color: var(--evergreen); }
-  .steps span { font-size: var(--step--1); color: #3a4a42; line-height: 1.5; }
-  .promises { display: grid; gap: 1rem 2.5rem; margin-bottom: 1.5rem; }
-  @media (min-width: 720px) { .promises { grid-template-columns: 1fr 1fr; } }
-  .promises p { margin: 0; font-size: var(--step--1); max-width: 40ch; }
-  .promises strong { font-weight: 500; color: var(--evergreen); }
-  .band-foot { margin-top: 2.5rem; margin-bottom: 0; }
-  .ways { margin: 1.5rem 0 0; }
-  .ways dt { font-size: var(--step--1); color: #5a6a62; margin-top: 0.9rem; }
-  .ways dd { margin: 0.1rem 0 0; padding: 0; }
-  .band .section__head { margin-bottom: 1.5rem; }
-</style>
-<style>
-  .photo--aside { margin-top: 1.5rem; max-width: 380px; }
-  .photo--aside img { aspect-ratio: 1; object-fit: cover; }
-  @media (min-width: 800px) { .how__aside { position: sticky; top: 6rem; } }
-  .photo img { border: 1px solid var(--rule); }
-  .photo figcaption { margin-top: 0.6rem; font-size: var(--step--1); color: #5a6a62; }
 </style>

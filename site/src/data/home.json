@@ -1,0 +1,74 @@
+{
+  "titlePrefix": "The college application,",
+  "strikeText": "survived",
+  "insertText": "done well.",
+  "heroLede": "Andrea Schiralli coaches students through every essay, the résumé and the interviews, and keeps parents in the loop the whole way. Harvard M.Ed. Cornell B.A. More than 20,000 essays since 2014.",
+  "primaryCtaText": "Talk to Andrea",
+  "primaryCtaHref": "/contact/",
+  "secondaryCtaText": "Get the free essay guide",
+  "secondaryCtaHref": "/resources/",
+  "heroPhoto": "/andrea.jpg",
+  "heroPhotoCaption": "Andrea Schiralli, founder",
+  "facts": [
+    { "number": "20,000+", "label": "essays coached and edited" },
+    { "number": "72 hrs", "label": "or less to get edits back" },
+    { "number": "12 yrs", "label": "consulting, 2014 to today" },
+    { "number": "1", "label": "business day to hear back" }
+  ],
+  "bandHeading": "Where students have gone",
+  "bandLede": "Acceptances every year since 2015. About 900 schools so far.",
+  "bandCtaText": "See acceptances by year",
+  "bandCtaHref": "/results/",
+  "howHeading": "How Andrea works",
+  "howPhoto": "/andrea-speaking.jpg",
+  "howPhotoCaption": "Keynote at an educational consulting conference in China.",
+  "howLede": "Admissions officers read thousands of essays written to impress them. They remember the ones written by a person.",
+  "howParagraphs": [
+    "So Andrea starts with the student, not the prompt. A conversation about what they care about turns into a shortlist of topics that are theirs. Then an outline, a first draft written by the student, margin comments that say exactly what to change and why, and a final edit for language and polish. Repeat for every school on the list.",
+    "She taught high-school English in New York City before this, and it shows. Feedback is specific, deadlines are real, and she will tell a student when a draft is not there yet. Students write their own essays. Andrea makes sure they are good."
+  ],
+  "steps": [
+    {
+      "title": "Brainstorm",
+      "description": "One conversation. Out of it, three or four topics that could only be this student's."
+    },
+    {
+      "title": "Outline and draft",
+      "description": "A structure first, then a real first draft. The student writes it. Andrea is on call while they do."
+    },
+    {
+      "title": "Comment",
+      "description": "Margin notes on content, structure and reflection. What works, what is missing, what to cut, and why."
+    },
+    {
+      "title": "Edit and finalize",
+      "description": "Line edits for language and grammar, a last read for word count, and it is ready to submit."
+    }
+  ],
+  "promises": [
+    {
+      "title": "72 hours.",
+      "text": "Comments and edits come back within three days, usually sooner."
+    },
+    {
+      "title": "Parents in the loop.",
+      "text": "You will know what is due, what is done, and whether a draft is good yet."
+    },
+    {
+      "title": "No AI.",
+      "text": "Andrea does not use it on student work, and she can usually tell when a student has. So can admissions officers."
+    },
+    {
+      "title": "One story.",
+      "text": "The résumé, the activities list and every essay are edited together so the application reads as one person."
+    }
+  ],
+  "howMoreText": "More about Andrea",
+  "howMoreHref": "/about/",
+  "packagesHeading": "Packages",
+  "packagesMuted": "Pick a package by the length of the school list, or go school by school.",
+  "packagesCtaText": "All services and how the process works",
+  "packagesCtaHref": "/services/",
+  "contactHeading": "Start with a conversation.",
+  "contactLede": "Tell Andrea where your child is applying and where you are in the process. You will hear back within one business day, and it will not be a sales pitch."
+}

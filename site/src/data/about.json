@@ -1,0 +1,54 @@
+{
+  "name": "Andrea Schiralli",
+  "lede": "Teacher first, editor second, consultant because families kept asking.",
+  "portrait": "/andrea.jpg",
+  "portraitAlt": "Andrea Schiralli",
+  "shortVersionHeading": "The short version",
+  "shortVersionParagraphs": [
+    "Andrea taught high-school English, ESL and SAT prep in New York City, then spent a year as a professor at a college in Jiangxi, China. In 2014 she finished her master's at Harvard and started coaching college essays full time. Families in New York and Hong Kong found her, independent college consultants found her, and she has been booked every fall since. Her students have gone on to every Ivy League school, Stanford, MIT, Oxford, and a few hundred places in between.",
+    "She reads a lot of essays. Twenty thousand or so at last count. The ones that work have a student in them who is curious about something and honest about it. Her job is to get that on the page and then get out of the way.",
+    "When she is not editing, she writes poetry, publishes SAT and GRE books, and tries to convince teenagers that Flaubert is worth their time. Results on that last one are mixed."
+  ],
+  "educationHeading": "Education",
+  "credentials": [
+    {
+      "school": "Harvard University",
+      "detail": "M.Ed., Harvard Graduate School of Education, 2014"
+    },
+    {
+      "school": "Cornell University",
+      "detail": "B.A. in French Literature, 2010"
+    },
+    {
+      "school": "Université de Paris",
+      "detail": "French Literature, 2008 to 2009"
+    }
+  ],
+  "experienceHeading": "Experience",
+  "experience": [
+    "College admissions consultant and essay coach since 2014. Students in New York, Connecticut, across the U.S. and throughout Asia.",
+    "Co-founder of Ivy & Quill, an editing service for independent educational consultants. Nearly 4,000 essays a year, 20,000 and counting.",
+    "High-school English, ESL and SAT teacher at private and charter schools in New York City.",
+    "Professor at a college in Jiangxi, China.",
+    "Keynote speaker at educational consulting conferences in China. Leads writing and literary-analysis workshops worldwide.",
+    "Author of published SAT and GRE prep books and an SAT vocabulary app.",
+    "Member of the International Association of Professional Writers & Editors.",
+    "Poetry and short fiction in Bards Annual, ALANA (Harvard's annual anthology) and The Public Journal (Cornell)."
+  ],
+  "photos": [
+    {
+      "image": "/andrea-speaking.jpg",
+      "alt": "Andrea speaking at an educational consulting conference",
+      "caption": "Keynote at an educational consulting conference in China."
+    },
+    {
+      "image": "/andrea-workshop.jpg",
+      "alt": "Andrea leading a workshop with students",
+      "caption": "Personal statement workshop with agency students."
+    }
+  ],
+  "parentNoteHeading": "A note to parents",
+  "parentNoteLede": "The application process is confusing for parents too. You will know where every essay stands, what is due when, and whether a draft is good yet. Andrea will not write a word your child cannot own, and she will tell you the truth about a draft even when it is not what you want to hear.",
+  "parentNoteCtaText": "Talk with Andrea",
+  "parentNoteCtaHref": "/contact/"
+}

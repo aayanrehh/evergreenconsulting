@@ -1,52 +1,37 @@
 ---
 import Base from '../layouts/Base.astro';
-import Marquee from '../components/Marquee.astro';
 import data from '../data/resources.json';
+import ResourcesContent from '../components/islands/ResourcesContent.astro';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
 
-const { downloads, reads = [] } = data;
+const isPreview = process.env.TINA_PREVIEW === 'true';
 
-const dos = reads.find((r) => r.id === 'dos') || {
-  sectionTitle: 'Six things to do',
-  items: [],
-};
-const avoid = reads.find((r) => r.id === 'avoid') || {
-  sectionTitle: 'Six topics to avoid',
-  items: [],
-  note: '',
-};
-const prompts = reads.find((r) => r.id === 'prompts') || {
-  sectionTitle: 'The 2026–27 Common App prompts',
-  intro: '',
-  items: [],
-};
-const brainstorm = reads.find((r) => r.id === 'brainstorm') || {
-  sectionTitle: 'Brainstorming questions',
-  intro: '',
-  items: [],
-};
-const structure = reads.find((r) => r.id === 'structure') || {
-  sectionTitle: 'Structuring a personal narrative',
-  items: [],
-};
-const style = reads.find((r) => r.id === 'style') || {
-  sectionTitle: 'Style: what to cut',
-  items: [],
-};
+let resourcesData = data;
+if (isPreview) {
+  try {
+    const { getResources } = await import('../lib/tina/data');
+    const res = await getResources();
+    if (res?.data?.resources) {
+      resourcesData = res.data.resources as any;
+    }
+  } catch (e) {
+    console.warn('[@tinacms/astro] Failed to load preview resources data, using resources.json', e);
+  }
+}
 
-const standardIds = new Set(['dos', 'avoid', 'prompts', 'brainstorm', 'structure', 'style']);
-const extraReads = reads.filter((r) => !standardIds.has(r.id));
+const { downloads = [] } = resourcesData;
 
-const schema = downloads.map((d) => ({
+const schema = downloads.map((d: any) => ({
   '@context': 'https://schema.org',
   '@type': 'DigitalDocument',
   name: d.title,
   author: { '@id': `${Astro.site}#andrea` },
-  encodingFormat: d.file.endsWith('.docx')
+  encodingFormat: d.file?.endsWith('.docx')
     ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    : d.file.endsWith('.pdf')
+    : d.file?.endsWith('.pdf')
     ? 'application/pdf'
     : 'application/octet-stream',
-  url: new URL(d.file.replace(/^\//, ''), Astro.site).toString(),
+  url: new URL(d.file?.replace(/^\//, '') || '', Astro.site).toString(),
   isAccessibleForFree: true,
   about: d.detail || d.blurb,
 }));
@@ -57,167 +42,13 @@ const schema = downloads.map((d) => ({
   description="Free college application resources from Andrea Schiralli: a full essay-writing guide, her personal statement workshop slides, the 2026–27 Common App prompts explained, brainstorming questions, structure and style tips."
   schema={schema}
 >
-  <section class="section page-head">
-    <div class="wrap">
-      <h1>Free resources</h1>
-      <p class="lede">Everything Andrea teaches in her workshops, written down and shared freely. Download what is useful, send it to your students, come back for more.</p>
+  {isPreview ? (
+    <TinaIsland name="resources" wrapper={{ tag: 'div', className: 'resources-page' }} primary>
+      <ResourcesContent data={resourcesData} />
+    </TinaIsland>
+  ) : (
+    <div class="resources-page">
+      <ResourcesContent data={resourcesData} />
     </div>
-  </section>
-
-  <Marquee items={['Common App prompts 2026–27', 'Personal statement structure', 'Topics to avoid', 'Brainstorming questions', 'UC Personal Insight Questions', 'Supplemental essays', 'Style tips', 'Interview prep']} speed={45} />
-
-  <section class="section" id="downloads">
-    <div class="wrap cols">
-      <h2 data-reveal>Downloads</h2>
-      <div class="downloads">
-        {downloads.map((d) => (
-          <article>
-            <h3>{d.title}</h3>
-            <p>{d.detail || d.blurb}</p>
-            {d.sections && d.sections.length > 0 && (
-              <ul class="small">
-                {d.sections.map((s) => <li>{s}</li>)}
-              </ul>
-            )}
-            <p><a class="btn btn--solid" href={d.file} download>{d.cta}</a></p>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--linen" id="dos">
-    <div class="wrap cols cols--even">
-      <div>
-        <h2 data-reveal>{dos.sectionTitle || dos.title}</h2>
-        {dos.intro && <p>{dos.intro}</p>}
-        <ul class="tips">
-          {dos.items.map((d) => <li>{d.text}</li>)}
-        </ul>
-        {dos.note && <p class="small muted">{dos.note}</p>}
-      </div>
-      <div id="avoid">
-        <h2 data-reveal>{avoid.sectionTitle || avoid.title}</h2>
-        {avoid.intro && <p>{avoid.intro}</p>}
-        <ul class="tips">
-          {avoid.items.map((d) => <li>{d.text}</li>)}
-        </ul>
-        {avoid.note && <p class="small muted">{avoid.note}</p>}
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="prompts">
-    <div class="wrap cols">
-      <h2 data-reveal>{prompts.sectionTitle || prompts.title}</h2>
-      <div>
-        {prompts.intro && <p>{prompts.intro}</p>}
-        <dl class="defs">
-          {prompts.items.map((item, i) => (
-            <div>
-              <dt>{i + 1}. {item.title}</dt>
-              <dd>{item.text}</dd>
-            </div>
-          ))}
-        </dl>
-        {prompts.note && <p class="small muted">{prompts.note}</p>}
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--linen" id="brainstorm">
-    <div class="wrap cols">
-      <h2 data-reveal>{brainstorm.sectionTitle || brainstorm.title}</h2>
-      <div>
-        {brainstorm.intro && <p>{brainstorm.intro}</p>}
-        <ol class="tips">
-          {brainstorm.items.map((q) => <li>{q.text}</li>)}
-        </ol>
-        {brainstorm.note && <p class="small muted">{brainstorm.note}</p>}
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="structure">
-    <div class="wrap cols">
-      <h2 data-reveal>{structure.sectionTitle || structure.title}</h2>
-      <div>
-        {structure.intro && <p>{structure.intro}</p>}
-        <dl class="defs">
-          {structure.items.map((item) => (
-            <div>
-              <dt>{item.title}</dt>
-              <dd>{item.text}</dd>
-            </div>
-          ))}
-        </dl>
-        {structure.note && <p class="small muted">{structure.note}</p>}
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--linen" id="style">
-    <div class="wrap cols">
-      <h2 data-reveal>{style.sectionTitle || style.title}</h2>
-      <div>
-        {style.intro && <p>{style.intro}</p>}
-        <dl class="defs">
-          {style.items.map((item) => (
-            <div>
-              <dt>{item.title}</dt>
-              <dd>{item.text}</dd>
-            </div>
-          ))}
-        </dl>
-        {style.note && <p class="small muted">{style.note}</p>}
-      </div>
-    </div>
-  </section>
-
-  {extraReads.map((extra, idx) => (
-    <section class={`section ${idx % 2 === 0 ? '' : 'section--linen'}`} id={extra.id}>
-      <div class="wrap cols">
-        <h2 data-reveal>{extra.sectionTitle || extra.title}</h2>
-        <div>
-          {extra.intro && <p>{extra.intro}</p>}
-          {extra.items && extra.items.length > 0 && (
-            <dl class="defs">
-              {extra.items.map((it) => (
-                <div>
-                  {it.title && <dt>{it.title}</dt>}
-                  <dd>{it.text}</dd>
-                </div>
-              ))}
-            </dl>
-          )}
-          {extra.note && <p class="small muted">{extra.note}</p>}
-        </div>
-      </div>
-    </section>
-  ))}
-
-  <section class="section">
-    <div class="wrap">
-      <h2>Read it all, wrote a draft, want a second opinion?</h2>
-      <p class="lede">Andrea reads drafts and sends back detailed comments within 72 hours.</p>
-      <p><a class="btn btn--solid" href="/services/#essay-editing">Essay commenting and editing</a></p>
-    </div>
-  </section>
+  )}
 </Base>
-
-<style>
-  .page-head { padding-bottom: 2.5rem; }
-  .downloads { display: grid; gap: 2.5rem; }
-  .downloads article { padding-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
-  .downloads article:last-child { border-bottom: 0; padding-bottom: 0; }
-  .downloads h3 { font-family: var(--serif); font-size: var(--step-2); font-weight: 400; }
-  .downloads p:last-child { margin: 0; }
-  .tips { padding-left: 1.1em; }
-  .tips li { margin-bottom: 0.6em; max-width: 52ch; }
-  .defs { margin: 0; display: grid; gap: 1rem; }
-  .defs div { padding-bottom: 1rem; border-bottom: 1px solid var(--rule); }
-  .defs dt { font-weight: 500; color: var(--evergreen); }
-  .defs dd { margin: 0.2rem 0 0; max-width: 60ch; font-size: var(--step--1); }
-  section[id] { scroll-margin-top: 5rem; }
-  div[id] { scroll-margin-top: 6rem; }
-</style>

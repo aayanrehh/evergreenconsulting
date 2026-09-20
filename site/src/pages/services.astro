@@ -1,17 +1,31 @@
 ---
 import Base from '../layouts/Base.astro';
 import data from '../data/services.json';
-const services = data.services;
+import ServicesContent from '../components/islands/ServicesContent.astro';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
 
-const packages = services.filter((s) => s.tag);
-const rest = services.filter((s) => !s.tag);
+const isPreview = process.env.TINA_PREVIEW === 'true';
 
+let servicesData = data;
+if (isPreview) {
+  try {
+    const { getServices } = await import('../lib/tina/data');
+    const res = await getServices();
+    if (res?.data?.services) {
+      servicesData = res.data.services as any;
+    }
+  } catch (e) {
+    console.warn('[@tinacms/astro] Failed to load preview services data, using services.json', e);
+  }
+}
+
+const services = servicesData.services || [];
 const schema = [
   {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: 'Evergreen Consulting services',
-    itemListElement: services.map((s, i) => ({
+    itemListElement: services.map((s: any, i: number) => ({
       '@type': 'ListItem',
       position: i + 1,
       item: {
@@ -24,18 +38,6 @@ const schema = [
     })),
   },
 ];
-
-const coaching = [
-  ['Brainstorm', 'A conversation about who the student is and what they care about. Out of it comes a shortlist of topics that are theirs.'],
-  ['Outline and draft', 'A structure for the essay, then a first draft written by the student, with Andrea on call while they write.'],
-  ['Comment', 'Margin comments on content, structure and reflection. What works, what is missing, what to cut, and why.'],
-  ['Edit and finalize', 'Line edits for language, style and grammar, then a last read for word count and polish.'],
-];
-const commenting = [
-  ['Comment', 'Andrea reads the draft and sends back detailed comments on content and organization.'],
-  ['Revise', 'The student revises, in their own words.'],
-  ['Final edit', 'A language and style edit. The essay is ready to submit.'],
-];
 ---
 
 <Base
@@ -43,100 +45,13 @@ const commenting = [
   description="Full college application packages, per-school coaching, essay commenting and editing, graduate statements, résumés, interview prep, and B2B editing for educational consultants. 72-hour turnaround."
   schema={schema}
 >
-  <section class="section page-head">
-    <div class="wrap">
-      <h1>Services</h1>
-      <p class="lede">Two packages for the whole application, à la carte for one school, and editing for anyone who already has a draft. Consultants, your section is at the bottom.</p>
+  {isPreview ? (
+    <TinaIsland name="services" wrapper={{ tag: 'div', className: 'services-page' }} primary>
+      <ServicesContent data={servicesData} />
+    </TinaIsland>
+  ) : (
+    <div class="services-page">
+      <ServicesContent data={servicesData} />
     </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <h2 class="group-title">Packages</h2>
-      <div class="services">
-        {packages.map((s) => (
-          <article class="service" id={s.id}>
-            <div>
-              <p class="service__tag">{s.tag}</p>
-              <h2>{s.name}</h2>
-            </div>
-            <div>
-              <p class="lede">{s.summary}</p>
-              <p>{s.detail}</p>
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <h2 class="group-title">Editing, statements, résumés, interviews</h2>
-      <div class="services">
-        {rest.map((s) => (
-          <article class="service" id={s.id}>
-            <h2>{s.name}</h2>
-            <div>
-              <p class="lede">{s.summary}</p>
-              <p>{s.detail}</p>
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--linen" id="process">
-    <div class="wrap">
-      <h2 data-reveal>How it works</h2>
-      <p class="muted">Two ways to work together. Both end with an essay the student wrote and can talk about in an interview.</p>
-      <div class="cols cols--even process">
-        <div>
-          <h3>Coaching and editing</h3>
-          <ol>
-            {coaching.map(([t, d]) => (
-              <li><strong>{t}.</strong> {d}</li>
-            ))}
-          </ol>
-        </div>
-        <div>
-          <h3>Commenting and editing</h3>
-          <ol>
-            {commenting.map(([t, d]) => (
-              <li><strong>{t}.</strong> {d}</li>
-            ))}
-          </ol>
-        </div>
-      </div>
-      <p class="small muted">
-        Andrea helps students find their voice, brainstorm, structure and revise. The student writes the essay. She does not use AI to write or rewrite student work, and she can usually tell when a student has. So can admissions officers.
-      </p>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <h2>Fees</h2>
-      <p>Pricing depends on the package, the number of schools and the timeline. Send Andrea the school list and the deadline and you will get a quote, not a sales call. Peak season runs October through early January. Juniors who start in the spring have an easier senior year, and so do their parents.</p>
-      <p><a class="btn btn--solid" href="/contact/">Ask for a quote</a></p>
-    </div>
-  </section>
+  )}
 </Base>
-
-<style>
-  .page-head { padding-bottom: 0; }
-  .page-head + .section { border-top: 0; }
-  .group-title { font-size: var(--step-1); font-family: var(--sans); font-weight: 500; color: #5a6a62; margin-bottom: 0; }
-  .services { display: grid; }
-  .service { display: grid; gap: 0.5rem 3rem; padding-block: clamp(2rem, 4vw, 3rem); border-top: 1px solid var(--rule); scroll-margin-top: 5rem; }
-  .service:first-child { border-top: 0; }
-  @media (min-width: 800px) { .service { grid-template-columns: 5fr 7fr; } }
-  .service h2 { font-size: var(--step-2); }
-  .service__tag { font-size: var(--step--1); color: #5a6a62; margin-bottom: 0.25rem; }
-  .service p:last-child { margin-bottom: 0; }
-  .process { margin-block: 2rem; }
-  .process ol { padding-left: 1.25em; }
-  .process li { margin-bottom: 0.75em; max-width: 52ch; }
-  .process strong { font-weight: 500; color: var(--evergreen); }
-</style>

@@ -6,13 +6,17 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "tinacms dev -c \"astro dev\"",
+    "dev": "ASTRO_DEV_BACKGROUND=false tinacms dev -c \"astro dev\"",
+    "dev:preview": "ASTRO_DEV_BACKGROUND=false TINA_PREVIEW=true tinacms dev -c \"astro dev\"",
     "build": "node tina/build.mjs",
+    "build:preview": "TINA_PREVIEW=true node tina/build.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/node": "^11.1.6",
     "@astrojs/sitemap": "^3.7.4",
+    "@tinacms/astro": "^0.7.0",
     "@tinacms/cli": "^3.0.0",
     "astro": "^7.3.3",
     "tinacms": "^3.14.0"

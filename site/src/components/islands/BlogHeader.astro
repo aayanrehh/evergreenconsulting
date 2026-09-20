@@ -1,0 +1,23 @@
+---
+import { tinaField } from 'tinacms/dist/react';
+
+interface Props {
+  blog: {
+    heading?: string;
+    lede?: string;
+  };
+}
+
+const { blog } = Astro.props;
+---
+
+<section class="section page-head">
+  <div class="wrap">
+    <h1 data-tina-field={tinaField(blog, 'heading') || undefined}>{blog?.heading || 'Blog'}</h1>
+    <p class="lede" data-tina-field={tinaField(blog, 'lede') || undefined}>{blog?.lede}</p>
+  </div>
+</section>
+
+<style>
+  .page-head { padding-bottom: 0; }
+</style>

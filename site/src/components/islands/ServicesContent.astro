@@ -1,0 +1,126 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+import defaultData from '../../data/services.json';
+
+interface Props {
+  data?: any;
+}
+
+const { data = defaultData } = Astro.props;
+
+const {
+  pageHeading = 'Services',
+  pageLede = 'Two packages for the whole application, à la carte for one school, and editing for anyone who already has a draft. Consultants, your section is at the bottom.',
+  processHeading = 'How it works',
+  processMuted = 'Two ways to work together. Both end with an essay the student wrote and can talk about in an interview.',
+  coachingSteps = [],
+  commentingSteps = [],
+  services = [],
+} = data;
+
+const packages = services.filter((s: any) => s.tag);
+const rest = services.filter((s: any) => !s.tag);
+---
+
+<section class="section page-head">
+  <div class="wrap">
+    <h1 data-tina-field={tinaField(data, 'pageHeading') || undefined}>{pageHeading}</h1>
+    <p class="lede" data-tina-field={tinaField(data, 'pageLede') || undefined}>{pageLede}</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2 class="group-title">Packages</h2>
+    <div class="services">
+      {packages.map((s: any) => {
+        const origIdx = services.indexOf(s);
+        return (
+          <article class="service" id={s.id} data-tina-field={origIdx >= 0 ? (tinaField(data, 'services', origIdx) || undefined) : undefined}>
+            <div>
+              <p class="service__tag">{s.tag}</p>
+              <h2>{s.name}</h2>
+            </div>
+            <div>
+              <p class="lede">{s.summary}</p>
+              <p>{s.detail}</p>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2 class="group-title">Editing, statements, résumés, interviews</h2>
+    <div class="services">
+      {rest.map((s: any) => {
+        const origIdx = services.indexOf(s);
+        return (
+          <article class="service" id={s.id} data-tina-field={origIdx >= 0 ? (tinaField(data, 'services', origIdx) || undefined) : undefined}>
+            <h2>{s.name}</h2>
+            <div>
+              <p class="lede">{s.summary}</p>
+              <p>{s.detail}</p>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<section class="section section--linen" id="process">
+  <div class="wrap">
+    <h2 data-reveal data-tina-field={tinaField(data, 'processHeading') || undefined}>{processHeading}</h2>
+    <p class="muted" data-tina-field={tinaField(data, 'processMuted') || undefined}>{processMuted}</p>
+    <div class="cols cols--even process">
+      <div>
+        <h3>Coaching and editing</h3>
+        <ol>
+          {coachingSteps.map((c: any, i: number) => (
+            <li data-tina-field={tinaField(data, 'coachingSteps', i) || undefined}><strong>{c.title}.</strong> {c.description}</li>
+          ))}
+        </ol>
+      </div>
+      <div>
+        <h3>Commenting and editing</h3>
+        <ol>
+          {commentingSteps.map((c: any, i: number) => (
+            <li data-tina-field={tinaField(data, 'commentingSteps', i) || undefined}><strong>{c.title}.</strong> {c.description}</li>
+          ))}
+        </ol>
+      </div>
+    </div>
+    <p class="small muted">
+      Andrea helps students find their voice, brainstorm, structure and revise. The student writes the essay. She does not use AI to write or rewrite student work, and she can usually tell when a student has. So can admissions officers.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Fees</h2>
+    <p>Pricing depends on the package, the number of schools and the timeline. Send Andrea the school list and the deadline and you will get a quote, not a sales call. Peak season runs October through early January. Juniors who start in the spring have an easier senior year, and so do their parents.</p>
+    <p><a class="btn btn--solid" href="/contact/">Ask for a quote</a></p>
+  </div>
+</section>
+
+<style>
+  .page-head { padding-bottom: 0; }
+  .page-head + .section { border-top: 0; }
+  .group-title { font-size: var(--step-1); font-family: var(--sans); font-weight: 500; color: #5a6a62; margin-bottom: 0; }
+  .services { display: grid; }
+  .service { display: grid; gap: 0.5rem 3rem; padding-block: clamp(2rem, 4vw, 3rem); border-top: 1px solid var(--rule); scroll-margin-top: 5rem; }
+  .service:first-child { border-top: 0; }
+  @media (min-width: 800px) { .service { grid-template-columns: 5fr 7fr; } }
+  .service h2 { font-size: var(--step-2); }
+  .service__tag { font-size: var(--step--1); color: #5a6a62; margin-bottom: 0.25rem; }
+  .service p:last-child { margin-bottom: 0; }
+  .process { margin-block: 2rem; }
+  .process ol { padding-left: 1.25em; }
+  .process li { margin-bottom: 0.75em; max-width: 52ch; }
+  .process strong { font-weight: 500; color: var(--evergreen); }
+</style>

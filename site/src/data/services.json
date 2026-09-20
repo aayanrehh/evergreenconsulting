@@ -1,4 +1,40 @@
 {
+  "pageHeading": "Services",
+  "pageLede": "Two packages for the whole application, à la carte for one school, and editing for anyone who already has a draft. Consultants, your section is at the bottom.",
+  "processHeading": "How it works",
+  "processMuted": "Two ways to work together. Both end with an essay the student wrote and can talk about in an interview.",
+  "coachingSteps": [
+    {
+      "title": "Brainstorm",
+      "description": "A conversation about who the student is and what they care about. Out of it comes a shortlist of topics that are theirs."
+    },
+    {
+      "title": "Outline and draft",
+      "description": "A structure for the essay, then a first draft written by the student, with Andrea on call while they write."
+    },
+    {
+      "title": "Comment",
+      "description": "Margin comments on content, structure and reflection. What works, what is missing, what to cut, and why."
+    },
+    {
+      "title": "Edit and finalize",
+      "description": "Line edits for language, style and grammar, then a last read for word count and polish."
+    }
+  ],
+  "commentingSteps": [
+    {
+      "title": "Comment",
+      "description": "Andrea reads the draft and sends back detailed comments on content and organization."
+    },
+    {
+      "title": "Revise",
+      "description": "The student revises, in their own words."
+    },
+    {
+      "title": "Final edit",
+      "description": "A language and style edit. The essay is ready to submit."
+    }
+  ],
   "services": [
     {
       "id": "golden-ticket",

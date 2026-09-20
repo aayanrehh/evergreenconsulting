@@ -1,58 +1,78 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getCollection, render } from 'astro:content';
+import { getCollection, getEntry, render } from 'astro:content';
+import BlogPostContent from '../../components/islands/BlogPostContent.astro';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
+
+const isPreview = process.env.TINA_PREVIEW === 'true';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
 }
-const { post } = Astro.props;
-const { Content } = await render(post);
-const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+let { post } = Astro.props;
+const { id = post?.id } = Astro.params;
+if (!post && id) {
+  post = await getEntry('blog', id);
+}
+
+let Content: any = null;
+if (post) {
+  try {
+    const rendered = await render(post);
+    Content = rendered.Content;
+  } catch {}
+}
+
+let previewPost: any = null;
+if (isPreview && id) {
+  try {
+    const { getBlogPost } = await import('../../lib/tina/data');
+    const res = await getBlogPost(id);
+    if (res?.data?.post) {
+      previewPost = res.data.post;
+    }
+  } catch (e) {
+    console.warn('[@tinacms/astro] Failed to load preview blog post, using static fallback', e);
+  }
+}
+
+const activePost = previewPost || post;
+const title = activePost?.data?.title ?? activePost?.title ?? '';
+const description = activePost?.data?.description ?? activePost?.description ?? '';
+const rawDate = activePost?.data?.date ?? activePost?.date;
+const dateObj = rawDate ? new Date(rawDate) : new Date();
+const image = activePost?.data?.image ?? activePost?.image;
 
 const schema = [
   {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
-    headline: post.data.title,
-    description: post.data.description,
-    datePublished: post.data.date.toISOString(),
+    headline: title,
+    description: description,
+    datePublished: !isNaN(dateObj.getTime()) ? dateObj.toISOString() : new Date().toISOString(),
     author: { '@id': `${Astro.site}#andrea` },
     publisher: { '@id': `${Astro.site}#business` },
     mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).toString(),
-    ...(post.data.image ? { image: new URL(post.data.image, Astro.site).toString() } : {}),
+    ...(image ? { image: new URL(image, Astro.site).toString() } : {}),
   },
 ];
 ---
 
-<Base title={`${post.data.title} | Evergreen Consulting`} description={post.data.description} schema={schema}>
-  <article class="section post">
-    <div class="wrap">
-      <p class="small muted"><a href="/blog/">Blog</a> · <time datetime={post.data.date.toISOString()}>{fmt(post.data.date)}</time></p>
-      <h1>{post.data.title}</h1>
-      <p class="lede">{post.data.description}</p>
-      {post.data.image && <img class="post__image" src={post.data.image} alt="" loading="eager" />}
-      <div class="prose">
-        <Content />
-      </div>
-      <footer class="post__foot">
-        <p><strong>Andrea Schiralli</strong> coaches college applications and edits essays. Harvard M.Ed., Cornell B.A., 20,000 essays since 2014.</p>
-        <p><a class="btn" href="/contact/">Work with Andrea</a> <a class="btn" href="/resources/">Free resources</a></p>
-      </footer>
-    </div>
-  </article>
+<Base title={`${title} | Evergreen Consulting`} description={description} schema={schema}>
+  {isPreview ? (
+    <TinaIsland
+      name="blog-post"
+      params={{ id }}
+      wrapper={{ tag: 'article', className: 'section post' }}
+      primary
+    >
+      <BlogPostContent post={activePost} Content={previewPost ? undefined : Content} />
+    </TinaIsland>
+  ) : (
+    <article class="section post">
+      <BlogPostContent post={post} Content={Content} />
+    </article>
+  )}
 </Base>
-
-<style>
-  .post h1 { font-size: var(--step-3); max-width: 22ch; }
-  .post__image { margin: 2rem 0; border: 1px solid var(--rule); }
-  .prose { max-width: 68ch; margin-top: 2rem; }
-  .prose :global(h2) { font-size: var(--step-2); margin-top: 2em; }
-  .prose :global(h3) { margin-top: 1.75em; }
-  .prose :global(p), .prose :global(li) { line-height: 1.7; }
-  .prose :global(li) { margin-bottom: 0.75em; }
-  .prose :global(img) { border: 1px solid var(--rule); margin: 1.5rem 0; }
-  .prose :global(blockquote) { margin: 1.5rem 0; padding-left: 1.25rem; border-left: 2px solid var(--brass); color: #3a4a42; }
-  .post__foot { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--rule); max-width: 68ch; }
-  .post__foot .btn { margin-right: 0.5rem; }
-</style>
