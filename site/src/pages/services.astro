@@ -1,7 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
 import data from '../data/services.json';
-const services = data.services;
+
+const {
+  pageHeading = 'Services',
+  pageLede = 'Two packages for the whole application, à la carte for one school, and editing for anyone who already has a draft. Consultants, your section is at the bottom.',
+  processHeading = 'How it works',
+  processMuted = 'Two ways to work together. Both end with an essay the student wrote and can talk about in an interview.',
+  coachingSteps = [],
+  commentingSteps = [],
+  services = [],
+} = data;
 
 const packages = services.filter((s) => s.tag);
 const rest = services.filter((s) => !s.tag);
@@ -24,18 +33,6 @@ const schema = [
     })),
   },
 ];
-
-const coaching = [
-  ['Brainstorm', 'A conversation about who the student is and what they care about. Out of it comes a shortlist of topics that are theirs.'],
-  ['Outline and draft', 'A structure for the essay, then a first draft written by the student, with Andrea on call while they write.'],
-  ['Comment', 'Margin comments on content, structure and reflection. What works, what is missing, what to cut, and why.'],
-  ['Edit and finalize', 'Line edits for language, style and grammar, then a last read for word count and polish.'],
-];
-const commenting = [
-  ['Comment', 'Andrea reads the draft and sends back detailed comments on content and organization.'],
-  ['Revise', 'The student revises, in their own words.'],
-  ['Final edit', 'A language and style edit. The essay is ready to submit.'],
-];
 ---
 
 <Base
@@ -45,8 +42,8 @@ const commenting = [
 >
   <section class="section page-head">
     <div class="wrap">
-      <h1>Services</h1>
-      <p class="lede">Two packages for the whole application, à la carte for one school, and editing for anyone who already has a draft. Consultants, your section is at the bottom.</p>
+      <h1>{pageHeading}</h1>
+      <p class="lede">{pageLede}</p>
     </div>
   </section>
 
@@ -89,22 +86,22 @@ const commenting = [
 
   <section class="section section--linen" id="process">
     <div class="wrap">
-      <h2 data-reveal>How it works</h2>
-      <p class="muted">Two ways to work together. Both end with an essay the student wrote and can talk about in an interview.</p>
+      <h2 data-reveal>{processHeading}</h2>
+      <p class="muted">{processMuted}</p>
       <div class="cols cols--even process">
         <div>
           <h3>Coaching and editing</h3>
           <ol>
-            {coaching.map(([t, d]) => (
-              <li><strong>{t}.</strong> {d}</li>
+            {coachingSteps.map((c) => (
+              <li><strong>{c.title}.</strong> {c.description}</li>
             ))}
           </ol>
         </div>
         <div>
           <h3>Commenting and editing</h3>
           <ol>
-            {commenting.map(([t, d]) => (
-              <li><strong>{t}.</strong> {d}</li>
+            {commentingSteps.map((c) => (
+              <li><strong>{c.title}.</strong> {c.description}</li>
             ))}
           </ol>
         </div>

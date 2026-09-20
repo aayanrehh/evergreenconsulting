@@ -33,8 +33,8 @@ const label = (c: string) => c.replace('Top-100 Schools: Undergraduate Acceptanc
   <section class="section">
     <div class="wrap">
       <LogoWall />
-      {years.map((y, i) => (
-        <details class="year" open={i === 0}>
+      {years.map((y) => (
+        <details class="year">
           <summary><h2>{y}</h2><span class="year__count">{Object.values(results[y]).flat().length} acceptances</span></summary>
           {order.filter((c) => results[y][c]).map((c) => (
             <div class="group">

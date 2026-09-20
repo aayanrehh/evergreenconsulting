@@ -1,7 +1,21 @@
 ---
 import Base from '../layouts/Base.astro';
 import ContactForm from '../components/ContactForm.astro';
-const EMAIL = 'andrea@evergreenconsulting.co';
+import contact from '../data/contact.json';
+
+const {
+  heading = 'Get in touch',
+  lede = 'Tell Andrea where your child is applying and where you are in the process. You will hear back within one business day.',
+  reachHeading = 'Reach Andrea',
+  email = 'andrea@evergreenconsulting.co',
+  phone = '+1 203-703-2710',
+  wechatQr = '/wechat-qr.jpg',
+  wechatNote = 'Scan to add Andrea. 微信扫码添加。',
+  locationTitle = 'Based in',
+  locationNote = 'New Canaan, Connecticut. Sessions are by video, so time zones are the only real limit, and Andrea keeps odd hours for Asia.',
+  agencyNote = 'Consultants and agencies: mention your typical volume and Andrea will send partnership terms.',
+  chatNote = 'Quick question? The chat button in the corner answers the common ones.',
+} = contact;
 ---
 
 <Base
@@ -10,30 +24,30 @@ const EMAIL = 'andrea@evergreenconsulting.co';
 >
   <section class="section page-head">
     <div class="wrap">
-      <h1>Get in touch</h1>
-      <p class="lede">Tell Andrea where your child is applying and where you are in the process. You will hear back within one business day.</p>
+      <h1>{heading}</h1>
+      <p class="lede">{lede}</p>
     </div>
   </section>
 
   <section class="section">
     <div class="wrap cols">
       <div class="ways">
-        <h2 data-reveal>Reach Andrea</h2>
+        <h2 data-reveal>{reachHeading}</h2>
         <dl>
           <dt>Email</dt>
-          <dd><a href={`mailto:${EMAIL}`}>{EMAIL}</a></dd>
+          <dd><a href={`mailto:${email}`}>{email}</a></dd>
           <dt>WhatsApp or phone</dt>
-          <dd><a href="https://wa.me/12037032710">+1 203-703-2710</a></dd>
+          <dd><a href={`https://wa.me/${phone.replace(/[^0-9]/g, '')}`}>{phone}</a></dd>
           <dt id="wechat">WeChat</dt>
           <dd>
-            <img class="qr" src="/wechat-qr.jpg" alt="WeChat QR code for Andrea Schiralli" width="160" height="163" loading="lazy" />
-            <span class="small muted">Scan to add Andrea. 微信扫码添加。</span>
+            <img class="qr" src={wechatQr} alt="WeChat QR code for Andrea Schiralli" width="160" height="163" loading="lazy" />
+            <span class="small muted">{wechatNote}</span>
           </dd>
-          <dt>Based in</dt>
-          <dd>New Canaan, Connecticut. Sessions are by video, so time zones are the only real limit, and Andrea keeps odd hours for Asia.</dd>
+          <dt>{locationTitle}</dt>
+          <dd>{locationNote}</dd>
         </dl>
-        <p class="small muted">Consultants and agencies: mention your typical volume and Andrea will send partnership terms.</p>
-        <p class="small muted">Quick question? The chat button in the corner answers the common ones.</p>
+        {agencyNote && <p class="small muted">{agencyNote}</p>}
+        {chatNote && <p class="small muted">{chatNote}</p>}
       </div>
       <ContactForm />
     </div>

@@ -7,9 +7,43 @@ import ContactForm from '../components/ContactForm.astro';
 import data from '../data/services.json';
 const services = data.services;
 import press from '../data/press.json';
+import home from '../data/home.json';
 
 const packages = services.filter((s) => s.tag);
 const also = services.filter((s) => !s.tag && s.id !== 'b2b');
+
+const {
+  titlePrefix = 'The college application,',
+  strikeText = 'survived',
+  insertText = 'done well.',
+  heroLede = 'Andrea Schiralli coaches students through every essay, the résumé and the interviews, and keeps parents in the loop the whole way. Harvard M.Ed. Cornell B.A. More than 20,000 essays since 2014.',
+  primaryCtaText = 'Talk to Andrea',
+  primaryCtaHref = '/contact/',
+  secondaryCtaText = 'Get the free essay guide',
+  secondaryCtaHref = '/resources/',
+  heroPhoto = '/andrea.jpg',
+  heroPhotoCaption = 'Andrea Schiralli, founder',
+  facts = [],
+  bandHeading = 'Where students have gone',
+  bandLede = 'Acceptances every year since 2015. About 900 schools so far.',
+  bandCtaText = 'See acceptances by year',
+  bandCtaHref = '/results/',
+  howHeading = 'How Andrea works',
+  howPhoto = '/andrea-speaking.jpg',
+  howPhotoCaption = 'Keynote at an educational consulting conference in China.',
+  howLede = 'Admissions officers read thousands of essays written to impress them. They remember the ones written by a person.',
+  howParagraphs = [],
+  steps = [],
+  promises = [],
+  howMoreText = 'More about Andrea',
+  howMoreHref = '/about/',
+  packagesHeading = 'Packages',
+  packagesMuted = 'Pick a package by the length of the school list, or go school by school.',
+  packagesCtaText = 'All services and how the process works',
+  packagesCtaHref = '/services/',
+  contactHeading = 'Start with a conversation.',
+  contactLede = 'Tell Andrea where your child is applying and where you are in the process. You will hear back within one business day, and it will not be a sales pitch.',
+} = home;
 ---
 
 <Base
@@ -21,33 +55,32 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
     <div class="wrap hero__grid">
       <div>
         <h1 class="hero__title">
-          The college application,
+          {titlePrefix}
           <span class="edit">
-            <s class="edit__strike">survived</s>
-            <span class="edit__insert">done well.</span>
+            <s class="edit__strike">{strikeText}</s>
+            <span class="edit__insert">{insertText}</span>
           </span>
         </h1>
         <p class="lede">
-          Andrea Schiralli coaches students through every essay, the résumé and the interviews, and keeps parents in the loop the whole way. Harvard M.Ed. Cornell B.A. More than 20,000 essays since 2014.
+          {heroLede}
         </p>
         <div class="hero__actions">
-          <a class="btn btn--solid" href="/contact/">Talk to Andrea</a>
-          <a class="btn" href="/resources/">Get the free essay guide</a>
+          <a class="btn btn--solid" href={primaryCtaHref}>{primaryCtaText}</a>
+          <a class="btn" href={secondaryCtaHref}>{secondaryCtaText}</a>
         </div>
       </div>
       <figure class="hero__photo">
         <div class="frame">
-        <img src="/andrea.jpg" alt="Andrea Schiralli" width="1122" height="1402" loading="eager" fetchpriority="high" />
+        <img src={heroPhoto} alt="Andrea Schiralli" width="1122" height="1402" loading="eager" fetchpriority="high" />
         </div>
-        <figcaption>Andrea Schiralli, founder</figcaption>
+        <figcaption>{heroPhotoCaption}</figcaption>
       </figure>
     </div>
     <div class="wrap">
       <div class="facts" aria-label="At a glance">
-        <span><strong>20,000+</strong> essays coached and edited</span>
-        <span><strong>72 hrs</strong> or less to get edits back</span>
-        <span><strong>12 yrs</strong> consulting, 2014 to today</span>
-        <span><strong>1</strong> business day to hear back</span>
+        {facts.map((f) => (
+          <span><strong>{f.number}</strong> {f.label}</span>
+        ))}
       </div>
     </div>
   </section>
@@ -66,13 +99,13 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
   <section class="section section--evergreen band">
     <div class="wrap">
       <div class="section__head">
-        <h2 data-reveal>Where students have gone</h2>
-        <p class="lede lede--dark">Acceptances every year since 2015. About 900 schools so far.</p>
+        <h2 data-reveal>{bandHeading}</h2>
+        <p class="lede lede--dark">{bandLede}</p>
       </div>
     </div>
     <LogoWall />
     <div class="wrap">
-      <p class="band-foot"><a class="btn btn--paper" href="/results/">See acceptances by year</a></p>
+      <p class="band-foot"><a class="btn btn--paper" href={bandCtaHref}>{bandCtaText}</a></p>
     </div>
   </section>
 
@@ -81,36 +114,31 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
   <section class="section">
     <div class="wrap cols">
       <div class="how__aside">
-        <h2 data-reveal>How Andrea works</h2>
+        <h2 data-reveal>{howHeading}</h2>
         <figure class="photo photo--aside">
-          <img src="/andrea-speaking.jpg" alt="Andrea Schiralli speaking at an educational consulting conference" width="1254" height="1254" loading="lazy" />
-          <figcaption>Keynote at an educational consulting conference in China.</figcaption>
+          <img src={howPhoto} alt="Andrea Schiralli speaking at an educational consulting conference" width="1254" height="1254" loading="lazy" />
+          <figcaption>{howPhotoCaption}</figcaption>
         </figure>
       </div>
       <div>
-        <p class="lede">Admissions officers read thousands of essays written to impress them. They remember the ones written by a person.</p>
-        <p>
-          So Andrea starts with the student, not the prompt. A conversation about what they care about turns into a shortlist of topics that are theirs. Then an outline, a first draft written by the student, margin comments that say exactly what to change and why, and a final edit for language and polish. Repeat for every school on the list.
-        </p>
-        <p>
-          She taught high-school English in New York City before this, and it shows. Feedback is specific, deadlines are real, and she will tell a student when a draft is not there yet. Students write their own essays. Andrea makes sure they are good.
-        </p>
+        <p class="lede">{howLede}</p>
+        {howParagraphs.map((p) => (
+          <p>{p}</p>
+        ))}
       </div>
     </div>
     <div class="wrap">
       <ol class="steps">
-        <li><strong>Brainstorm</strong><span>One conversation. Out of it, three or four topics that could only be this student's.</span></li>
-        <li><strong>Outline and draft</strong><span>A structure first, then a real first draft. The student writes it. Andrea is on call while they do.</span></li>
-        <li><strong>Comment</strong><span>Margin notes on content, structure and reflection. What works, what is missing, what to cut, and why.</span></li>
-        <li><strong>Edit and finalize</strong><span>Line edits for language and grammar, a last read for word count, and it is ready to submit.</span></li>
+        {steps.map((st) => (
+          <li><strong>{st.title}</strong><span>{st.description}</span></li>
+        ))}
       </ol>
       <div class="promises">
-        <p><strong>72 hours.</strong> Comments and edits come back within three days, usually sooner.</p>
-        <p><strong>Parents in the loop.</strong> You will know what is due, what is done, and whether a draft is good yet.</p>
-        <p><strong>No AI.</strong> Andrea does not use it on student work, and she can usually tell when a student has. So can admissions officers.</p>
-        <p><strong>One story.</strong> The résumé, the activities list and every essay are edited together so the application reads as one person.</p>
+        {promises.map((pr) => (
+          <p><strong>{pr.title}</strong> {pr.text}</p>
+        ))}
       </div>
-      <p><a href="/about/">More about Andrea</a></p>
+      <p><a href={howMoreHref}>{howMoreText}</a></p>
     </div>
   </section>
 
@@ -119,8 +147,8 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
   <section class="section section--linen">
     <div class="wrap">
       <div class="section__head">
-        <h2 data-reveal>Packages</h2>
-        <p class="muted">Pick a package by the length of the school list, or go school by school.</p>
+        <h2 data-reveal>{packagesHeading}</h2>
+        <p class="muted">{packagesMuted}</p>
       </div>
       <div class="cards cards--3">
         {packages.map((s) => (
@@ -134,15 +162,15 @@ const also = services.filter((s) => !s.tag && s.id !== 'b2b');
       <p class="also">
         Also on offer: {also.map((s, i) => (<><a href={`/services/#${s.id}`}>{s.name.toLowerCase()}</a>{i < also.length - 1 ? ', ' : '.'}</>))}
       </p>
-      <p><a class="btn" href="/services/">All services and how the process works</a></p>
+      <p><a class="btn" href={packagesCtaHref}>{packagesCtaText}</a></p>
     </div>
   </section>
 
   <section class="section" id="contact">
     <div class="wrap cols">
       <div>
-        <h2 data-reveal>Start with a conversation.</h2>
-        <p class="lede">Tell Andrea where your child is applying and where you are in the process. You will hear back within one business day, and it will not be a sales pitch.</p>
+        <h2 data-reveal>{contactHeading}</h2>
+        <p class="lede">{contactLede}</p>
         <dl class="ways">
           <dt>Email</dt><dd><a href="mailto:andrea@evergreenconsulting.co">andrea@evergreenconsulting.co</a></dd>
           <dt>WhatsApp or phone</dt><dd><a href="https://wa.me/12037032710">+1 203-703-2710</a></dd>
