@@ -7,7 +7,7 @@
   "secondaryCtaText": "View consulting packages",
   "secondaryCtaHref": "/services/",
   "facts": [
-    { "number": "12 yrs", "label": "consulting experience (2014–present)" },
+    { "number": "Since 2014", "label": "full-time admissions consulting" },
     { "number": "20,000+", "label": "student essays coached" },
     { "number": "1-on-1", "label": "direct guidance from Andrea" },
     { "number": "Fairfield County", "label": "coverage & New Canaan base" }
@@ -75,7 +75,7 @@
   "benefits": [
     {
       "title": "Direct founder expertise",
-      "description": "Unlike large consulting firms that assign clients to recent graduates or contractors, you work directly with Andrea Schiralli at every session. Andrea brings twelve years of full-time consulting experience and over 20,000 coached essays."
+      "description": "Unlike large consulting firms that assign clients to recent graduates or contractors, you work directly with Andrea Schiralli at every session. Andrea has coached college applicants full-time since 2014, with over 20,000 student essays reviewed."
     },
     {
       "title": "Remote efficiency for demanding schedules",

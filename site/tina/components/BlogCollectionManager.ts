@@ -118,7 +118,7 @@ export const BlogCollectionManager = (props: any) => {
             relativePath: `${slug}.md`,
             params: {
               title: newTitle.trim(),
-              description: newDesc.trim() || 'New blog article for Evergreen Consulting.',
+              description: newDesc.trim() || 'New blog article for Evergreen Admissions Consulting.',
               date: new Date(newDate).toISOString(),
               body: {
                 type: 'root',
