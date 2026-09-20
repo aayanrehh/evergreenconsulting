@@ -1,0 +1,53 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+import data from '../../data/services.json';
+
+interface Props {
+  front: any;
+}
+
+const { front = {} } = Astro.props;
+const services = data.services;
+const packages = services.filter((s) => s.tag);
+const also = services.filter((s) => !s.tag && s.id !== 'b2b');
+
+const {
+  packagesHeading = 'Packages',
+  packagesMuted = 'Pick a package by the length of the school list, or go school by school.',
+  packagesCtaText = 'All services and how the process works',
+  packagesCtaHref = '/services/',
+} = front;
+---
+
+<div class="wrap">
+  <div class="section__head">
+    <h2 data-reveal data-tina-field={tinaField(front, 'packagesHeading') || undefined}>{packagesHeading}</h2>
+    <p class="muted" data-tina-field={tinaField(front, 'packagesMuted') || undefined}>{packagesMuted}</p>
+  </div>
+  <div class="cards cards--3">
+    {packages.map((s) => (
+      <a class="card card--link" href={`/services/#${s.id}`}>
+        <span class="card__meta">{s.tag}</span>
+        <h3>{s.name}</h3>
+        <p>{s.summary}</p>
+      </a>
+    ))}
+  </div>
+  <p class="also">
+    Also on offer: {also.map((s, i) => (<><a href={`/services/#${s.id}`}>{s.name.toLowerCase()}</a>{i < also.length - 1 ? ', ' : '.'}</>))}
+  </p>
+  <p>
+    <a class="btn" href={packagesCtaHref} data-tina-field={tinaField(front, 'packagesCtaText') || undefined}>{packagesCtaText}</a>
+  </p>
+</div>
+
+<style>
+  .section__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 2rem; margin-bottom: 2rem; }
+  .section__head h2 { margin: 0; }
+  .section__head p { margin: 0; max-width: 46ch; }
+  .also { margin: 1.75rem 0 1.5rem; max-width: none; }
+  .card--link { text-decoration: none; color: inherit; transition: background-color 160ms ease; }
+  .card--link:hover { background: #fff; }
+  .card--link h3 { color: var(--evergreen); font-family: var(--serif); font-size: var(--step-2); font-weight: 400; }
+  .card--link .card__meta { font-family: var(--sans); font-size: var(--step--1); color: #5a6a62; }
+</style>

@@ -1,0 +1,34 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+import ContactForm from '../ContactForm.astro';
+
+interface Props {
+  front: any;
+}
+
+const { front = {} } = Astro.props;
+
+const {
+  contactHeading = 'Start with a conversation.',
+  contactLede = 'Tell Andrea where your child is applying and where you are in the process. You will hear back within one business day, and it will not be a sales pitch.',
+} = front;
+---
+
+<div class="wrap cols">
+  <div>
+    <h2 data-reveal data-tina-field={tinaField(front, 'contactHeading') || undefined}>{contactHeading}</h2>
+    <p class="lede" data-tina-field={tinaField(front, 'contactLede') || undefined}>{contactLede}</p>
+    <dl class="ways">
+      <dt>Email</dt><dd><a href="mailto:andrea@evergreenconsulting.co">andrea@evergreenconsulting.co</a></dd>
+      <dt>WhatsApp or phone</dt><dd><a href="https://wa.me/12037032710">+1 203-703-2710</a></dd>
+      <dt>WeChat</dt><dd><a href="/contact/#wechat">Scan the code on the contact page</a></dd>
+    </dl>
+  </div>
+  <ContactForm compact />
+</div>
+
+<style>
+  .ways { margin: 1.5rem 0 0; }
+  .ways dt { font-size: var(--step--1); color: #5a6a62; margin-top: 0.9rem; }
+  .ways dd { margin: 0.1rem 0 0; padding: 0; }
+</style>

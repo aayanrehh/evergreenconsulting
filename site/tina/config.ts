@@ -83,7 +83,11 @@ export default defineConfig({
         path: 'src/data',
         match: { include: 'about' },
         format: 'json',
-        ui: { allowedActions: { create: false, delete: false }, global: true },
+        ui: {
+          allowedActions: { create: false, delete: false },
+          global: !isPreview,
+          ...(isPreview ? { router: () => '/about/' } : {}),
+        },
         fields: [
           { type: 'string', name: 'name', label: 'Headline / Name', required: true },
           { type: 'string', name: 'lede', label: 'Tagline / Subtitle', ui: { component: 'textarea' } },
@@ -123,7 +127,11 @@ export default defineConfig({
         path: 'src/data',
         match: { include: 'services' },
         format: 'json',
-        ui: { allowedActions: { create: false, delete: false }, global: true },
+        ui: {
+          allowedActions: { create: false, delete: false },
+          global: !isPreview,
+          ...(isPreview ? { router: () => '/services/' } : {}),
+        },
         fields: [
           { type: 'string', name: 'pageHeading', label: 'Page Heading' },
           { type: 'string', name: 'pageLede', label: 'Page Subtitle / Lede', ui: { component: 'textarea' } },
@@ -165,7 +173,11 @@ export default defineConfig({
         path: 'src/data',
         match: { include: 'resources' },
         format: 'json',
-        ui: { allowedActions: { create: false, delete: false }, global: true },
+        ui: {
+          allowedActions: { create: false, delete: false },
+          global: !isPreview,
+          ...(isPreview ? { router: () => '/resources/' } : {}),
+        },
         fields: [
           {
             type: 'object', name: 'downloads', label: 'Downloads', list: true,
@@ -208,7 +220,11 @@ export default defineConfig({
         path: 'src/data',
         match: { include: 'contact' },
         format: 'json',
-        ui: { allowedActions: { create: false, delete: false }, global: true },
+        ui: {
+          allowedActions: { create: false, delete: false },
+          global: !isPreview,
+          ...(isPreview ? { router: () => '/contact/' } : {}),
+        },
         fields: [
           { type: 'string', name: 'heading', label: 'Page Heading', required: true },
           { type: 'string', name: 'lede', label: 'Page Subtitle / Lede', ui: { component: 'textarea' } },
@@ -228,6 +244,9 @@ export default defineConfig({
         label: 'Blog',
         path: 'src/content/blog',
         format: 'md',
+        ui: {
+          ...(isPreview ? { router: ({ document }) => `/blog/${document._sys.filename}/` } : {}),
+        },
         fields: [
           { type: 'string', name: 'title', label: 'Title', isTitle: true, required: true },
           { type: 'string', name: 'description', label: 'Description (shows in Google and on the blog index)', required: true, ui: { component: 'textarea' } },
@@ -242,7 +261,11 @@ export default defineConfig({
         path: 'src/data',
         match: { include: 'reviews' },
         format: 'json',
-        ui: { allowedActions: { create: false, delete: false }, global: true },
+        ui: {
+          allowedActions: { create: false, delete: false },
+          global: !isPreview,
+          ...(isPreview ? { router: () => '/#reviews' } : {}),
+        },
         fields: [
           { type: 'number', name: 'rating', label: 'Google rating (e.g. 5)' },
           { type: 'number', name: 'count', label: 'Number of Google reviews' },

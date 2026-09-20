@@ -1,0 +1,66 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+import ContactForm from '../ContactForm.astro';
+import defaultContact from '../../data/contact.json';
+
+interface Props {
+  contact?: any;
+}
+
+const { contact = defaultContact } = Astro.props;
+
+const {
+  heading = 'Get in touch',
+  lede = 'Tell Andrea where your child is applying and where you are in the process. You will hear back within one business day.',
+  reachHeading = 'Reach Andrea',
+  email = 'andrea@evergreenconsulting.co',
+  phone = '+1 203-703-2710',
+  wechatQr = '/wechat-qr.jpg',
+  wechatNote = 'Scan to add Andrea. 微信扫码添加。',
+  locationTitle = 'Based in',
+  locationNote = 'New Canaan, Connecticut. Sessions are by video, so time zones are the only real limit, and Andrea keeps odd hours for Asia.',
+  agencyNote = 'Consultants and agencies: mention your typical volume and Andrea will send partnership terms.',
+  chatNote = 'Quick question? The chat button in the corner answers the common ones.',
+} = contact;
+---
+
+<section class="section page-head">
+  <div class="wrap">
+    <h1 data-tina-field={tinaField(contact, 'heading') || undefined}>{heading}</h1>
+    <p class="lede" data-tina-field={tinaField(contact, 'lede') || undefined}>{lede}</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap cols">
+    <div class="ways">
+      <h2 data-reveal data-tina-field={tinaField(contact, 'reachHeading') || undefined}>{reachHeading}</h2>
+      <dl>
+        <dt>Email</dt>
+        <dd><a href={`mailto:${email}`} data-tina-field={tinaField(contact, 'email') || undefined}>{email}</a></dd>
+        <dt>WhatsApp or phone</dt>
+        <dd><a href={`https://wa.me/${phone.replace(/[^0-9]/g, '')}`} data-tina-field={tinaField(contact, 'phone') || undefined}>{phone}</a></dd>
+        <dt id="wechat">WeChat</dt>
+        <dd>
+          <img class="qr" src={wechatQr} alt="WeChat QR code for Andrea Schiralli" width="160" height="163" loading="lazy" data-tina-field={tinaField(contact, 'wechatQr') || undefined} />
+          <span class="small muted" data-tina-field={tinaField(contact, 'wechatNote') || undefined}>{wechatNote}</span>
+        </dd>
+        <dt data-tina-field={tinaField(contact, 'locationTitle') || undefined}>{locationTitle}</dt>
+        <dd data-tina-field={tinaField(contact, 'locationNote') || undefined}>{locationNote}</dd>
+      </dl>
+      {agencyNote && <p class="small muted" data-tina-field={tinaField(contact, 'agencyNote') || undefined}>{agencyNote}</p>}
+      {chatNote && <p class="small muted" data-tina-field={tinaField(contact, 'chatNote') || undefined}>{chatNote}</p>}
+    </div>
+    <ContactForm />
+  </div>
+</section>
+
+<style>
+  .page-head { padding-bottom: 0; }
+  .page-head + .section { border-top: 0; }
+  .ways dl { margin: 0 0 1.5rem; }
+  .ways dt { font-size: var(--step--1); color: #5a6a62; margin-top: 1rem; }
+  .ways dd { margin: 0.15rem 0 0; }
+  .qr { width: 140px; height: auto; border: 1px solid var(--rule); padding: 4px; background: #fff; margin: 0.4rem 0; }
+  .ways dd .small { display: block; }
+</style>

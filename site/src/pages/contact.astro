@@ -1,65 +1,36 @@
 ---
 import Base from '../layouts/Base.astro';
-import ContactForm from '../components/ContactForm.astro';
 import contact from '../data/contact.json';
+import ContactContent from '../components/islands/ContactContent.astro';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
 
-const {
-  heading = 'Get in touch',
-  lede = 'Tell Andrea where your child is applying and where you are in the process. You will hear back within one business day.',
-  reachHeading = 'Reach Andrea',
-  email = 'andrea@evergreenconsulting.co',
-  phone = '+1 203-703-2710',
-  wechatQr = '/wechat-qr.jpg',
-  wechatNote = 'Scan to add Andrea. 微信扫码添加。',
-  locationTitle = 'Based in',
-  locationNote = 'New Canaan, Connecticut. Sessions are by video, so time zones are the only real limit, and Andrea keeps odd hours for Asia.',
-  agencyNote = 'Consultants and agencies: mention your typical volume and Andrea will send partnership terms.',
-  chatNote = 'Quick question? The chat button in the corner answers the common ones.',
-} = contact;
+const isPreview = process.env.TINA_PREVIEW === 'true';
+
+let contactData = contact;
+if (isPreview) {
+  try {
+    const { getContact } = await import('../lib/tina/data');
+    const res = await getContact();
+    if (res?.data?.contact) {
+      contactData = res.data.contact as any;
+    }
+  } catch (e) {
+    console.warn('[@tinacms/astro] Failed to load preview contact data, using contact.json', e);
+  }
+}
 ---
 
 <Base
   title="Contact Andrea Schiralli | Evergreen Consulting"
   description="Contact Andrea Schiralli about college admissions packages, essay editing or B2B partnerships. Email, WhatsApp or WeChat. Replies within one business day."
 >
-  <section class="section page-head">
-    <div class="wrap">
-      <h1>{heading}</h1>
-      <p class="lede">{lede}</p>
+  {isPreview ? (
+    <TinaIsland name="contact" wrapper={{ tag: 'div', className: 'contact-page' }} primary>
+      <ContactContent contact={contactData} />
+    </TinaIsland>
+  ) : (
+    <div class="contact-page">
+      <ContactContent contact={contactData} />
     </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap cols">
-      <div class="ways">
-        <h2 data-reveal>{reachHeading}</h2>
-        <dl>
-          <dt>Email</dt>
-          <dd><a href={`mailto:${email}`}>{email}</a></dd>
-          <dt>WhatsApp or phone</dt>
-          <dd><a href={`https://wa.me/${phone.replace(/[^0-9]/g, '')}`}>{phone}</a></dd>
-          <dt id="wechat">WeChat</dt>
-          <dd>
-            <img class="qr" src={wechatQr} alt="WeChat QR code for Andrea Schiralli" width="160" height="163" loading="lazy" />
-            <span class="small muted">{wechatNote}</span>
-          </dd>
-          <dt>{locationTitle}</dt>
-          <dd>{locationNote}</dd>
-        </dl>
-        {agencyNote && <p class="small muted">{agencyNote}</p>}
-        {chatNote && <p class="small muted">{chatNote}</p>}
-      </div>
-      <ContactForm />
-    </div>
-  </section>
+  )}
 </Base>
-
-<style>
-  .page-head { padding-bottom: 0; }
-  .page-head + .section { border-top: 0; }
-  .ways dl { margin: 0 0 1.5rem; }
-  .ways dt { font-size: var(--step--1); color: #5a6a62; margin-top: 1rem; }
-  .ways dd { margin: 0.15rem 0 0; }
-  .qr { width: 140px; height: auto; border: 1px solid var(--rule); padding: 4px; background: #fff; margin: 0.4rem 0; }
-  .ways dd .small { display: block; }
-</style>

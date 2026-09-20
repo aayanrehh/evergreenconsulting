@@ -1,0 +1,72 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+
+interface Props {
+  front: any;
+}
+
+const { front = {} } = Astro.props;
+
+const {
+  howHeading = 'How Andrea works',
+  howPhoto = '/andrea-speaking.jpg',
+  howPhotoCaption = 'Keynote at an educational consulting conference in China.',
+  howLede = 'Admissions officers read thousands of essays written to impress them. They remember the ones written by a person.',
+  howParagraphs = [],
+  steps = [],
+  promises = [],
+  howMoreText = 'More about Andrea',
+  howMoreHref = '/about/',
+} = front;
+---
+
+<div class="wrap cols">
+  <div class="how__aside">
+    <h2 data-reveal data-tina-field={tinaField(front, 'howHeading') || undefined}>{howHeading}</h2>
+    <figure class="photo photo--aside">
+      <img src={howPhoto} alt="Andrea Schiralli speaking at an educational consulting conference" width="1254" height="1254" loading="lazy" data-tina-field={tinaField(front, 'howPhoto') || undefined} />
+      <figcaption data-tina-field={tinaField(front, 'howPhotoCaption') || undefined}>{howPhotoCaption}</figcaption>
+    </figure>
+  </div>
+  <div>
+    <p class="lede" data-tina-field={tinaField(front, 'howLede') || undefined}>{howLede}</p>
+    {howParagraphs.map((p: string, i: number) => (
+      <p data-tina-field={tinaField(front, 'howParagraphs', i) || undefined}>{p}</p>
+    ))}
+  </div>
+</div>
+<div class="wrap">
+  <ol class="steps">
+    {steps.map((st: any, i: number) => (
+      <li data-tina-field={tinaField(front, 'steps', i) || undefined}>
+        <strong>{st.title}</strong><span>{st.description}</span>
+      </li>
+    ))}
+  </ol>
+  <div class="promises">
+    {promises.map((pr: any, i: number) => (
+      <p data-tina-field={tinaField(front, 'promises', i) || undefined}>
+        <strong>{pr.title}</strong> {pr.text}
+      </p>
+    ))}
+  </div>
+  <p><a href={howMoreHref} data-tina-field={tinaField(front, 'howMoreText') || undefined}>{howMoreText}</a></p>
+</div>
+
+<style>
+  .photo--aside { margin-top: 1.5rem; max-width: 380px; }
+  .photo--aside img { aspect-ratio: 1; object-fit: cover; }
+  @media (min-width: 800px) { .how__aside { position: sticky; top: 6rem; } }
+  .photo img { border: 1px solid var(--rule); }
+  .photo figcaption { margin-top: 0.6rem; font-size: var(--step--1); color: #5a6a62; }
+  .steps { list-style: none; counter-reset: step; margin: 3rem 0 2.5rem; padding: 0; display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  @media (min-width: 720px) { .steps { grid-template-columns: repeat(4, 1fr); } }
+  .steps li { counter-increment: step; margin: 0; background: var(--paper); padding: 1.5rem; display: grid; gap: 0.5rem; align-content: start; }
+  .steps li::before { content: counter(step); font-family: var(--serif); font-size: var(--step-2); color: var(--brass); line-height: 1; }
+  .steps strong { font-weight: 500; color: var(--evergreen); }
+  .steps span { font-size: var(--step--1); color: #3a4a42; line-height: 1.5; }
+  .promises { display: grid; gap: 1rem 2.5rem; margin-bottom: 1.5rem; }
+  @media (min-width: 720px) { .promises { grid-template-columns: 1fr 1fr; } }
+  .promises p { margin: 0; font-size: var(--step--1); max-width: 40ch; }
+  .promises strong { font-weight: 500; color: var(--evergreen); }
+</style>
