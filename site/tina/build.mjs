@@ -42,6 +42,13 @@ function runTinaBuild(port) {
     env: process.env,
   });
 
+  // Handle spawn-level errors (e.g., binary not found, permission denied)
+  if (result.error) {
+    const errMsg = `tina: failed to spawn process: ${result.error.message}`;
+    console.error(errMsg);
+    return { success: false, isPortError: false, output: errMsg };
+  }
+
   // Emit captured output to the build log for debugging
   if (result.stdout && result.stdout.length > 0) {
     process.stdout.write(result.stdout);
@@ -106,6 +113,11 @@ const astroResult = spawnSync('npx', ['astro', 'build'], {
   stdio: 'inherit',
   env: process.env,
 });
+if (astroResult.error) {
+  console.error(`astro: failed to spawn process: ${astroResult.error.message}`);
+  process.exit(1);
+}
 if (astroResult.status !== 0) {
-  process.exit(astroResult.status);
+  // Use a non-zero fallback if status is null (spawn-level failure)
+  process.exit(astroResult.status ?? 1);
 }
