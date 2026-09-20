@@ -3,59 +3,38 @@ import Base from '../layouts/Base.astro';
 import Marquee from '../components/Marquee.astro';
 import data from '../data/resources.json';
 
-const { downloads } = data;
-const dos = [
-  'Start early. Revising is where essays get good, and revising takes time.',
-  'Brainstorm and outline first. Write down the strengths, interests and quirks you want admissions officers to know about.',
-  'Make it your own. Write about what you care about, not what you think they want to hear.',
-  'Stay on one theme. The prompt may be broad; your answer should be narrow and specific.',
-  'Ignore the word count on the first draft. Cut later.',
-  'Rewrite, then ask one person whose opinion you trust, not six.',
-];
-const avoid = [
-  'Heroism',
-  'Death, divorce, depression',
-  'The travel itinerary',
-  'Religious or political issues',
-  'Dating and relationships',
-  'Anything you would not want an admissions officer to know',
-];
-const prompts = [
-  ['Background, identity, interest or talent', 'The open door. Works when the thing is specific and you can show it in scenes, not list it.'],
-  ['A challenge, setback or failure', 'The lesson matters more than the failure. Keep the setback to a paragraph and spend the rest on what changed.'],
-  ['Questioning or challenging a belief', 'Not a debate essay. What did you believe, what cracked it, and what do you do differently now?'],
-  ['Gratitude that surprised you', 'Small and specific beats big and vague. One person, one moment.'],
-  ['An accomplishment or realization that sparked growth', 'The realization is the essay. The accomplishment is the setup.'],
-  ['A topic that makes you lose track of time', 'Careful with jargon. The reader should feel the pull, not sit an exam on it.'],
-  ['Any topic of your choice', 'Fine to use, but a great answer to another prompt is usually a great answer here too.'],
-];
-const brainstorm = [
-  'What is my favorite academic subject, and what memory first sparked it?',
-  'What is my greatest success so far? What steps got me there, and how did it feel?',
-  'What is my greatest challenge so far? How did I get through it, or how am I getting through it?',
-  'What is one talent people would not guess I have? How did I find out?',
-  'The activity I pursue with real passion is… and I do it because…',
-  'What are my best three character traits, and where do they show up?',
-  'How has my family life shaped who I am?',
-  'How has my background, culture or country of origin shaped who I am?',
-  'The three things (people, places, animals count) that affect me most are… because…',
-  'The biggest lesson I have learned so far is… I learned it by… and it made me more…',
-];
-const structure = [
-  ['Introduction', 'A hook, the scene, and a hint of the thesis. Start inside the story, not with a definition of courage.'],
-  ['Body', 'Scenes, not summaries. Show the emotion through action. Skip the bus ride home with a transition and get to the moment that matters.'],
-  ['Conclusion', 'What changed. Or, increasingly, nothing: end the story and let the actions carry the reflection. Most great short stories do.'],
-  ['Alternatives', 'A diary format for a story that spans days. A manifesto. A pivotal essay that opens on the conflict. Structure should fit the story, not the other way round.'],
-];
-const style = [
-  ['Wordiness', 'Most students can cut a quarter of the essay and lose nothing. Try it.'],
-  ['Vague language', '"Stuff", "things", "this aspect of society". Admissions officers are not mind readers.'],
-  ['Clichés', '"One in a million." "My global perspective." "My potential as a future leader." If you must use one, put a spin on it.'],
-  ['Too much "I"', 'More than once a sentence is too much. Rearrange the sentence and it usually disappears.'],
-  ['Adverbs', '"She ran quickly" is "she sprinted". Every adverb is a strong verb waiting to happen.'],
-  ['Expletive constructions', '"There were two girls who struggled with math" is "two girls struggled with math".'],
-  ['Flowery language', 'Too many adjectives suffocate a paragraph. One precise noun ("a Yorkie") beats three vague ones.'],
-];
+const { downloads, reads = [] } = data;
+
+const dos = reads.find((r) => r.id === 'dos') || {
+  sectionTitle: 'Six things to do',
+  items: [],
+};
+const avoid = reads.find((r) => r.id === 'avoid') || {
+  sectionTitle: 'Six topics to avoid',
+  items: [],
+  note: '',
+};
+const prompts = reads.find((r) => r.id === 'prompts') || {
+  sectionTitle: 'The 2026–27 Common App prompts',
+  intro: '',
+  items: [],
+};
+const brainstorm = reads.find((r) => r.id === 'brainstorm') || {
+  sectionTitle: 'Brainstorming questions',
+  intro: '',
+  items: [],
+};
+const structure = reads.find((r) => r.id === 'structure') || {
+  sectionTitle: 'Structuring a personal narrative',
+  items: [],
+};
+const style = reads.find((r) => r.id === 'style') || {
+  sectionTitle: 'Style: what to cut',
+  items: [],
+};
+
+const standardIds = new Set(['dos', 'avoid', 'prompts', 'brainstorm', 'structure', 'style']);
+const extraReads = reads.filter((r) => !standardIds.has(r.id));
 
 const schema = downloads.map((d) => ({
   '@context': 'https://schema.org',
@@ -110,62 +89,112 @@ const schema = downloads.map((d) => ({
   <section class="section section--linen" id="dos">
     <div class="wrap cols cols--even">
       <div>
-        <h2 data-reveal>Six things to do</h2>
+        <h2 data-reveal>{dos.sectionTitle || dos.title}</h2>
+        {dos.intro && <p>{dos.intro}</p>}
         <ul class="tips">
-          {dos.map((d) => <li>{d}</li>)}
+          {dos.items.map((d) => <li>{d.text}</li>)}
         </ul>
+        {dos.note && <p class="small muted">{dos.note}</p>}
       </div>
       <div id="avoid">
-        <h2 data-reveal>Six topics to avoid</h2>
+        <h2 data-reveal>{avoid.sectionTitle || avoid.title}</h2>
+        {avoid.intro && <p>{avoid.intro}</p>}
         <ul class="tips">
-          {avoid.map((d) => <li>{d}</li>)}
+          {avoid.items.map((d) => <li>{d.text}</li>)}
         </ul>
-        <p class="small muted">Not because they are bad subjects. Thousands of other applicants chose them this year, and it is hard to be specific about a trip to Costa Rica in 650 words.</p>
+        {avoid.note && <p class="small muted">{avoid.note}</p>}
       </div>
     </div>
   </section>
 
   <section class="section" id="prompts">
     <div class="wrap cols">
-      <h2 data-reveal>The 2026–27 Common App prompts</h2>
+      <h2 data-reveal>{prompts.sectionTitle || prompts.title}</h2>
       <div>
-        <p>Seven prompts, 650 words, one essay. The prompts are doors into the same room; pick the one that lets your story walk in naturally.</p>
+        {prompts.intro && <p>{prompts.intro}</p>}
         <dl class="defs">
-          {prompts.map(([t, d], i) => (<div><dt>{i + 1}. {t}</dt><dd>{d}</dd></div>))}
+          {prompts.items.map((item, i) => (
+            <div>
+              <dt>{i + 1}. {item.title}</dt>
+              <dd>{item.text}</dd>
+            </div>
+          ))}
         </dl>
+        {prompts.note && <p class="small muted">{prompts.note}</p>}
       </div>
     </div>
   </section>
 
   <section class="section section--linen" id="brainstorm">
     <div class="wrap cols">
-      <h2 data-reveal>Brainstorming questions</h2>
+      <h2 data-reveal>{brainstorm.sectionTitle || brainstorm.title}</h2>
       <div>
-        <p>Answer these in a page or two, fast and messy. Three or four essay topics usually fall out. Then, for each one, ask: is this mostly about me? Is there a beginning, middle and end? Does it show my best self?</p>
+        {brainstorm.intro && <p>{brainstorm.intro}</p>}
         <ol class="tips">
-          {brainstorm.map((q) => <li>{q}</li>)}
+          {brainstorm.items.map((q) => <li>{q.text}</li>)}
         </ol>
+        {brainstorm.note && <p class="small muted">{brainstorm.note}</p>}
       </div>
     </div>
   </section>
 
   <section class="section" id="structure">
     <div class="wrap cols">
-      <h2 data-reveal>Structuring a personal narrative</h2>
-      <dl class="defs">
-        {structure.map(([t, d]) => (<div><dt>{t}</dt><dd>{d}</dd></div>))}
-      </dl>
+      <h2 data-reveal>{structure.sectionTitle || structure.title}</h2>
+      <div>
+        {structure.intro && <p>{structure.intro}</p>}
+        <dl class="defs">
+          {structure.items.map((item) => (
+            <div>
+              <dt>{item.title}</dt>
+              <dd>{item.text}</dd>
+            </div>
+          ))}
+        </dl>
+        {structure.note && <p class="small muted">{structure.note}</p>}
+      </div>
     </div>
   </section>
 
   <section class="section section--linen" id="style">
     <div class="wrap cols">
-      <h2 data-reveal>Style: what to cut</h2>
-      <dl class="defs">
-        {style.map(([t, d]) => (<div><dt>{t}</dt><dd>{d}</dd></div>))}
-      </dl>
+      <h2 data-reveal>{style.sectionTitle || style.title}</h2>
+      <div>
+        {style.intro && <p>{style.intro}</p>}
+        <dl class="defs">
+          {style.items.map((item) => (
+            <div>
+              <dt>{item.title}</dt>
+              <dd>{item.text}</dd>
+            </div>
+          ))}
+        </dl>
+        {style.note && <p class="small muted">{style.note}</p>}
+      </div>
     </div>
   </section>
+
+  {extraReads.map((extra, idx) => (
+    <section class={`section ${idx % 2 === 0 ? '' : 'section--linen'}`} id={extra.id}>
+      <div class="wrap cols">
+        <h2 data-reveal>{extra.sectionTitle || extra.title}</h2>
+        <div>
+          {extra.intro && <p>{extra.intro}</p>}
+          {extra.items && extra.items.length > 0 && (
+            <dl class="defs">
+              {extra.items.map((it) => (
+                <div>
+                  {it.title && <dt>{it.title}</dt>}
+                  <dd>{it.text}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+          {extra.note && <p class="small muted">{extra.note}</p>}
+        </div>
+      </div>
+    </section>
+  ))}
 
   <section class="section">
     <div class="wrap">

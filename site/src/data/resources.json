@@ -28,28 +28,149 @@
   ],
   "reads": [
     {
+      "id": "dos",
       "title": "Six things to do before you write a word",
-      "href": "/resources/#dos"
+      "sectionTitle": "Six things to do",
+      "href": "/resources/#dos",
+      "items": [
+        { "text": "Start early. Revising is where essays get good, and revising takes time." },
+        { "text": "Brainstorm and outline first. Write down the strengths, interests and quirks you want admissions officers to know about." },
+        { "text": "Make it your own. Write about what you care about, not what you think they want to hear." },
+        { "text": "Stay on one theme. The prompt may be broad; your answer should be narrow and specific." },
+        { "text": "Ignore the word count on the first draft. Cut later." },
+        { "text": "Rewrite, then ask one person whose opinion you trust, not six." }
+      ]
     },
     {
+      "id": "avoid",
       "title": "Six essay topics to avoid, and why",
-      "href": "/resources/#avoid"
+      "sectionTitle": "Six topics to avoid",
+      "href": "/resources/#avoid",
+      "note": "Not because they are bad subjects. Thousands of other applicants chose them this year, and it is hard to be specific about a trip to Costa Rica in 650 words.",
+      "items": [
+        { "text": "Heroism" },
+        { "text": "Death, divorce, depression" },
+        { "text": "The travel itinerary" },
+        { "text": "Religious or political issues" },
+        { "text": "Dating and relationships" },
+        { "text": "Anything you would not want an admissions officer to know" }
+      ]
     },
     {
+      "id": "prompts",
       "title": "The 2026–27 Common App prompts, explained",
-      "href": "/resources/#prompts"
+      "sectionTitle": "The 2026–27 Common App prompts",
+      "href": "/resources/#prompts",
+      "intro": "Seven prompts, 650 words, one essay. The prompts are doors into the same room; pick the one that lets your story walk in naturally.",
+      "items": [
+        {
+          "title": "Background, identity, interest or talent",
+          "text": "The open door. Works when the thing is specific and you can show it in scenes, not list it."
+        },
+        {
+          "title": "A challenge, setback or failure",
+          "text": "The lesson matters more than the failure. Keep the setback to a paragraph and spend the rest on what changed."
+        },
+        {
+          "title": "Questioning or challenging a belief",
+          "text": "Not a debate essay. What did you believe, what cracked it, and what do you do differently now?"
+        },
+        {
+          "title": "Gratitude that surprised you",
+          "text": "Small and specific beats big and vague. One person, one moment."
+        },
+        {
+          "title": "An accomplishment or realization that sparked growth",
+          "text": "The realization is the essay. The accomplishment is the setup."
+        },
+        {
+          "title": "A topic that makes you lose track of time",
+          "text": "Careful with jargon. The reader should feel the pull, not sit an exam on it."
+        },
+        {
+          "title": "Any topic of your choice",
+          "text": "Fine to use, but a great answer to another prompt is usually a great answer here too."
+        }
+      ]
     },
     {
+      "id": "brainstorm",
       "title": "Brainstorming questions for the personal statement",
-      "href": "/resources/#brainstorm"
+      "sectionTitle": "Brainstorming questions",
+      "href": "/resources/#brainstorm",
+      "intro": "Answer these in a page or two, fast and messy. Three or four essay topics usually fall out. Then, for each one, ask: is this mostly about me? Is there a beginning, middle and end? Does it show my best self?",
+      "items": [
+        { "text": "What is my favorite academic subject, and what memory first sparked it?" },
+        { "text": "What is my greatest success so far? What steps got me there, and how did it feel?" },
+        { "text": "What is my greatest challenge so far? How did I get through it, or how am I getting through it?" },
+        { "text": "What is one talent people would not guess I have? How did I find out?" },
+        { "text": "The activity I pursue with real passion is… and I do it because…" },
+        { "text": "What are my best three character traits, and where do they show up?" },
+        { "text": "How has my family life shaped who I am?" },
+        { "text": "How has my background, culture or country of origin shaped who I am?" },
+        { "text": "The three things (people, places, animals count) that affect me most are… because…" },
+        { "text": "The biggest lesson I have learned so far is… I learned it by… and it made me more…" }
+      ]
     },
     {
+      "id": "structure",
       "title": "Structuring a personal narrative",
-      "href": "/resources/#structure"
+      "sectionTitle": "Structuring a personal narrative",
+      "href": "/resources/#structure",
+      "items": [
+        {
+          "title": "Introduction",
+          "text": "A hook, the scene, and a hint of the thesis. Start inside the story, not with a definition of courage."
+        },
+        {
+          "title": "Body",
+          "text": "Scenes, not summaries. Show the emotion through action. Skip the bus ride home with a transition and get to the moment that matters."
+        },
+        {
+          "title": "Conclusion",
+          "text": "What changed. Or, increasingly, nothing: end the story and let the actions carry the reflection. Most great short stories do."
+        },
+        {
+          "title": "Alternatives",
+          "text": "A diary format for a story that spans days. A manifesto. A pivotal essay that opens on the conflict. Structure should fit the story, not the other way round."
+        }
+      ]
     },
     {
+      "id": "style",
       "title": "Style tips: what to cut",
-      "href": "/resources/#style"
+      "sectionTitle": "Style: what to cut",
+      "href": "/resources/#style",
+      "items": [
+        {
+          "title": "Wordiness",
+          "text": "Most students can cut a quarter of the essay and lose nothing. Try it."
+        },
+        {
+          "title": "Vague language",
+          "text": "\"Stuff\", \"things\", \"this aspect of society\". Admissions officers are not mind readers."
+        },
+        {
+          "title": "Clichés",
+          "text": "\"One in a million.\" \"My global perspective.\" \"My potential as a future leader.\" If you must use one, put a spin on it."
+        },
+        {
+          "title": "Too much \"I\"",
+          "text": "More than once a sentence is too much. Rearrange the sentence and it usually disappears."
+        },
+        {
+          "title": "Adverbs",
+          "text": "\"She ran quickly\" is \"she sprinted\". Every adverb is a strong verb waiting to happen."
+        },
+        {
+          "title": "Expletive constructions",
+          "text": "\"There were two girls who struggled with math\" is \"two girls struggled with math\"."
+        },
+        {
+          "title": "Flowery language",
+          "text": "Too many adjectives suffocate a paragraph. One precise noun (\"a Yorkie\") beats three vague ones."
+        }
+      ]
     }
   ]
 }

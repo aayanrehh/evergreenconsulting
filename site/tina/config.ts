@@ -46,10 +46,22 @@ export default defineConfig({
           },
           {
             type: 'object', name: 'reads', label: 'Quick reads', list: true,
-            ui: { itemProps: (item) => ({ label: item?.title }) },
+            ui: { itemProps: (item) => ({ label: item?.title || item?.sectionTitle || 'Quick read' }) },
             fields: [
-              { type: 'string', name: 'title', label: 'Title', required: true },
-              { type: 'string', name: 'href', label: 'Link', required: true },
+              { type: 'string', name: 'id', label: 'Section ID (anchor name, e.g. dos, avoid, prompts)', required: true },
+              { type: 'string', name: 'title', label: 'Card / Link title (e.g. Six things to do before you write a word)', required: true },
+              { type: 'string', name: 'sectionTitle', label: 'Section heading on Resources page (e.g. Six things to do)' },
+              { type: 'string', name: 'href', label: 'Link URL (e.g. /resources/#dos)' },
+              { type: 'string', name: 'intro', label: 'Introductory paragraph (optional)', ui: { component: 'textarea' } },
+              {
+                type: 'object', name: 'items', label: 'Items / Tips / Prompts', list: true,
+                ui: { itemProps: (item) => ({ label: item?.title || (item?.text ? (item.text.slice(0, 40) + '…') : 'Item') }) },
+                fields: [
+                  { type: 'string', name: 'title', label: 'Item title / label (optional)' },
+                  { type: 'string', name: 'text', label: 'Item text / explanation / question', required: true, ui: { component: 'textarea' } },
+                ],
+              },
+              { type: 'string', name: 'note', label: 'Footnote / callout note (optional)', ui: { component: 'textarea' } },
             ],
           },
         ],
