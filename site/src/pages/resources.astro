@@ -1,15 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import Marquee from '../components/Marquee.astro';
+import data from '../data/resources.json';
 
-const guideSections = [
-  "General do's and don'ts, including essay topics to avoid",
-  'Tips for every 2026–2027 Common App personal statement prompt',
-  'Developing a personal narrative essay: introduction, body, conclusion and alternative structures',
-  'Stylistic tips: what to avoid',
-  'The eight University of California Personal Insight Questions',
-  'Common supplemental essay types: favorite activity, why this school, intellectual curiosity, diversity, problem solving and more',
-];
+const { downloads } = data;
 const dos = [
   'Start early. Revising is where essays get good, and revising takes time.',
   'Brainstorm and outline first. Write down the strengths, interests and quirks you want admissions officers to know about.',
@@ -63,28 +57,20 @@ const style = [
   ['Flowery language', 'Too many adjectives suffocate a paragraph. One precise noun ("a Yorkie") beats three vague ones.'],
 ];
 
-const schema = [
-  {
-    '@context': 'https://schema.org',
-    '@type': 'DigitalDocument',
-    name: 'Writing Successful College Application Essays',
-    author: { '@id': `${Astro.site}#andrea` },
-    encodingFormat: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    url: `${Astro.site}resources/writing-successful-college-application-essays.docx`,
-    isAccessibleForFree: true,
-    about: 'College application essays, Common App prompts 2026–2027, UC Personal Insight Questions, supplemental essays',
-  },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'DigitalDocument',
-    name: 'Writing the Personal Statement',
-    author: { '@id': `${Astro.site}#andrea` },
-    encodingFormat: 'application/pdf',
-    url: `${Astro.site}resources/writing-the-personal-statement.pdf`,
-    isAccessibleForFree: true,
-    about: 'Personal statement workshop: structure, style, brainstorming, Common App prompts',
-  },
-];
+const schema = downloads.map((d) => ({
+  '@context': 'https://schema.org',
+  '@type': 'DigitalDocument',
+  name: d.title,
+  author: { '@id': `${Astro.site}#andrea` },
+  encodingFormat: d.file.endsWith('.docx')
+    ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    : d.file.endsWith('.pdf')
+    ? 'application/pdf'
+    : 'application/octet-stream',
+  url: new URL(d.file.replace(/^\//, ''), Astro.site).toString(),
+  isAccessibleForFree: true,
+  about: d.detail || d.blurb,
+}));
 ---
 
 <Base
@@ -105,23 +91,18 @@ const schema = [
     <div class="wrap cols">
       <h2 data-reveal>Downloads</h2>
       <div class="downloads">
-        <article>
-          <h3>Writing Successful College Application Essays</h3>
-          <p>
-            A complete guide to the written part of the U.S. college application. It covers how admissions officers read essays, what a personal narrative needs, and how to handle each prompt your child will face this cycle. Parents tend to read it first and then hand it over.
-          </p>
-          <ul class="small">
-            {guideSections.map((s) => <li>{s}</li>)}
-          </ul>
-          <p><a class="btn btn--solid" href="/resources/writing-successful-college-application-essays.docx" download>Download the guide (Word, 4.3 MB)</a></p>
-        </article>
-        <article>
-          <h3>Writing the Personal Statement</h3>
-          <p>
-            The deck from Andrea's personal statement workshop, updated July 2026. Thirty-six slides: do's and don'ts, topics to avoid, how to build an introduction, body and conclusion, writing strategies from verb tense to pacing, the 2026 to 2027 Common App prompts, and the brainstorming questions she asks students first.
-          </p>
-          <p><a class="btn btn--solid" href="/resources/writing-the-personal-statement.pdf" download>Download the slides (PDF, 1.2 MB)</a></p>
-        </article>
+        {downloads.map((d) => (
+          <article>
+            <h3>{d.title}</h3>
+            <p>{d.detail || d.blurb}</p>
+            {d.sections && d.sections.length > 0 && (
+              <ul class="small">
+                {d.sections.map((s) => <li>{s}</li>)}
+              </ul>
+            )}
+            <p><a class="btn btn--solid" href={d.file} download>{d.cta}</a></p>
+          </article>
+        ))}
       </div>
     </div>
   </section>

@@ -15,7 +15,6 @@ export default defineConfig({
         label: 'Blog posts',
         path: 'src/content/blog',
         format: 'md',
-        ui: { router: ({ document }) => `/blog/${document._sys.filename}/` },
         fields: [
           { type: 'string', name: 'title', label: 'Title', isTitle: true, required: true },
           { type: 'string', name: 'description', label: 'Description (shows in Google and on the blog index)', required: true, ui: { component: 'textarea' } },
@@ -30,7 +29,7 @@ export default defineConfig({
         path: 'src/data',
         match: { include: 'resources' },
         format: 'json',
-        ui: { allowedActions: { create: false, delete: false }, router: () => '/resources/' },
+        ui: { allowedActions: { create: false, delete: false }, global: true },
         fields: [
           {
             type: 'object', name: 'downloads', label: 'Downloads', list: true,
@@ -39,7 +38,9 @@ export default defineConfig({
               { type: 'string', name: 'title', label: 'Title', required: true },
               { type: 'string', name: 'kind', label: 'Kind (Guide, Slides, Checklist…)' },
               { type: 'image', name: 'file', label: 'File (PDF or Word)', required: true },
-              { type: 'string', name: 'blurb', label: 'One or two sentences', ui: { component: 'textarea' } },
+              { type: 'string', name: 'blurb', label: 'Summary / card blurb', ui: { component: 'textarea' } },
+              { type: 'string', name: 'detail', label: 'Full description (resources page)', ui: { component: 'textarea' } },
+              { type: 'string', name: 'sections', label: 'Section bullet points', list: true },
               { type: 'string', name: 'cta', label: 'Button text' },
             ],
           },
@@ -59,7 +60,7 @@ export default defineConfig({
         path: 'src/data',
         match: { include: 'reviews' },
         format: 'json',
-        ui: { allowedActions: { create: false, delete: false }, router: () => '/#reviews' },
+        ui: { allowedActions: { create: false, delete: false }, global: true },
         fields: [
           { type: 'number', name: 'rating', label: 'Google rating (e.g. 5)' },
           { type: 'number', name: 'count', label: 'Number of Google reviews' },
@@ -82,7 +83,7 @@ export default defineConfig({
         path: 'src/data',
         match: { include: 'services' },
         format: 'json',
-        ui: { allowedActions: { create: false, delete: false }, router: () => '/services/' },
+        ui: { allowedActions: { create: false, delete: false }, global: true },
         fields: [
           {
             type: 'object', name: 'services', label: 'Services', list: true,
