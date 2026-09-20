@@ -1,5 +1,7 @@
 import { defineConfig } from 'tinacms';
 
+const isPreview = process.env.TINA_PREVIEW === 'true';
+
 // Editing happens at /admin. Locally: `npm run dev`. In production the same URL works once
 // TINA_CLIENT_ID / TINA_TOKEN from app.tina.io are set on the host.
 export default defineConfig({
@@ -16,7 +18,11 @@ export default defineConfig({
         path: 'src/data',
         match: { include: 'home' },
         format: 'json',
-        ui: { allowedActions: { create: false, delete: false }, global: true },
+        ui: {
+          allowedActions: { create: false, delete: false },
+          global: !isPreview,
+          ...(isPreview ? { router: () => '/' } : {}),
+        },
         fields: [
           { type: 'string', name: 'titlePrefix', label: 'Hero Headline (Prefix)' },
           { type: 'string', name: 'strikeText', label: 'Hero Strikethrough Word' },

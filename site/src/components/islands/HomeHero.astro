@@ -1,0 +1,85 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+
+interface Props {
+  front: any;
+}
+
+const { front = {} } = Astro.props;
+
+const {
+  titlePrefix = 'The college application,',
+  strikeText = 'survived',
+  insertText = 'done well.',
+  heroLede = 'Andrea Schiralli coaches students through every essay, the résumé and the interviews, and keeps parents in the loop the whole way. Harvard M.Ed. Cornell B.A. More than 20,000 essays since 2014.',
+  primaryCtaText = 'Talk to Andrea',
+  primaryCtaHref = '/contact/',
+  secondaryCtaText = 'Get the free essay guide',
+  secondaryCtaHref = '/resources/',
+  heroPhoto = '/andrea.jpg',
+  heroPhotoCaption = 'Andrea Schiralli, founder',
+  facts = [],
+} = front;
+---
+
+<div class="wrap hero__grid">
+  <div>
+    <h1 class="hero__title">
+      <span data-tina-field={tinaField(front, 'titlePrefix') || undefined}>{titlePrefix}</span>
+      <span class="edit">
+        <s class="edit__strike" data-tina-field={tinaField(front, 'strikeText') || undefined}>{strikeText}</s>
+        <span class="edit__insert" data-tina-field={tinaField(front, 'insertText') || undefined}>{insertText}</span>
+      </span>
+    </h1>
+    <p class="lede" data-tina-field={tinaField(front, 'heroLede') || undefined}>
+      {heroLede}
+    </p>
+    <div class="hero__actions">
+      <a class="btn btn--solid" href={primaryCtaHref} data-tina-field={tinaField(front, 'primaryCtaText') || undefined}>{primaryCtaText}</a>
+      <a class="btn" href={secondaryCtaHref} data-tina-field={tinaField(front, 'secondaryCtaText') || undefined}>{secondaryCtaText}</a>
+    </div>
+  </div>
+  <figure class="hero__photo">
+    <div class="frame">
+      <img src={heroPhoto} alt="Andrea Schiralli" width="1122" height="1402" loading="eager" fetchpriority="high" data-tina-field={tinaField(front, 'heroPhoto') || undefined} />
+    </div>
+    <figcaption data-tina-field={tinaField(front, 'heroPhotoCaption') || undefined}>{heroPhotoCaption}</figcaption>
+  </figure>
+</div>
+<div class="wrap">
+  <div class="facts" aria-label="At a glance">
+    {facts.map((f: any, i: number) => (
+      <span data-tina-field={tinaField(front, 'facts', i) || undefined}><strong>{f.number}</strong> {f.label}</span>
+    ))}
+  </div>
+</div>
+
+<style>
+  :global(.hero) { padding-block: clamp(3rem, 8vw, 6rem) 0; }
+  .hero__grid { display: grid; gap: 2.5rem; align-items: start; }
+  @media (min-width: 860px) { .hero__grid { grid-template-columns: 7fr 4fr; gap: clamp(2rem, 6vw, 6rem); } }
+  .hero__title { max-width: 16ch; margin-bottom: 1.25rem; }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.75rem 0 0; }
+  .hero__photo { margin: 0; max-width: 400px; padding-top: 0.35rem; }
+  .frame { position: relative; margin-right: 14px; }
+  .frame img { position: relative; z-index: 1; border: 1px solid var(--evergreen); padding: 8px; background: var(--paper); }
+  .frame::before { content: ''; position: absolute; inset: 0; transform: translate(14px, 14px); background: var(--evergreen); }
+  .hero__photo figcaption { margin-top: 0.6rem; font-size: var(--step--1); color: #5a6a62; }
+  .facts { margin-top: clamp(2.5rem, 5vw, 4rem); border-bottom: 0; }
+
+  /* The edit: one strike, one insertion, once. */
+  .edit { display: inline; margin-left: 0.22em; }
+  .edit__strike { position: relative; text-decoration: none; color: var(--sage); white-space: nowrap; }
+  .edit__strike::after {
+    content: ''; position: absolute; left: -0.03em; right: -0.03em; top: 55%; height: 0.06em;
+    background: var(--brass); transform-origin: left; transform: scaleX(0);
+    animation: strike 500ms cubic-bezier(.4,0,.2,1) 900ms forwards;
+  }
+  .edit__insert { position: relative; display: inline-block; color: var(--evergreen); font-family: var(--sans); font-weight: 500; letter-spacing: -0.02em; opacity: 0; animation: insert 600ms ease 1500ms forwards; }
+  @keyframes strike { to { transform: scaleX(1); } }
+  @keyframes insert { from { opacity: 0; transform: translateY(0.15em); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .edit__strike::after { animation: none; transform: none; }
+    .edit__insert { animation: none; opacity: 1; }
+  }
+</style>
