@@ -7,7 +7,7 @@ export default defineConfig({
   clientId: process.env.TINA_CLIENT_ID || null,
   token: process.env.TINA_TOKEN || null,
   build: { outputFolder: 'admin', publicFolder: 'public' },
-  media: { tina: { mediaRoot: 'uploads', publicFolder: 'public' } },
+  media: { tina: { mediaRoot: '', publicFolder: 'public' } },
   schema: {
     collections: [
       {
