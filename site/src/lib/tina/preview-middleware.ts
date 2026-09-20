@@ -30,12 +30,14 @@ export const onRequest = defineMiddleware(async (context, next) => {
     });
   }
 
-  // Exclude island dynamic endpoints, Tina internal/API endpoints, and binary/static assets
+  const isAdminResponse = pathname.startsWith('/admin');
+
   if (
     pathname.startsWith('/tina-island/') ||
     pathname.startsWith('/api/') ||
     pathname.startsWith('/_astro/') ||
-    pathname.match(/\.(jpe?g|png|webp|svg|gif|ico|woff2?|ttf|eot|pdf|docx?|css|js|map)$/i)
+    (!isAdminResponse &&
+      pathname.match(/\.(jpe?g|png|webp|svg|gif|ico|woff2?|ttf|eot|pdf|docx?|css|js|map)$/i))
   ) {
     return next();
   }
@@ -45,6 +47,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   // Apply X-Robots-Tag to HTML pages, text responses, and page redirects
   const contentType = response.headers.get('content-type') || '';
   if (
+    isAdminResponse ||
     contentType.includes('text/html') ||
     contentType.includes('text/plain') ||
     response.status === 301 ||
