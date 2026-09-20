@@ -2,15 +2,64 @@ import { defineConfig } from 'tinacms';
 
 const isPreview = process.env.TINA_PREVIEW === 'true';
 
-// Ensure the admin editor automatically opens in side-by-side visual preview mode
-// by default, so users don't need to manually type '#/~/' in the address bar.
+// Ensure the admin editor automatically stays in side-by-side visual preview mode
+// by default and when navigating between pages or clicking breadcrumbs, so the
+// right-side live website preview is never unexpectedly removed.
 if (typeof window !== 'undefined') {
+  const collectionToPreviewRoute: Record<string, string> = {
+    front: '',
+    about: 'about/',
+    services: 'services/',
+    resources: 'resources/',
+    contact: 'contact/',
+    results: 'results/',
+    blog: 'blog/',
+    reviews: '',
+  };
+
   const ensurePreviewHash = () => {
-    const hash = window.location.hash;
-    if (!hash || hash === '#' || hash === '#/' || hash === '#/~') {
-      window.location.replace(window.location.pathname + window.location.search + '#/~/');
+    const rawHash = window.location.hash || '';
+    const hash = rawHash.replace(/^#/, '');
+
+    // 1. Root or empty hash -> default to home preview /~/
+    if (!hash || hash === '/' || hash === '/~' || hash === '/~/' || hash === '~') {
+      if (rawHash !== '#/~/') {
+        window.location.replace(window.location.pathname + window.location.search + '#/~/');
+      }
+      return;
+    }
+
+    // 2. Already in visual preview route /~/* -> do not touch
+    if (hash.startsWith('/~/') || hash.startsWith('~/')) {
+      return;
+    }
+
+    // 3. Post collection edit: #/collections/edit/post/:slug -> open post in visual preview
+    const postEditMatch = hash.match(/^\/?collections\/edit\/post\/(.+)$/);
+    if (postEditMatch) {
+      const slug = postEditMatch[1].replace(/^\/|\/$/g, '');
+      window.location.replace(window.location.pathname + window.location.search + `#/~/blog/${slug}/`);
+      return;
+    }
+
+    // 4. Post collection list: #/collections/post or #/collections/post/~ -> open blog index preview
+    if (/^\/?collections\/post(\/|(\/~.*))?$/.test(hash)) {
+      window.location.replace(window.location.pathname + window.location.search + '#/~/blog/');
+      return;
+    }
+
+    // 5. Singleton collections list or edit: #/collections/:name or #/collections/edit/:name/*
+    const collectionMatch = hash.match(/^\/?collections(?:\/edit)?\/([^\/~]+)/);
+    if (collectionMatch) {
+      const colName = collectionMatch[1];
+      if (colName in collectionToPreviewRoute) {
+        const routePath = collectionToPreviewRoute[colName];
+        window.location.replace(window.location.pathname + window.location.search + `#/~/` + routePath);
+        return;
+      }
     }
   };
+
   ensurePreviewHash();
   window.addEventListener('hashchange', ensurePreviewHash);
 }
