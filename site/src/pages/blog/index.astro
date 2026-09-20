@@ -1,6 +1,17 @@
 ---
 import Base from '../../layouts/Base.astro';
+import staticBlog from '../../data/blog.json';
+import BlogHeader from '../../components/islands/BlogHeader.astro';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
 import { getCollection } from 'astro:content';
+
+const isPreview = process.env.TINA_PREVIEW === 'true';
+let blogData: any = null;
+if (isPreview) {
+  const { getBlog } = await import('../../lib/tina/data');
+  blogData = await getBlog();
+}
+const blog = isPreview && blogData?.data?.blog ? blogData.data.blog : staticBlog;
 
 const posts = (await getCollection('blog')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -10,20 +21,38 @@ const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month:
   title="Blog: College Essays, Interviews and Applications | Evergreen Consulting"
   description="Andrea Schiralli on college essays, personal statements, supplements, interviews and the application process. Practical, specific, from twenty thousand essays."
 >
-  <section class="section page-head">
-    <div class="wrap">
-      <h1>Blog</h1>
-      <p class="lede">Notes from twenty thousand essays. Practical, specific, and usually shorter than the essay you are working on.</p>
-    </div>
-  </section>
+  {isPreview ? (
+    <TinaIsland name="blog-header" wrapper={{ tag: 'div', className: 'blog-header-wrap' }} primary>
+      <BlogHeader blog={blog} />
+    </TinaIsland>
+  ) : (
+    <BlogHeader blog={blog} />
+  )}
 
   <section class="section">
     <div class="wrap">
+      {isPreview && (
+        <div class="preview-collection-hint">
+          <div class="hint-content">
+            <span class="hint-icon">📚</span>
+            <div>
+              <strong>Blog Posts Collection:</strong> Click any article below to edit its text and markdown in live preview.
+            </div>
+          </div>
+          <a href="/admin/index.html#/collections/post" target="_top" class="hint-link">
+            Manage All Posts in Admin &rarr;
+          </a>
+        </div>
+      )}
+
       <ul class="posts">
         {posts.map((p) => (
           <li>
             <a href={`/blog/${p.id}/`}>
-              <time datetime={p.data.date.toISOString()}>{fmt(p.data.date)}</time>
+              <div class="post-meta">
+                <time datetime={p.data.date.toISOString()}>{fmt(p.data.date)}</time>
+                {isPreview && <span class="edit-badge">✏️ Edit in live preview &rarr;</span>}
+              </div>
               <h2>{p.data.title}</h2>
               <p>{p.data.description}</p>
             </a>
@@ -35,12 +64,42 @@ const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month:
 </Base>
 
 <style>
-  .page-head { padding-bottom: 0; }
-  .page-head + .section { border-top: 0; }
+  .preview-collection-hint {
+    margin-bottom: 1.5rem;
+    padding: 0.85rem 1.25rem;
+    background: #eef6f2;
+    border: 1px solid #cce4d8;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: var(--step--1);
+  }
+  .hint-content {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--evergreen);
+  }
+  .hint-icon {
+    font-size: 1.25rem;
+  }
+  .hint-link {
+    font-weight: 600;
+    color: var(--evergreen);
+    text-decoration: underline;
+  }
+  .hint-link:hover {
+    color: var(--ink);
+  }
   .posts { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
   .posts li { margin: 0; border-bottom: 1px solid var(--rule); }
   .posts a { display: grid; gap: 0.35rem; padding: 1.75rem 0; text-decoration: none; color: inherit; max-width: 70ch; }
+  .post-meta { display: flex; align-items: center; gap: 1rem; }
   .posts time { font-size: var(--step--1); color: #5a6a62; }
+  .edit-badge { font-size: var(--step--2); color: var(--evergreen); font-weight: 600; background: #eef6f2; padding: 0.15rem 0.5rem; border-radius: 4px; }
   .posts h2 { font-size: var(--step-2); margin: 0; color: var(--evergreen); }
   .posts p { margin: 0; color: #3a4a42; }
   .posts a:hover h2 { color: var(--ink); }

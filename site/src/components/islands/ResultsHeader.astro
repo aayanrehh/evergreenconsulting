@@ -1,0 +1,29 @@
+---
+import { tinaField } from 'tinacms/dist/react';
+
+interface Props {
+  results: {
+    heading?: string;
+    lede?: string;
+    disclaimer?: string;
+  };
+}
+
+const { results } = Astro.props;
+---
+
+<section class="section page-head">
+  <div class="wrap">
+    <h1 data-tina-field={tinaField(results, 'heading') || undefined}>{results?.heading || 'Results'}</h1>
+    <p class="lede" data-tina-field={tinaField(results, 'lede') || undefined}>{results?.lede}</p>
+    {results?.disclaimer && (
+      <p class="small muted" data-tina-field={tinaField(results, 'disclaimer') || undefined}>
+        {results.disclaimer}
+      </p>
+    )}
+  </div>
+</section>
+
+<style>
+  .page-head { padding-bottom: 0; }
+</style>

@@ -240,8 +240,41 @@ export default defineConfig({
         ],
       },
       {
+        name: 'results',
+        label: 'Results',
+        path: 'src/data',
+        match: { include: 'results' },
+        format: 'json',
+        ui: {
+          allowedActions: { create: false, delete: false },
+          global: !isPreview,
+          ...(isPreview ? { router: () => '/results/' } : {}),
+        },
+        fields: [
+          { type: 'string', name: 'heading', label: 'Page Heading' },
+          { type: 'string', name: 'lede', label: 'Top Blurb / Description', ui: { component: 'textarea' } },
+          { type: 'string', name: 'disclaimer', label: 'Disclaimer Note', ui: { component: 'textarea' } },
+        ],
+      },
+      {
+        name: 'blog',
+        label: 'Blog Page',
+        path: 'src/data',
+        match: { include: 'blog' },
+        format: 'json',
+        ui: {
+          allowedActions: { create: false, delete: false },
+          global: !isPreview,
+          ...(isPreview ? { router: () => '/blog/' } : {}),
+        },
+        fields: [
+          { type: 'string', name: 'heading', label: 'Page Heading' },
+          { type: 'string', name: 'lede', label: 'Page Lede / Subtitle', ui: { component: 'textarea' } },
+        ],
+      },
+      {
         name: 'post',
-        label: 'Blog',
+        label: 'Blog Posts',
         path: 'src/content/blog',
         format: 'md',
         ui: {

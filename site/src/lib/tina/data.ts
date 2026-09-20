@@ -49,3 +49,17 @@ export const getReviews = async () => {
     { priority: 'secondary' }
   );
 };
+
+export const getResults = async () => {
+  return requestWithMetadata(
+    client.queries.results({ relativePath: 'results.json' }),
+    { priority: 'primary' }
+  );
+};
+
+export const getBlog = async () => {
+  return requestWithMetadata(
+    client.queries.blog({ relativePath: 'blog.json' }),
+    { priority: 'primary' }
+  );
+};

@@ -20,6 +20,8 @@ import ServicesContent from '../../components/islands/ServicesContent.astro';
 import ResourcesContent from '../../components/islands/ResourcesContent.astro';
 import ContactContent from '../../components/islands/ContactContent.astro';
 import BlogPostContent from '../../components/islands/BlogPostContent.astro';
+import ResultsHeader from '../../components/islands/ResultsHeader.astro';
+import BlogHeader from '../../components/islands/BlogHeader.astro';
 import {
   getHome,
   getAbout,
@@ -28,6 +30,8 @@ import {
   getContact,
   getBlogPost,
   getReviews,
+  getResults,
+  getBlog,
 } from './data';
 
 export const islands: IslandRegistry = {
@@ -120,6 +124,22 @@ export const islands: IslandRegistry = {
     wrapper: { tag: 'article', className: 'section post' },
     propsFromData: (data) => ({
       post: (data as QueryResult<PostQuery>)?.data?.post,
+    }),
+  },
+  'results-header': {
+    fetch: () => getResults(),
+    component: ResultsHeader,
+    wrapper: { tag: 'div', className: 'results-header-wrap' },
+    propsFromData: (data: any) => ({
+      results: data?.data?.results,
+    }),
+  },
+  'blog-header': {
+    fetch: () => getBlog(),
+    component: BlogHeader,
+    wrapper: { tag: 'div', className: 'blog-header-wrap' },
+    propsFromData: (data: any) => ({
+      blog: data?.data?.blog,
     }),
   },
 };
