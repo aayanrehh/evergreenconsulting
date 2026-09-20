@@ -1,4 +1,5 @@
 import { defineConfig } from 'tinacms';
+import { BlogCollectionManager } from './components/BlogCollectionManager';
 
 const isPreview = process.env.TINA_PREVIEW === 'true';
 
@@ -72,6 +73,13 @@ export default defineConfig({
   token: process.env.TINA_TOKEN || null,
   build: { outputFolder: 'admin', publicFolder: 'public' },
   media: { tina: { mediaRoot: '', publicFolder: 'public' } },
+  cmsCallback: (cms) => {
+    cms.fields.add({
+      name: 'blog-posts-manager',
+      Component: BlogCollectionManager,
+    });
+    return cms;
+  },
   schema: {
     collections: [
       {
@@ -330,6 +338,14 @@ export default defineConfig({
           ...(isPreview ? { router: () => '/blog/' } : {}),
         },
         fields: [
+          {
+            type: 'string',
+            name: '_postsManager',
+            label: 'Manage Blog Posts',
+            ui: {
+              component: 'blog-posts-manager',
+            },
+          },
           { type: 'string', name: 'heading', label: 'Page Heading' },
           { type: 'string', name: 'lede', label: 'Page Lede / Subtitle', ui: { component: 'textarea' } },
         ],

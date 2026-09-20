@@ -1,21 +1,32 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getCollection, render } from 'astro:content';
+import { getCollection, getEntry, render } from 'astro:content';
 import BlogPostContent from '../../components/islands/BlogPostContent.astro';
 import TinaIsland from '@tinacms/astro/TinaIsland.astro';
+
+const isPreview = process.env.TINA_PREVIEW === 'true';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
 }
-const { post } = Astro.props;
-const { id = post?.id } = Astro.params;
-const { Content } = await render(post);
 
-const isPreview = process.env.TINA_PREVIEW === 'true';
+let { post } = Astro.props;
+const { id = post?.id } = Astro.params;
+if (!post && id) {
+  post = await getEntry('blog', id);
+}
+
+let Content: any = null;
+if (post) {
+  try {
+    const rendered = await render(post);
+    Content = rendered.Content;
+  } catch {}
+}
 
 let previewPost: any = null;
-if (isPreview) {
+if (isPreview && id) {
   try {
     const { getBlogPost } = await import('../../lib/tina/data');
     const res = await getBlogPost(id);
