@@ -16,6 +16,16 @@ const previewEndpoints = () => ({
         entrypoint: './src/lib/tina/island-endpoint.ts',
         prerender: false,
       });
+      injectRoute({
+        pattern: '/admin',
+        entrypoint: './src/lib/tina/admin-redirect.ts',
+        prerender: false,
+      });
+      injectRoute({
+        pattern: '/admin/index.html/~',
+        entrypoint: './src/lib/tina/admin-redirect.ts',
+        prerender: false,
+      });
     },
   },
 });

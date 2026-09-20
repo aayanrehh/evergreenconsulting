@@ -2,6 +2,19 @@ import { defineConfig } from 'tinacms';
 
 const isPreview = process.env.TINA_PREVIEW === 'true';
 
+// Ensure the admin editor automatically opens in side-by-side visual preview mode
+// by default, so users don't need to manually type '#/~/' in the address bar.
+if (typeof window !== 'undefined') {
+  const ensurePreviewHash = () => {
+    const hash = window.location.hash;
+    if (!hash || hash === '#' || hash === '#/' || hash === '#/~') {
+      window.location.replace(window.location.pathname + window.location.search + '#/~/');
+    }
+  };
+  ensurePreviewHash();
+  window.addEventListener('hashchange', ensurePreviewHash);
+}
+
 // Editing happens at /admin. Locally: `npm run dev`. In production the same URL works once
 // TINA_CLIENT_ID / TINA_TOKEN from app.tina.io are set on the host.
 export default defineConfig({
