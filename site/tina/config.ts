@@ -1,10 +1,38 @@
 import { defineConfig } from 'tinacms';
 import { BlogCollectionManager } from './components/BlogCollectionManager';
 
-// Ensure the admin editor automatically stays in side-by-side visual preview mode
-// by default and when navigating between pages or clicking breadcrumbs, so the
-// right-side live website preview is never unexpectedly removed.
+// Route the admin editor cleanly to collection document forms so that singleton
+// page fields and blog posts are directly editable in the static production admin,
+// without triggering visual preview on pages that do not carry TinaIsland bridges.
 if (typeof window !== 'undefined') {
+  const isPreviewMode = (): boolean => {
+    const search = window.location.search || '';
+    if (search.includes('preview=false')) return false;
+    if (search.includes('preview=true')) return true;
+    if (typeof (window as any).__TINA_PREVIEW__ === 'boolean') {
+      return (window as any).__TINA_PREVIEW__;
+    }
+    const host = window.location.hostname || '';
+    if (host.startsWith('preview.') || host.includes('preview')) {
+      return true;
+    }
+    if (typeof process !== 'undefined' && process.env?.TINA_PREVIEW === 'true') {
+      return true;
+    }
+    return false;
+  };
+
+  const singletonDocMap: Record<string, string> = {
+    front: 'home',
+    about: 'about',
+    services: 'services',
+    resources: 'resources',
+    contact: 'contact',
+    results: 'results',
+    blog: 'blog',
+    reviews: 'reviews',
+  };
+
   const collectionToPreviewRoute: Record<string, string> = {
     front: '',
     about: 'about/',
@@ -16,51 +44,114 @@ if (typeof window !== 'undefined') {
     reviews: '',
   };
 
-  const ensurePreviewHash = () => {
+  const previewRouteToEditPath: Record<string, string> = {
+    '': 'front/home',
+    '/': 'front/home',
+    about: 'about/about',
+    'about/': 'about/about',
+    services: 'services/services',
+    'services/': 'services/services',
+    resources: 'resources/resources',
+    'resources/': 'resources/resources',
+    contact: 'contact/contact',
+    'contact/': 'contact/contact',
+    results: 'results/results',
+    'results/': 'results/results',
+    blog: 'blog/blog',
+    'blog/': 'blog/blog',
+    reviews: 'reviews/reviews',
+    'reviews/': 'reviews/reviews',
+  };
+
+  const handleAdminRouting = () => {
     const rawHash = window.location.hash || '';
-    const hash = rawHash.replace(/^#/, '');
+    const hash = rawHash.replace(/^#\/?/, '');
+    const isPreview = isPreviewMode();
 
-    // 1. Root or empty hash -> default to home preview /~/
-    if (!hash || hash === '/' || hash === '/~' || hash === '/~/' || hash === '~') {
-      if (rawHash !== '#/~/') {
-        window.location.replace(window.location.pathname + window.location.search + '#/~/');
-      }
-      return;
-    }
-
-    // 2. Already in visual preview route /~/* -> do not touch
-    if (hash.startsWith('/~/') || hash.startsWith('~/')) {
-      return;
-    }
-
-    // 3. Post collection edit: #/collections/edit/post/:slug -> open post in visual preview
-    const postEditMatch = hash.match(/^\/?collections\/edit\/post\/(.+)$/);
-    if (postEditMatch) {
-      const slug = postEditMatch[1].replace(/^\/|\/$/g, '');
-      window.location.replace(window.location.pathname + window.location.search + `#/~/blog/${slug}/`);
-      return;
-    }
-
-    // 4. Post collection list: #/collections/post or #/collections/post/~ -> open blog index preview
-    if (/^\/?collections\/post(\/|(\/~.*))?$/.test(hash)) {
-      window.location.replace(window.location.pathname + window.location.search + '#/~/blog/');
-      return;
-    }
-
-    // 5. Singleton collections list or edit: #/collections/:name or #/collections/edit/:name/*
-    const collectionMatch = hash.match(/^\/?collections(?:\/edit)?\/([^\/~]+)/);
-    if (collectionMatch) {
-      const colName = collectionMatch[1];
-      if (colName in collectionToPreviewRoute) {
-        const routePath = collectionToPreviewRoute[colName];
-        window.location.replace(window.location.pathname + window.location.search + `#/~/` + routePath);
+    if (isPreview) {
+      // PREVIEW MODE: Live side-by-side visual preview editor
+      // 1. Root or empty hash -> default to home visual preview #/~/
+      if (!hash || hash === '/' || hash === '~' || hash === '~/' || hash === '/~') {
+        if (rawHash !== '#/~/') {
+          window.location.replace(window.location.pathname + window.location.search + '#/~/');
+        }
         return;
+      }
+
+      // 2. Visual preview route #/~/... -> preserve and keep side-by-side preview active
+      if (hash.startsWith('~/') || hash === '~') {
+        return;
+      }
+
+      // 3. Post collection edit: #/collections/edit/post/:slug -> open post in visual preview
+      const postEditMatch = hash.match(/^collections\/edit\/post\/(.+)$/);
+      if (postEditMatch) {
+        const slug = postEditMatch[1].replace(/^\/|\/$/g, '');
+        window.location.replace(window.location.pathname + window.location.search + `#/~/blog/${slug}/`);
+        return;
+      }
+
+      // 4. Post collection list: #/collections/post or #/collections/post/~ -> open blog index preview
+      if (/^collections\/post(\/|(\/~.*))?$/.test(hash)) {
+        window.location.replace(window.location.pathname + window.location.search + '#/~/blog/');
+        return;
+      }
+
+      // 5. Singleton collections list or edit: #/collections/:name or #/collections/edit/:name/*
+      const collectionMatch = hash.match(/^collections(?:\/edit)?\/([^\/~]+)/);
+      if (collectionMatch) {
+        const colName = collectionMatch[1];
+        if (colName in collectionToPreviewRoute) {
+          const routePath = collectionToPreviewRoute[colName];
+          window.location.replace(window.location.pathname + window.location.search + `#/~/` + routePath);
+          return;
+        }
+      }
+    } else {
+      // PRODUCTION MODE: Standard Tina form editing (no visual preview iframe)
+      // 1. Root or empty hash or default preview route -> default to front page editor
+      if (!hash || hash === '~' || hash === '~/' || hash === '/' || hash === '/~') {
+        if (rawHash !== '#/collections/edit/front/home') {
+          window.location.replace(window.location.pathname + window.location.search + '#/collections/edit/front/home');
+        }
+        return;
+      }
+
+      // 2. Visual preview routes #/~/... -> map to corresponding collection form editor
+      if (hash.startsWith('~/') || hash === '~') {
+        const sub = hash.replace(/^~\/?/, '');
+        const blogMatch = sub.match(/^blog\/(.+?)\/?$/);
+        if (blogMatch) {
+          window.location.replace(window.location.pathname + window.location.search + `#/collections/edit/post/${blogMatch[1]}`);
+          return;
+        }
+        if (sub in previewRouteToEditPath) {
+          window.location.replace(window.location.pathname + window.location.search + `#/collections/edit/${previewRouteToEditPath[sub]}`);
+          return;
+        }
+        if (sub.includes('reviews')) {
+          window.location.replace(window.location.pathname + window.location.search + '#/collections/edit/reviews/reviews');
+          return;
+        }
+        window.location.replace(window.location.pathname + window.location.search + '#/collections/edit/front/home');
+        return;
+      }
+
+      // 3. Singleton collection list routes: #/collections/:name or #/collections/:name/~
+      const singletonListMatch = hash.match(/^collections\/([^\/~]+)(?:\/~?)?$/);
+      if (singletonListMatch) {
+        const colName = singletonListMatch[1];
+        if (colName in singletonDocMap) {
+          const docName = singletonDocMap[colName];
+          window.location.replace(window.location.pathname + window.location.search + `#/collections/edit/${colName}/${docName}`);
+          return;
+        }
       }
     }
   };
 
-  ensurePreviewHash();
-  window.addEventListener('hashchange', ensurePreviewHash);
+  handleAdminRouting();
+  window.addEventListener('hashchange', handleAdminRouting);
 }
 
 // Editing happens at /admin. Locally: `npm run dev`. In production the same URL works once
