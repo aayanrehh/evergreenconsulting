@@ -5,6 +5,23 @@ import { BlogCollectionManager } from './components/BlogCollectionManager';
 // page fields and blog posts are directly editable in the static production admin,
 // without triggering visual preview on pages that do not carry TinaIsland bridges.
 if (typeof window !== 'undefined') {
+  const isPreviewMode = (): boolean => {
+    const search = window.location.search || '';
+    if (search.includes('preview=false')) return false;
+    if (search.includes('preview=true')) return true;
+    if (typeof (window as any).__TINA_PREVIEW__ === 'boolean') {
+      return (window as any).__TINA_PREVIEW__;
+    }
+    const host = window.location.hostname || '';
+    if (host.startsWith('preview.') || host.includes('preview')) {
+      return true;
+    }
+    if (typeof process !== 'undefined' && process.env?.TINA_PREVIEW === 'true') {
+      return true;
+    }
+    return false;
+  };
+
   const singletonDocMap: Record<string, string> = {
     front: 'home',
     about: 'about',
@@ -14,6 +31,17 @@ if (typeof window !== 'undefined') {
     results: 'results',
     blog: 'blog',
     reviews: 'reviews',
+  };
+
+  const collectionToPreviewRoute: Record<string, string> = {
+    front: '',
+    about: 'about/',
+    services: 'services/',
+    resources: 'resources/',
+    contact: 'contact/',
+    results: 'results/',
+    blog: 'blog/',
+    reviews: '',
   };
 
   const previewRouteToEditPath: Record<string, string> = {
@@ -31,44 +59,93 @@ if (typeof window !== 'undefined') {
     'results/': 'results/results',
     blog: 'blog/blog',
     'blog/': 'blog/blog',
+    reviews: 'reviews/reviews',
+    'reviews/': 'reviews/reviews',
   };
 
   const handleAdminRouting = () => {
     const rawHash = window.location.hash || '';
     const hash = rawHash.replace(/^#\/?/, '');
+    const isPreview = isPreviewMode();
 
-    // 1. Root or empty hash -> default to front page editor
-    if (!hash || hash === '~' || hash === '~/' || hash === '/') {
-      if (rawHash !== '#/collections/edit/front/home') {
+    if (isPreview) {
+      // PREVIEW MODE: Live side-by-side visual preview editor
+      // 1. Root or empty hash -> default to home visual preview #/~/
+      if (!hash || hash === '/' || hash === '~' || hash === '~/' || hash === '/~') {
+        if (rawHash !== '#/~/') {
+          window.location.replace(window.location.pathname + window.location.search + '#/~/');
+        }
+        return;
+      }
+
+      // 2. Visual preview route #/~/... -> preserve and keep side-by-side preview active
+      if (hash.startsWith('~/') || hash === '~') {
+        return;
+      }
+
+      // 3. Post collection edit: #/collections/edit/post/:slug -> open post in visual preview
+      const postEditMatch = hash.match(/^collections\/edit\/post\/(.+)$/);
+      if (postEditMatch) {
+        const slug = postEditMatch[1].replace(/^\/|\/$/g, '');
+        window.location.replace(window.location.pathname + window.location.search + `#/~/blog/${slug}/`);
+        return;
+      }
+
+      // 4. Post collection list: #/collections/post or #/collections/post/~ -> open blog index preview
+      if (/^collections\/post(\/|(\/~.*))?$/.test(hash)) {
+        window.location.replace(window.location.pathname + window.location.search + '#/~/blog/');
+        return;
+      }
+
+      // 5. Singleton collections list or edit: #/collections/:name or #/collections/edit/:name/*
+      const collectionMatch = hash.match(/^collections(?:\/edit)?\/([^\/~]+)/);
+      if (collectionMatch) {
+        const colName = collectionMatch[1];
+        if (colName in collectionToPreviewRoute) {
+          const routePath = collectionToPreviewRoute[colName];
+          window.location.replace(window.location.pathname + window.location.search + `#/~/` + routePath);
+          return;
+        }
+      }
+    } else {
+      // PRODUCTION MODE: Standard Tina form editing (no visual preview iframe)
+      // 1. Root or empty hash or default preview route -> default to front page editor
+      if (!hash || hash === '~' || hash === '~/' || hash === '/' || hash === '/~') {
+        if (rawHash !== '#/collections/edit/front/home') {
+          window.location.replace(window.location.pathname + window.location.search + '#/collections/edit/front/home');
+        }
+        return;
+      }
+
+      // 2. Visual preview routes #/~/... -> map to corresponding collection form editor
+      if (hash.startsWith('~/') || hash === '~') {
+        const sub = hash.replace(/^~\/?/, '');
+        const blogMatch = sub.match(/^blog\/(.+?)\/?$/);
+        if (blogMatch) {
+          window.location.replace(window.location.pathname + window.location.search + `#/collections/edit/post/${blogMatch[1]}`);
+          return;
+        }
+        if (sub in previewRouteToEditPath) {
+          window.location.replace(window.location.pathname + window.location.search + `#/collections/edit/${previewRouteToEditPath[sub]}`);
+          return;
+        }
+        if (sub.includes('reviews')) {
+          window.location.replace(window.location.pathname + window.location.search + '#/collections/edit/reviews/reviews');
+          return;
+        }
         window.location.replace(window.location.pathname + window.location.search + '#/collections/edit/front/home');
+        return;
       }
-      return;
-    }
 
-    // 2. Legacy or visual preview routes #/~/...
-    if (hash.startsWith('~/') || hash === '~') {
-      const sub = hash.replace(/^~\/?/, '');
-      const blogMatch = sub.match(/^blog\/(.+?)\/?$/);
-      if (blogMatch) {
-        window.location.replace(window.location.pathname + window.location.search + `#/collections/edit/post/${blogMatch[1]}`);
-        return;
-      }
-      if (sub in previewRouteToEditPath) {
-        window.location.replace(window.location.pathname + window.location.search + `#/collections/edit/${previewRouteToEditPath[sub]}`);
-        return;
-      }
-      window.location.replace(window.location.pathname + window.location.search + '#/collections/edit/front/home');
-      return;
-    }
-
-    // 3. Singleton collection list routes: #/collections/:name or #/collections/:name/~
-    const singletonListMatch = hash.match(/^collections\/([^\/~]+)(?:\/~?)?$/);
-    if (singletonListMatch) {
-      const colName = singletonListMatch[1];
-      if (colName in singletonDocMap) {
-        const docName = singletonDocMap[colName];
-        window.location.replace(window.location.pathname + window.location.search + `#/collections/edit/${colName}/${docName}`);
-        return;
+      // 3. Singleton collection list routes: #/collections/:name or #/collections/:name/~
+      const singletonListMatch = hash.match(/^collections\/([^\/~]+)(?:\/~?)?$/);
+      if (singletonListMatch) {
+        const colName = singletonListMatch[1];
+        if (colName in singletonDocMap) {
+          const docName = singletonDocMap[colName];
+          window.location.replace(window.location.pathname + window.location.search + `#/collections/edit/${colName}/${docName}`);
+          return;
+        }
       }
     }
   };
@@ -103,6 +180,7 @@ export default defineConfig({
         ui: {
           allowedActions: { create: false, delete: false },
           global: false,
+          router: () => '/',
         },
         fields: [
           { type: 'string', name: 'titlePrefix', label: 'Hero Headline (Prefix)' },
@@ -167,6 +245,7 @@ export default defineConfig({
         ui: {
           allowedActions: { create: false, delete: false },
           global: false,
+          router: () => '/about/',
         },
         fields: [
           { type: 'string', name: 'name', label: 'Headline / Name', required: true },
@@ -210,6 +289,7 @@ export default defineConfig({
         ui: {
           allowedActions: { create: false, delete: false },
           global: false,
+          router: () => '/services/',
         },
         fields: [
           { type: 'string', name: 'pageHeading', label: 'Page Heading' },
@@ -255,6 +335,7 @@ export default defineConfig({
         ui: {
           allowedActions: { create: false, delete: false },
           global: false,
+          router: () => '/resources/',
         },
         fields: [
           {
@@ -301,6 +382,7 @@ export default defineConfig({
         ui: {
           allowedActions: { create: false, delete: false },
           global: false,
+          router: () => '/contact/',
         },
         fields: [
           { type: 'string', name: 'heading', label: 'Page Heading', required: true },
@@ -325,6 +407,7 @@ export default defineConfig({
         ui: {
           allowedActions: { create: false, delete: false },
           global: false,
+          router: () => '/results/',
         },
         fields: [
           { type: 'string', name: 'heading', label: 'Page Heading' },
@@ -341,6 +424,7 @@ export default defineConfig({
         ui: {
           allowedActions: { create: false, delete: false },
           global: false,
+          router: () => '/blog/',
         },
         fields: [
           {
@@ -360,7 +444,9 @@ export default defineConfig({
         label: 'Blog Posts',
         path: 'src/content/blog',
         format: 'md',
-        ui: {},
+        ui: {
+          router: ({ document }) => `/blog/${document._sys.filename}/`,
+        },
         fields: [
           { type: 'string', name: 'title', label: 'Title', isTitle: true, required: true },
           { type: 'string', name: 'description', label: 'Description (shows in Google and on the blog index)', required: true, ui: { component: 'textarea' } },
@@ -378,6 +464,7 @@ export default defineConfig({
         ui: {
           allowedActions: { create: false, delete: false },
           global: false,
+          router: () => '/#reviews',
         },
         fields: [
           { type: 'number', name: 'rating', label: 'Google rating (e.g. 5)' },

@@ -1,6 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useCMS } from 'tinacms';
 
+const isPreviewMode = (): boolean => {
+  if (typeof window !== 'undefined') {
+    const search = window.location.search || '';
+    if (search.includes('preview=false')) return false;
+    if (search.includes('preview=true')) return true;
+    if (typeof (window as any).__TINA_PREVIEW__ === 'boolean') {
+      return (window as any).__TINA_PREVIEW__;
+    }
+    const host = window.location.hostname || '';
+    if (host.startsWith('preview.') || host.includes('preview')) {
+      return true;
+    }
+  }
+  if (typeof process !== 'undefined' && process.env?.TINA_PREVIEW === 'true') {
+    return true;
+  }
+  return false;
+};
+
 export const BlogCollectionManager = (props: any) => {
   if (typeof window === 'undefined') {
     return null;
@@ -121,8 +140,10 @@ export const BlogCollectionManager = (props: any) => {
         setNewTitle('');
         setNewSlug('');
         setNewDesc('');
-        // Immediately navigate into the newly created post in collection form editor
-        window.location.hash = `#/collections/edit/post/${slug}`;
+        // Immediately navigate into the newly created post
+        window.location.hash = isPreviewMode()
+          ? `#/~/blog/${slug}/`
+          : `#/collections/edit/post/${slug}`;
       } else {
         setError('Failed to create post. Please try again.');
       }
@@ -470,7 +491,9 @@ export const BlogCollectionManager = (props: any) => {
                 {
                   type: 'button',
                   onClick: () => {
-                    window.location.hash = `#/collections/edit/post/${filename}`;
+                    window.location.hash = isPreviewMode()
+                      ? `#/~/blog/${filename}/`
+                      : `#/collections/edit/post/${filename}`;
                   },
                   style: {
                     background: '#f8fafc',
