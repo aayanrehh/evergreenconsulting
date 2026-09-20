@@ -6,10 +6,10 @@
   <button class="chat__toggle" type="button" aria-expanded="false" aria-controls="chat-panel" aria-label="Ask a question" title="Ask a question">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg>
   </button>
-  <section class="chat__panel" id="chat-panel" hidden aria-label="Chat with Evergreen Admissions Consulting">
+  <section class="chat__panel" id="chat-panel" hidden aria-label="Chat with Evergreen Consulting">
     <header class="chat__head">
       <div>
-        <strong>Evergreen Admissions Consulting</strong>
+        <strong>Evergreen Consulting</strong>
         <span class="small muted">Quick answers now. Andrea replies to anything else within a business day.</span>
       </div>
       <button class="chat__close" type="button" aria-label="Close chat">×</button>
@@ -49,7 +49,6 @@
     [/free|guide|resource|download|pdf/i, 'Two free guides, no email required: Writing Successful College Application Essays and the Writing the Personal Statement workshop slides. Both are on the Free resources page.'],
     [/wechat|whatsapp|phone|call|china|chinese/i, 'You can reach Andrea on WhatsApp at +1 203-703-2710 or scan the WeChat code on the Contact page.'],
     [/ai|chatgpt/i, 'Andrea does not use AI to write or rewrite student essays, and she can usually tell when a student has. Admissions officers can too.'],
-    [/new canaan|fairfield|connecticut|local|location|where/i, 'Andrea is based in New Canaan, Connecticut, and works with families across Fairfield County and worldwide via one-on-one video sessions and shared documents.'],
   ];
   async function ask(q: string): Promise<string> {
     const hit = faq.find(([re]) => re.test(q));
