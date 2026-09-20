@@ -121,8 +121,8 @@ export const BlogCollectionManager = (props: any) => {
         setNewTitle('');
         setNewSlug('');
         setNewDesc('');
-        // Immediately navigate into the newly created post in live visual preview
-        window.location.hash = `#/~/blog/${slug}/`;
+        // Immediately navigate into the newly created post in collection form editor
+        window.location.hash = `#/collections/edit/post/${slug}`;
       } else {
         setError('Failed to create post. Please try again.');
       }
@@ -470,7 +470,7 @@ export const BlogCollectionManager = (props: any) => {
                 {
                   type: 'button',
                   onClick: () => {
-                    window.location.hash = `#/~/blog/${filename}/`;
+                    window.location.hash = `#/collections/edit/post/${filename}`;
                   },
                   style: {
                     background: '#f8fafc',

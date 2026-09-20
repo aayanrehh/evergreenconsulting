@@ -1,66 +1,80 @@
 import { defineConfig } from 'tinacms';
 import { BlogCollectionManager } from './components/BlogCollectionManager';
 
-// Ensure the admin editor automatically stays in side-by-side visual preview mode
-// by default and when navigating between pages or clicking breadcrumbs, so the
-// right-side live website preview is never unexpectedly removed.
+// Route the admin editor cleanly to collection document forms so that singleton
+// page fields and blog posts are directly editable in the static production admin,
+// without triggering visual preview on pages that do not carry TinaIsland bridges.
 if (typeof window !== 'undefined') {
-  const collectionToPreviewRoute: Record<string, string> = {
-    front: '',
-    about: 'about/',
-    services: 'services/',
-    resources: 'resources/',
-    contact: 'contact/',
-    results: 'results/',
-    blog: 'blog/',
-    reviews: '',
+  const singletonDocMap: Record<string, string> = {
+    front: 'home',
+    about: 'about',
+    services: 'services',
+    resources: 'resources',
+    contact: 'contact',
+    results: 'results',
+    blog: 'blog',
+    reviews: 'reviews',
   };
 
-  const ensurePreviewHash = () => {
-    const rawHash = window.location.hash || '';
-    const hash = rawHash.replace(/^#/, '');
+  const previewRouteToEditPath: Record<string, string> = {
+    '': 'front/home',
+    '/': 'front/home',
+    about: 'about/about',
+    'about/': 'about/about',
+    services: 'services/services',
+    'services/': 'services/services',
+    resources: 'resources/resources',
+    'resources/': 'resources/resources',
+    contact: 'contact/contact',
+    'contact/': 'contact/contact',
+    results: 'results/results',
+    'results/': 'results/results',
+    blog: 'blog/blog',
+    'blog/': 'blog/blog',
+  };
 
-    // 1. Root or empty hash -> default to home preview /~/
-    if (!hash || hash === '/' || hash === '/~' || hash === '/~/' || hash === '~') {
-      if (rawHash !== '#/~/') {
-        window.location.replace(window.location.pathname + window.location.search + '#/~/');
+  const handleAdminRouting = () => {
+    const rawHash = window.location.hash || '';
+    const hash = rawHash.replace(/^#\/?/, '');
+
+    // 1. Root or empty hash -> default to front page editor
+    if (!hash || hash === '~' || hash === '~/' || hash === '/') {
+      if (rawHash !== '#/collections/edit/front/home') {
+        window.location.replace(window.location.pathname + window.location.search + '#/collections/edit/front/home');
       }
       return;
     }
 
-    // 2. Already in visual preview route /~/* -> do not touch
-    if (hash.startsWith('/~/') || hash.startsWith('~/')) {
+    // 2. Legacy or visual preview routes #/~/...
+    if (hash.startsWith('~/') || hash === '~') {
+      const sub = hash.replace(/^~\/?/, '');
+      const blogMatch = sub.match(/^blog\/(.+?)\/?$/);
+      if (blogMatch) {
+        window.location.replace(window.location.pathname + window.location.search + `#/collections/edit/post/${blogMatch[1]}`);
+        return;
+      }
+      if (sub in previewRouteToEditPath) {
+        window.location.replace(window.location.pathname + window.location.search + `#/collections/edit/${previewRouteToEditPath[sub]}`);
+        return;
+      }
+      window.location.replace(window.location.pathname + window.location.search + '#/collections/edit/front/home');
       return;
     }
 
-    // 3. Post collection edit: #/collections/edit/post/:slug -> open post in visual preview
-    const postEditMatch = hash.match(/^\/?collections\/edit\/post\/(.+)$/);
-    if (postEditMatch) {
-      const slug = postEditMatch[1].replace(/^\/|\/$/g, '');
-      window.location.replace(window.location.pathname + window.location.search + `#/~/blog/${slug}/`);
-      return;
-    }
-
-    // 4. Post collection list: #/collections/post or #/collections/post/~ -> open blog index preview
-    if (/^\/?collections\/post(\/|(\/~.*))?$/.test(hash)) {
-      window.location.replace(window.location.pathname + window.location.search + '#/~/blog/');
-      return;
-    }
-
-    // 5. Singleton collections list or edit: #/collections/:name or #/collections/edit/:name/*
-    const collectionMatch = hash.match(/^\/?collections(?:\/edit)?\/([^\/~]+)/);
-    if (collectionMatch) {
-      const colName = collectionMatch[1];
-      if (colName in collectionToPreviewRoute) {
-        const routePath = collectionToPreviewRoute[colName];
-        window.location.replace(window.location.pathname + window.location.search + `#/~/` + routePath);
+    // 3. Singleton collection list routes: #/collections/:name or #/collections/:name/~
+    const singletonListMatch = hash.match(/^collections\/([^\/~]+)(?:\/~?)?$/);
+    if (singletonListMatch) {
+      const colName = singletonListMatch[1];
+      if (colName in singletonDocMap) {
+        const docName = singletonDocMap[colName];
+        window.location.replace(window.location.pathname + window.location.search + `#/collections/edit/${colName}/${docName}`);
         return;
       }
     }
   };
 
-  ensurePreviewHash();
-  window.addEventListener('hashchange', ensurePreviewHash);
+  handleAdminRouting();
+  window.addEventListener('hashchange', handleAdminRouting);
 }
 
 // Editing happens at /admin. Locally: `npm run dev`. In production the same URL works once
@@ -89,7 +103,6 @@ export default defineConfig({
         ui: {
           allowedActions: { create: false, delete: false },
           global: false,
-          router: () => '/',
         },
         fields: [
           { type: 'string', name: 'titlePrefix', label: 'Hero Headline (Prefix)' },
@@ -154,7 +167,6 @@ export default defineConfig({
         ui: {
           allowedActions: { create: false, delete: false },
           global: false,
-          router: () => '/about/',
         },
         fields: [
           { type: 'string', name: 'name', label: 'Headline / Name', required: true },
@@ -198,7 +210,6 @@ export default defineConfig({
         ui: {
           allowedActions: { create: false, delete: false },
           global: false,
-          router: () => '/services/',
         },
         fields: [
           { type: 'string', name: 'pageHeading', label: 'Page Heading' },
@@ -244,7 +255,6 @@ export default defineConfig({
         ui: {
           allowedActions: { create: false, delete: false },
           global: false,
-          router: () => '/resources/',
         },
         fields: [
           {
@@ -291,7 +301,6 @@ export default defineConfig({
         ui: {
           allowedActions: { create: false, delete: false },
           global: false,
-          router: () => '/contact/',
         },
         fields: [
           { type: 'string', name: 'heading', label: 'Page Heading', required: true },
@@ -316,7 +325,6 @@ export default defineConfig({
         ui: {
           allowedActions: { create: false, delete: false },
           global: false,
-          router: () => '/results/',
         },
         fields: [
           { type: 'string', name: 'heading', label: 'Page Heading' },
@@ -333,7 +341,6 @@ export default defineConfig({
         ui: {
           allowedActions: { create: false, delete: false },
           global: false,
-          router: () => '/blog/',
         },
         fields: [
           {
@@ -353,9 +360,7 @@ export default defineConfig({
         label: 'Blog Posts',
         path: 'src/content/blog',
         format: 'md',
-        ui: {
-          router: ({ document }) => `/blog/${document._sys.filename}/`,
-        },
+        ui: {},
         fields: [
           { type: 'string', name: 'title', label: 'Title', isTitle: true, required: true },
           { type: 'string', name: 'description', label: 'Description (shows in Google and on the blog index)', required: true, ui: { component: 'textarea' } },
@@ -373,7 +378,6 @@ export default defineConfig({
         ui: {
           allowedActions: { create: false, delete: false },
           global: false,
-          router: () => '/#reviews',
         },
         fields: [
           { type: 'number', name: 'rating', label: 'Google rating (e.g. 5)' },
