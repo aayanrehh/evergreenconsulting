@@ -1,5 +1,47 @@
 {
   "heading": "Results",
-  "lede": "Every acceptance since 2015 for students Andrea coached, on her own and through partner consultants. About 900 schools, from the Ivy League to the UCs to graduate programs, listed by year.",
-  "disclaimer": "Rankings follow U.S. News Best National Universities for the year listed. An essay is one part of a holistic review. Nobody can guarantee an admission, and anyone who does is selling something."
+  "lede": "Acceptances earned since 2015 for students Andrea coached, both independently and through partner educational consultancies. Over 800 acceptances across the Ivy League, top-20 universities, liberal arts colleges, and graduate programs.",
+  "stats": [
+    {
+      "number": "800+",
+      "label": "University & Graduate Acceptances"
+    },
+    {
+      "number": "20,000+",
+      "label": "Essays Coached Since 2014"
+    },
+    {
+      "number": "100%",
+      "label": "Direct 1-on-1 Guidance"
+    },
+    {
+      "number": "72 hrs",
+      "label": "Or Less Feedback Turnaround"
+    }
+  ],
+  "highlights": [
+    {
+      "tier": "Ivy League & Elite Private Universities",
+      "description": "Every Ivy League institution (Harvard, Yale, Princeton, Columbia, UPenn, Brown, Dartmouth, Cornell), plus Stanford, MIT, and University of Chicago."
+    },
+    {
+      "tier": "Top-25 National Universities",
+      "description": "Duke, Johns Hopkins, Northwestern, Vanderbilt, Rice, Washington University in St. Louis, Georgetown, Notre Dame, and Emory."
+    },
+    {
+      "tier": "Selective Public Flagships",
+      "description": "UC Berkeley, UCLA, University of Michigan, UVA, UNC Chapel Hill, Georgia Tech, and University of Wisconsin–Madison."
+    },
+    {
+      "tier": "Liberal Arts & International",
+      "description": "Williams, Amherst, Wellesley, Bowdoin, Swarthmore, Oxford University, and London School of Economics."
+    }
+  ],
+  "methodologyHeading": "Honest admissions guidance, zero manufactured guarantees",
+  "methodologyText": "Admissions decisions are made through holistic review, where GPA, course rigor, testing, extracurricular impact, and recommendations intersect. Evergreen does not make inflated statistical claims or promise admission to specific institutions. What Andrea provides is uncompromising editorial precision, school list strategy, and authentic essay coaching that enables students to present their strongest, most compelling selves to admissions committees.",
+  "disclaimer": "Rankings follow U.S. News Best National Universities for the year listed. An essay is one part of a holistic review. Nobody can guarantee an admission, and anyone who does is selling something.",
+  "ctaHeading": "Start with a conversation",
+  "ctaLede": "Tell Andrea where your child is applying and where you are in the application timeline. You will hear back within one business day.",
+  "ctaButtonText": "Schedule a consultation",
+  "ctaButtonHref": "/contact/"
 }
