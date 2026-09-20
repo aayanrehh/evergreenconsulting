@@ -9,10 +9,10 @@ import { fileURLToPath } from 'node:url';
 
 const isPreview = process.env.TINA_PREVIEW === 'true';
 
+/** @returns {import('astro').AstroIntegration} */
 const previewEndpoints = () => ({
   name: 'tina-preview-endpoints',
   hooks: {
-    // @ts-ignore
     'astro:config:setup': ({ injectRoute, addMiddleware, updateConfig }) => {
       addMiddleware({
         order: 'pre',
@@ -31,6 +31,11 @@ const previewEndpoints = () => ({
       injectRoute({
         pattern: '/admin',
         entrypoint: './src/lib/tina/admin-redirect.ts',
+        prerender: false,
+      });
+      injectRoute({
+        pattern: '/admin/index.html',
+        entrypoint: './src/lib/tina/preview-admin-index.ts',
         prerender: false,
       });
       injectRoute({
@@ -76,17 +81,20 @@ const previewEndpoints = () => ({
         },
       });
     },
-    // @ts-ignore
     'astro:build:done': async ({ dir }) => {
-      const previewRobots = 'User-agent: *\nDisallow: /\n';
-      const targets = [
+      const robotsTargets = [
         new URL('robots.txt', dir),
         new URL('client/robots.txt', dir),
       ];
-      for (const target of targets) {
+      for (const target of robotsTargets) {
         if (fs.existsSync(target)) {
-          fs.writeFileSync(target, previewRobots, 'utf-8');
+          fs.rmSync(target);
         }
+      }
+
+      const clientAdminIndex = new URL('admin/index.html', dir);
+      if (fs.existsSync(clientAdminIndex)) {
+        fs.renameSync(clientAdminIndex, new URL('../server/admin-index.html', dir));
       }
     },
   },
@@ -98,6 +106,7 @@ export default defineConfig({
     ...(isPreview ? [tina(), previewEndpoints()] : [sitemap()]),
   ],
   ...(isPreview ? {
+    output: 'server',
     adapter: node({ mode: 'standalone' }),
   } : {}),
 });
