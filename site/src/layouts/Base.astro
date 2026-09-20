@@ -64,6 +64,7 @@ const person = {
   sameAs: ['https://www.linkedin.com/in/andrea-schiralli-19529683/'],
 };
 const graph = [business, person, ...schema];
+const isPreview = process.env.TINA_PREVIEW === 'true';
 ---
 
 <!doctype html>
@@ -74,7 +75,14 @@ const graph = [business, person, ...schema];
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="robots" content="index, follow, max-image-preview:large" />
+    {isPreview ? (
+      <>
+        <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
+        <meta name="googlebot" content="noindex,nofollow,noarchive,nosnippet" />
+      </>
+    ) : (
+      <meta name="robots" content="index, follow, max-image-preview:large" />
+    )}
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={siteName} />
     <meta property="og:title" content={ogTitle} />
@@ -88,7 +96,7 @@ const graph = [business, person, ...schema];
     <meta name="twitter:title" content={ogTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={new URL("/og.png", Astro.site)} />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    {!isPreview && <link rel="sitemap" href="/sitemap-index.xml" />}
     <link rel="icon" href="/favicon.png" type="image/png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
