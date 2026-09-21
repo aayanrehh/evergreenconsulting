@@ -412,6 +412,25 @@ export default defineConfig({
         fields: [
           { type: 'string', name: 'heading', label: 'Page Heading' },
           { type: 'string', name: 'lede', label: 'Top Blurb / Description', ui: { component: 'textarea' } },
+          {
+            type: 'object', name: 'stats', label: 'Stats Strip', list: true,
+            ui: { itemProps: (item) => ({ label: `${item?.number || ''} — ${item?.label || ''}`.trim() || 'Stat' }) },
+            fields: [
+              { type: 'string', name: 'number', label: 'Number / Stat (e.g. 800+)', required: true },
+              { type: 'string', name: 'label', label: 'Label (e.g. University Acceptances)', required: true },
+            ],
+          },
+          {
+            type: 'object', name: 'highlights', label: 'Tier Highlights (backend reference)',
+            list: true,
+            ui: { itemProps: (item) => ({ label: item?.tier || 'Tier' }) },
+            fields: [
+              { type: 'string', name: 'tier', label: 'Tier Name', required: true },
+              { type: 'string', name: 'description', label: 'Schools / Description', required: true, ui: { component: 'textarea' } },
+            ],
+          },
+          { type: 'string', name: 'methodologyHeading', label: 'Methodology Heading' },
+          { type: 'string', name: 'methodologyText', label: 'Methodology Body', ui: { component: 'textarea' } },
           { type: 'string', name: 'disclaimer', label: 'Disclaimer Note', ui: { component: 'textarea' } },
         ],
       },
