@@ -332,6 +332,15 @@ export default defineConfig({
               { type: 'string', name: 'description', label: 'Step Description', required: true, ui: { component: 'textarea' } },
             ],
           },
+          { type: 'string', name: 'localIntro', label: 'Local Discovery Intro Text', ui: { component: 'textarea' } },
+          {
+            type: 'object', name: 'localLinks', label: 'Local Discovery Links', list: true,
+            ui: { itemProps: (item) => ({ label: item?.label || 'Link' }) },
+            fields: [
+              { type: 'string', name: 'label', label: 'Link Text', required: true },
+              { type: 'string', name: 'href', label: 'Link Target URL', required: true },
+            ],
+          },
         ],
       },
       {
