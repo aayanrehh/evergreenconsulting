@@ -6,6 +6,7 @@ interface Props {
     heading?: string;
     lede?: string;
     disclaimer?: string;
+    stats?: { number: string; label: string }[];
   };
 }
 
@@ -16,8 +17,19 @@ const { results } = Astro.props;
   <div class="wrap">
     <h1 data-tina-field={tinaField(results, 'heading') || undefined}>{results?.heading || 'Results'}</h1>
     <p class="lede" data-tina-field={tinaField(results, 'lede') || undefined}>{results?.lede}</p>
+
+    {results?.stats && results.stats.length > 0 && (
+      <div class="facts" aria-label="Admissions Track Record" data-tina-field={tinaField(results, 'stats') || undefined}>
+        {results.stats.map((stat, i) => (
+          <span data-tina-field={tinaField(results, 'stats', i) || undefined}>
+            <strong>{stat.number}</strong> {stat.label}
+          </span>
+        ))}
+      </div>
+    )}
+
     {results?.disclaimer && (
-      <p class="small muted" data-tina-field={tinaField(results, 'disclaimer') || undefined}>
+      <p class="small muted disclaimer" data-tina-field={tinaField(results, 'disclaimer') || undefined}>
         {results.disclaimer}
       </p>
     )}
@@ -26,4 +38,17 @@ const { results } = Astro.props;
 
 <style>
   .page-head { padding-bottom: 0; }
+
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 2.5rem;
+    margin-top: 1.75rem;
+    margin-bottom: 0.25rem;
+    font-size: var(--step--1);
+  }
+  .facts span { display: flex; flex-direction: column; gap: 0.15rem; }
+  .facts strong { font-size: var(--step-1); font-family: var(--serif); color: var(--evergreen); line-height: 1; }
+
+  .disclaimer { margin-top: 1.25rem; max-width: 70ch; }
 </style>
