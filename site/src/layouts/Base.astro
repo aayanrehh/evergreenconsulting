@@ -24,6 +24,18 @@ const nav = [
 ];
 const current = Astro.url.pathname;
 
+const website = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${Astro.site}#website`,
+  url: Astro.site?.toString(),
+  name: siteName,
+  alternateName: 'Evergreen Consulting',
+  description:
+    'College admissions consulting and essay coaching by Andrea Schiralli, Harvard-trained educator. Personal statements, supplemental essays, résumés, and interview preparation for undergraduate and graduate applicants.',
+  publisher: { '@id': `${Astro.site}#business` },
+};
+
 const business = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
@@ -40,6 +52,7 @@ const business = {
   image: `${Astro.site}andrea.jpg`,
   founder: { '@id': `${Astro.site}#andrea` },
   knowsAbout: [
+    'college admissions consulting',
     'college admissions essay editing',
     'personal statement review',
     'Common App essays',
@@ -55,15 +68,16 @@ const person = {
   '@id': `${Astro.site}#andrea`,
   name: 'Andrea Schiralli',
   jobTitle: 'College Admissions Consultant',
+  url: `${Astro.site}about/`,
   image: `${Astro.site}andrea.jpg`,
   worksFor: { '@id': `${Astro.site}#business` },
   alumniOf: [
-    { '@type': 'CollegeOrUniversity', name: 'Harvard University', description: "M.Ed., 2014" },
+    { '@type': 'CollegeOrUniversity', name: 'Harvard University', description: 'M.Ed., 2014' },
     { '@type': 'CollegeOrUniversity', name: 'Cornell University', description: 'B.A. French Literature, 2010' },
   ],
   sameAs: ['https://www.linkedin.com/in/andrea-schiralli-19529683/'],
 };
-const graph = [business, person, ...schema];
+const graph = [website, business, person, ...schema];
 const isPreview = process.env.TINA_PREVIEW === 'true';
 ---
 
