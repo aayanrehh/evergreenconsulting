@@ -39,9 +39,11 @@ const label = (c: string) => c.replace('Top-100 Schools: Undergraduate Acceptanc
     <ResultsHeader results={results} />
   )}
 
-  <section class="section">
+  <section class="section results-body">
     <div class="wrap">
-      <LogoWall />
+      <div class="logos-wrap">
+        <LogoWall />
+      </div>
       {years.map((y) => (
         <details class="year">
           <summary><h2>{y}</h2><span class="year__count">{Object.values((acceptances as any)[y]).flat().length} acceptances</span></summary>
@@ -60,6 +62,13 @@ const label = (c: string) => c.replace('Top-100 Schools: Undergraduate Acceptanc
 </Base>
 
 <style>
+  .results-body {
+    border-top: none !important;
+    padding-top: 2rem;
+  }
+  .logos-wrap {
+    margin-bottom: 2.5rem;
+  }
   .year { border-top: 1px solid var(--rule); }
   .year:last-child { border-bottom: 1px solid var(--rule); }
   .year summary { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding-block: 1.25rem; cursor: pointer; list-style: none; }
