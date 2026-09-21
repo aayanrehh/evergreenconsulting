@@ -33,6 +33,7 @@ if (typeof window !== 'undefined') {
     reviews: 'reviews',
     newCanaan: 'new-canaan',
     fairfieldCounty: 'fairfield-county',
+    guidesIndex: 'guides-index',
   };
 
   const collectionToPreviewRoute: Record<string, string> = {
@@ -46,6 +47,7 @@ if (typeof window !== 'undefined') {
     reviews: '',
     newCanaan: 'new-canaan-ct/',
     fairfieldCounty: 'fairfield-county-ct/',
+    guidesIndex: 'guides/',
   };
 
   const previewRouteToEditPath: Record<string, string> = {
@@ -69,6 +71,8 @@ if (typeof window !== 'undefined') {
     'new-canaan-ct/': 'newCanaan/new-canaan',
     'fairfield-county-ct': 'fairfieldCounty/fairfield-county',
     'fairfield-county-ct/': 'fairfieldCounty/fairfield-county',
+    guides: 'guidesIndex/guides-index',
+    'guides/': 'guidesIndex/guides-index',
   };
 
   const handleAdminRouting = () => {
@@ -105,7 +109,21 @@ if (typeof window !== 'undefined') {
         return;
       }
 
-      // 5. Singleton collections list or edit: #/collections/:name or #/collections/edit/:name/*
+      // 5. Guide collection edit: #/collections/edit/guide/:slug -> open guide in visual preview
+      const guideEditMatch = hash.match(/^collections\/edit\/guide\/(.+)$/);
+      if (guideEditMatch) {
+        const slug = guideEditMatch[1].replace(/^\/|\/$/g, '');
+        window.location.replace(window.location.pathname + window.location.search + `#/~/guides/${slug}/`);
+        return;
+      }
+
+      // 6. Guide collection list: #/collections/guide or #/collections/guide/~ -> open guides index preview
+      if (/^collections\/guide(\/|(\/~.*))?$/.test(hash)) {
+        window.location.replace(window.location.pathname + window.location.search + '#/~/guides/');
+        return;
+      }
+
+      // 7. Singleton collections list or edit: #/collections/:name or #/collections/edit/:name/*
       const collectionMatch = hash.match(/^collections(?:\/edit)?\/([^\/~]+)/);
       if (collectionMatch) {
         const colName = collectionMatch[1];
@@ -133,6 +151,11 @@ if (typeof window !== 'undefined') {
           window.location.replace(window.location.pathname + window.location.search + `#/collections/edit/post/${blogMatch[1]}`);
           return;
         }
+        const guideMatch = sub.match(/^guides\/(.+?)\/?$/);
+        if (guideMatch) {
+          window.location.replace(window.location.pathname + window.location.search + `#/collections/edit/guide/${guideMatch[1]}`);
+          return;
+        }
         if (sub in previewRouteToEditPath) {
           window.location.replace(window.location.pathname + window.location.search + `#/collections/edit/${previewRouteToEditPath[sub]}`);
           return;
@@ -144,6 +167,7 @@ if (typeof window !== 'undefined') {
         window.location.replace(window.location.pathname + window.location.search + '#/collections/edit/front/home');
         return;
       }
+
 
       // 3. Singleton collection list routes: #/collections/:name or #/collections/:name/~
       const singletonListMatch = hash.match(/^collections\/([^\/~]+)(?:\/~?)?$/);
@@ -707,6 +731,101 @@ export default defineConfig({
           { type: 'string', name: 'ctaButtonHref', label: 'Bottom Banner Button Link' },
         ],
       },
+      {
+        name: 'guidesIndex',
+        label: 'Guides Index Page',
+        path: 'src/data',
+        match: { include: 'guides-index' },
+        format: 'json',
+        ui: {
+          allowedActions: { create: false, delete: false },
+          global: false,
+          router: () => '/guides/',
+        },
+        fields: [
+          { type: 'string', name: 'metaTitle', label: 'SEO Title / Browser Tab' },
+          { type: 'string', name: 'metaDescription', label: 'Meta Description', ui: { component: 'textarea' } },
+          { type: 'string', name: 'eyebrow', label: 'Eyebrow Tag' },
+          { type: 'string', name: 'heading', label: 'Page Heading', required: true },
+          { type: 'string', name: 'lede', label: 'Page Lede / Subtitle', ui: { component: 'textarea' }, required: true },
+          { type: 'string', name: 'introParagraphs', label: 'Introductory Paragraphs', list: true, ui: { component: 'textarea' } },
+          { type: 'string', name: 'ctaHeading', label: 'Bottom Banner Heading' },
+          { type: 'string', name: 'ctaLede', label: 'Bottom Banner Lede', ui: { component: 'textarea' } },
+          { type: 'string', name: 'ctaButtonText', label: 'Bottom Banner Button Text' },
+          { type: 'string', name: 'ctaButtonHref', label: 'Bottom Banner Button Link' },
+        ],
+      },
+      {
+        name: 'guide',
+        label: 'Local Guides',
+        path: 'src/content/guides',
+        format: 'md',
+        ui: {
+          router: ({ document }) => `/guides/${document._sys.filename}/`,
+        },
+        fields: [
+          { type: 'string', name: 'title', label: 'Guide Title', isTitle: true, required: true },
+          { type: 'string', name: 'description', label: 'Short Description', required: true, ui: { component: 'textarea' } },
+          { type: 'datetime', name: 'date', label: 'Published Date', required: true },
+          { type: 'datetime', name: 'updated', label: 'Updated Date' },
+          { type: 'string', name: 'author', label: 'Author Name' },
+          { type: 'string', name: 'locality', label: 'Locality / Region (e.g. Fairfield County, CT)' },
+          { type: 'string', name: 'searchIntent', label: 'Search Intent / Topic Category' },
+          { type: 'string', name: 'readerQuestion', label: 'Primary Reader Question', ui: { component: 'textarea' } },
+          { type: 'image', name: 'image', label: 'Featured Image (optional)' },
+          { type: 'boolean', name: 'draft', label: 'Draft' },
+          {
+            type: 'object',
+            name: 'sources',
+            label: 'Visible Sources & References',
+            list: true,
+            ui: { itemProps: (item) => ({ label: item?.title || 'Source' }) },
+            fields: [
+              { type: 'string', name: 'title', label: 'Source Title', required: true },
+              { type: 'string', name: 'url', label: 'Source URL' },
+            ],
+          },
+          {
+            type: 'object',
+            name: 'faqs',
+            label: 'Frequently Asked Questions',
+            list: true,
+            ui: { itemProps: (item) => ({ label: item?.question || 'FAQ' }) },
+            fields: [
+              { type: 'string', name: 'question', label: 'Question', required: true },
+              { type: 'string', name: 'answer', label: 'Answer', required: true, ui: { component: 'textarea' } },
+            ],
+          },
+          {
+            type: 'object',
+            name: 'relatedPages',
+            label: 'Related Pages',
+            list: true,
+            ui: { itemProps: (item) => ({ label: item?.label || 'Related Page' }) },
+            fields: [
+              { type: 'string', name: 'label', label: 'Link Label', required: true },
+              { type: 'string', name: 'href', label: 'Target URL', required: true },
+              { type: 'string', name: 'optionalDescription', label: 'Optional Description', ui: { component: 'textarea' } },
+            ],
+          },
+          {
+            type: 'object',
+            name: 'cta',
+            label: 'End-of-Article Call to Action',
+            fields: [
+              { type: 'boolean', name: 'show', label: 'Display CTA Banner' },
+              { type: 'string', name: 'heading', label: 'CTA Heading' },
+              { type: 'string', name: 'text', label: 'CTA Description', ui: { component: 'textarea' } },
+              { type: 'string', name: 'buttonText', label: 'Button Text' },
+              { type: 'string', name: 'buttonHref', label: 'Button Link' },
+            ],
+          },
+          { type: 'string', name: 'metaTitle', label: 'SEO Title / Browser Tab' },
+          { type: 'string', name: 'metaDescription', label: 'Meta Description', ui: { component: 'textarea' } },
+          { type: 'rich-text', name: 'body', label: 'Guide Content', isBody: true },
+        ],
+      },
     ],
   },
 });
+

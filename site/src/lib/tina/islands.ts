@@ -24,6 +24,8 @@ import ResultsHeader from '../../components/islands/ResultsHeader.astro';
 import BlogHeader from '../../components/islands/BlogHeader.astro';
 import NewCanaanContent from '../../components/islands/NewCanaanContent.astro';
 import FairfieldCountyContent from '../../components/islands/FairfieldCountyContent.astro';
+import GuidesIndexContent from '../../components/islands/GuidesIndexContent.astro';
+import GuidePostContent from '../../components/islands/GuidePostContent.astro';
 import {
   getHome,
   getAbout,
@@ -36,7 +38,10 @@ import {
   getBlog,
   getNewCanaan,
   getFairfieldCounty,
+  getGuidesIndex,
+  getGuidePost,
 } from './data';
+
 
 export const islands: IslandRegistry = {
   hero: {
@@ -162,4 +167,24 @@ export const islands: IslandRegistry = {
       data: data?.data?.fairfieldCounty,
     }),
   },
+  'guides-index': {
+    fetch: () => getGuidesIndex(),
+    component: GuidesIndexContent,
+    wrapper: { tag: 'div', className: 'guides-index-wrap' },
+    propsFromData: (data: any) => ({
+      data: data?.data?.guidesIndex,
+    }),
+  },
+  'guide-post': {
+    fetch: (_req, params) => {
+      const id = params.get('id') || '';
+      return getGuidePost(id);
+    },
+    component: GuidePostContent,
+    wrapper: { tag: 'article', className: 'section post guide-post' },
+    propsFromData: (data: any) => ({
+      guide: data?.data?.guide,
+    }),
+  },
 };
+

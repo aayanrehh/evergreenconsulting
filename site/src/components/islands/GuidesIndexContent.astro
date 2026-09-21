@@ -1,0 +1,208 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+import defaultData from '../../data/guides-index.json';
+
+interface GuideItem {
+  id: string;
+  data: {
+    title: string;
+    description: string;
+    date: Date | string;
+    updated?: Date | string;
+    locality?: string;
+    searchIntent?: string;
+    readerQuestion?: string;
+    draft?: boolean;
+  };
+}
+
+interface Props {
+  data?: any;
+  guides?: GuideItem[];
+}
+
+const { data = defaultData, guides = [] } = Astro.props;
+
+const {
+  eyebrow = 'Admissions Knowledge Base',
+  heading = 'College Admissions & Application Guides',
+  lede = 'Clear, practical guidance on high-stakes college planning milestones, essay pacing, and decision timelines for Fairfield County families.',
+  introParagraphs = [],
+  ctaHeading = 'Planning Your College Admissions Roadmap?',
+  ctaLede = 'Connect with Andrea to discuss your student’s target colleges, timeline, and essay strategy. Andrea will reply personally.',
+  ctaButtonText = 'Schedule a Consultation',
+  ctaButtonHref = '/contact/',
+} = data || {};
+
+const fmt = (d: Date | string) => {
+  const dateObj = typeof d === 'string' ? new Date(d) : d;
+  return !isNaN(dateObj?.getTime?.())
+    ? dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    : '';
+};
+---
+
+<section class="section page-head">
+  <div class="wrap">
+    <p class="eyebrow" data-tina-field={tinaField(data, 'eyebrow') || undefined}>{eyebrow}</p>
+    <h1 data-tina-field={tinaField(data, 'heading') || undefined}>{heading}</h1>
+    <p class="lede" data-tina-field={tinaField(data, 'lede') || undefined}>{lede}</p>
+    {introParagraphs.length > 0 && (
+      <div class="intro-prose" data-tina-field={tinaField(data, 'introParagraphs') || undefined}>
+        {introParagraphs.map((p: string, i: number) => (
+          <p data-tina-field={tinaField(data, 'introParagraphs', i) || undefined}>{p}</p>
+        ))}
+      </div>
+    )}
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="guides-grid">
+      {guides.map((g) => (
+        <article class="guide-card">
+          <div class="guide-meta">
+            {g.data.locality && <span class="badge">{g.data.locality}</span>}
+            <time datetime={typeof g.data.date === 'string' ? g.data.date : g.data.date.toISOString()}>
+              {fmt(g.data.date)}
+            </time>
+          </div>
+          <h2>
+            <a href={`/guides/${g.id}/`}>{g.data.title}</a>
+          </h2>
+          <p class="guide-desc">{g.data.description}</p>
+          {g.data.readerQuestion && (
+            <p class="guide-q">
+              <strong>Core Question:</strong> {g.data.readerQuestion}
+            </p>
+          )}
+          <a class="guide-link" href={`/guides/${g.id}/`} aria-label={`Read guide: ${g.data.title}`}>
+            Read guide <span aria-hidden="true">→</span>
+          </a>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="section section--linen cta-banner">
+  <div class="wrap cta-banner__wrap">
+    <div>
+      <h2 data-tina-field={tinaField(data, 'ctaHeading') || undefined}>{ctaHeading}</h2>
+      <p data-tina-field={tinaField(data, 'ctaLede') || undefined}>{ctaLede}</p>
+    </div>
+    <div class="cta-actions">
+      <a class="btn btn--solid" href={ctaButtonHref} data-tina-field={tinaField(data, 'ctaButtonText') || undefined}>
+        {ctaButtonText}
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .intro-prose {
+    max-width: 68ch;
+    margin-top: 1.5rem;
+    color: #3a4a42;
+    line-height: 1.7;
+  }
+  .intro-prose p {
+    margin-bottom: 0.75rem;
+  }
+  .guides-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+  .guide-card {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .guide-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  .guide-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: var(--step--1);
+    color: #5a6a62;
+    margin-bottom: 1rem;
+  }
+  .badge {
+    background: var(--linen);
+    color: var(--evergreen);
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+    font-weight: 500;
+    font-size: 0.85rem;
+  }
+  .guide-card h2 {
+    font-size: var(--step-1);
+    line-height: 1.35;
+    margin: 0 0 0.75rem;
+  }
+  .guide-card h2 a {
+    color: var(--evergreen);
+    text-decoration: none;
+  }
+  .guide-card h2 a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+  .guide-desc {
+    color: #3a4a42;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0 0 1rem;
+    flex-grow: 1;
+  }
+  .guide-q {
+    font-size: 0.85rem;
+    color: #4a5a52;
+    background: var(--sand, #f8f6f0);
+    padding: 0.6rem 0.8rem;
+    border-radius: 3px;
+    border-left: 2px solid var(--brass);
+    margin: 0 0 1.25rem;
+    line-height: 1.45;
+  }
+  .guide-link {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--evergreen);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .guide-link:hover {
+    color: var(--ink);
+  }
+  .cta-banner {
+    border-top: 1px solid var(--rule);
+  }
+  .cta-banner__wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+  .cta-banner h2 {
+    font-size: var(--step-2);
+    margin: 0 0 0.5rem;
+  }
+  .cta-banner p {
+    color: #4a5a52;
+    margin: 0;
+    max-width: 55ch;
+  }
+</style>

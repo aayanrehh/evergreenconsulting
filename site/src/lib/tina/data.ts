@@ -77,3 +77,18 @@ export const getFairfieldCounty = async () => {
     { priority: 'primary' }
   );
 };
+
+export const getGuidesIndex = async () => {
+  return requestWithMetadata(
+    (client.queries as any).guidesIndex?.({ relativePath: 'guides-index.json' }),
+    { priority: 'primary' }
+  );
+};
+
+export const getGuidePost = async (id: string) => {
+  return requestWithMetadata(
+    (client.queries as any).guide?.({ relativePath: `${id}.md` }),
+    { priority: 'primary' }
+  );
+};
+
