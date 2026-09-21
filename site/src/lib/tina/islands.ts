@@ -22,6 +22,7 @@ import ContactContent from '../../components/islands/ContactContent.astro';
 import BlogPostContent from '../../components/islands/BlogPostContent.astro';
 import ResultsHeader from '../../components/islands/ResultsHeader.astro';
 import BlogHeader from '../../components/islands/BlogHeader.astro';
+import NewCanaanContent from '../../components/islands/NewCanaanContent.astro';
 import {
   getHome,
   getAbout,
@@ -32,6 +33,7 @@ import {
   getReviews,
   getResults,
   getBlog,
+  getNewCanaan,
 } from './data';
 
 export const islands: IslandRegistry = {
@@ -140,6 +142,14 @@ export const islands: IslandRegistry = {
     wrapper: { tag: 'div', className: 'blog-header-wrap' },
     propsFromData: (data: any) => ({
       blog: data?.data?.blog,
+    }),
+  },
+  'new-canaan': {
+    fetch: () => getNewCanaan(),
+    component: NewCanaanContent,
+    wrapper: { tag: 'div', className: 'new-canaan-page' },
+    propsFromData: (data: any) => ({
+      data: data?.data?.newCanaan,
     }),
   },
 };

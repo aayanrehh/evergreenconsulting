@@ -63,3 +63,10 @@ export const getBlog = async () => {
     { priority: 'primary' }
   );
 };
+
+export const getNewCanaan = async () => {
+  return requestWithMetadata(
+    (client.queries as any).newCanaan?.({ relativePath: 'new-canaan.json' }),
+    { priority: 'primary' }
+  );
+};

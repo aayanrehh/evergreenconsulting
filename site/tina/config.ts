@@ -31,6 +31,7 @@ if (typeof window !== 'undefined') {
     results: 'results',
     blog: 'blog',
     reviews: 'reviews',
+    newCanaan: 'new-canaan',
   };
 
   const collectionToPreviewRoute: Record<string, string> = {
@@ -42,6 +43,7 @@ if (typeof window !== 'undefined') {
     results: 'results/',
     blog: 'blog/',
     reviews: '',
+    newCanaan: 'new-canaan-ct/',
   };
 
   const previewRouteToEditPath: Record<string, string> = {
@@ -61,6 +63,8 @@ if (typeof window !== 'undefined') {
     'blog/': 'blog/blog',
     reviews: 'reviews/reviews',
     'reviews/': 'reviews/reviews',
+    'new-canaan-ct': 'newCanaan/new-canaan',
+    'new-canaan-ct/': 'newCanaan/new-canaan',
   };
 
   const handleAdminRouting = () => {
@@ -511,6 +515,89 @@ export default defineConfig({
               { type: 'string', name: 'text', label: 'Review', ui: { component: 'textarea' }, required: true },
             ],
           },
+        ],
+      },
+      {
+        name: 'newCanaan',
+        label: 'New Canaan Landing Page',
+        path: 'src/data',
+        match: { include: 'new-canaan' },
+        format: 'json',
+        ui: {
+          allowedActions: { create: false, delete: false },
+          global: false,
+          router: () => '/new-canaan-ct/',
+        },
+        fields: [
+          { type: 'string', name: 'metaTitle', label: 'SEO Title / Browser Tab' },
+          { type: 'string', name: 'metaDescription', label: 'Meta Description', ui: { component: 'textarea' } },
+          { type: 'string', name: 'eyebrow', label: 'Eyebrow Tag' },
+          { type: 'string', name: 'heading', label: 'Page Heading', required: true },
+          { type: 'string', name: 'lede', label: 'Hero Lede', ui: { component: 'textarea' }, required: true },
+          { type: 'string', name: 'primaryCtaText', label: 'Primary CTA Text' },
+          { type: 'string', name: 'primaryCtaHref', label: 'Primary CTA Link' },
+          { type: 'string', name: 'secondaryCtaText', label: 'Secondary CTA Text' },
+          { type: 'string', name: 'secondaryCtaHref', label: 'Secondary CTA Link' },
+          {
+            type: 'object', name: 'facts', label: 'Key Facts', list: true,
+            ui: { itemProps: (item) => ({ label: `${item?.number || ''} ${item?.label || ''}`.trim() || 'Fact' }) },
+            fields: [
+              { type: 'string', name: 'number', label: 'Number / Stat', required: true },
+              { type: 'string', name: 'label', label: 'Label', required: true },
+            ],
+          },
+          { type: 'string', name: 'introHeading', label: 'Intro Heading' },
+          { type: 'string', name: 'introParagraphs', label: 'Intro Paragraphs', list: true, ui: { component: 'textarea' } },
+          { type: 'string', name: 'pillarsHeading', label: 'Pillars Heading' },
+          {
+            type: 'object', name: 'pillars', label: 'Service Pillars', list: true,
+            ui: { itemProps: (item) => ({ label: item?.title || 'Pillar' }) },
+            fields: [
+              { type: 'string', name: 'tag', label: 'Pillar Tag' },
+              { type: 'string', name: 'title', label: 'Pillar Title', required: true },
+              { type: 'string', name: 'description', label: 'Pillar Description', required: true, ui: { component: 'textarea' } },
+            ],
+          },
+          { type: 'string', name: 'processHeading', label: 'Process Heading' },
+          {
+            type: 'object', name: 'processSteps', label: 'Process Steps', list: true,
+            ui: { itemProps: (item) => ({ label: item?.title || 'Step' }) },
+            fields: [
+              { type: 'string', name: 'title', label: 'Step Title', required: true },
+              { type: 'string', name: 'description', label: 'Step Description', required: true, ui: { component: 'textarea' } },
+            ],
+          },
+          { type: 'string', name: 'aboutHeading', label: 'About Heading' },
+          { type: 'string', name: 'aboutSubtitle', label: 'About Subtitle' },
+          { type: 'string', name: 'aboutParagraphs', label: 'About Bio Paragraphs', list: true, ui: { component: 'textarea' } },
+          { type: 'string', name: 'aboutCtaText', label: 'About Primary CTA Text' },
+          { type: 'string', name: 'aboutCtaHref', label: 'About Primary CTA Link' },
+          { type: 'string', name: 'aboutSecondaryCtaText', label: 'About Secondary CTA Text' },
+          { type: 'string', name: 'aboutSecondaryCtaHref', label: 'About Secondary CTA Link' },
+          { type: 'string', name: 'relatedPagesHeading', label: 'Related Pages Heading' },
+          {
+            type: 'object', name: 'relatedPages', label: 'Related Internal Pages', list: true,
+            ui: { itemProps: (item) => ({ label: item?.label || 'Related Page' }) },
+            fields: [
+              { type: 'string', name: 'label', label: 'Link Label / Anchor', required: true },
+              { type: 'string', name: 'href', label: 'Target URL (e.g. /services/)', required: true },
+              { type: 'string', name: 'optionalDescription', label: 'Optional Description', ui: { component: 'textarea' } },
+            ],
+          },
+          { type: 'string', name: 'faqHeading', label: 'FAQ Heading' },
+          { type: 'string', name: 'faqSubtitle', label: 'FAQ Subtitle' },
+          {
+            type: 'object', name: 'faqs', label: 'Frequently Asked Questions', list: true,
+            ui: { itemProps: (item) => ({ label: item?.question || 'FAQ' }) },
+            fields: [
+              { type: 'string', name: 'question', label: 'Question', required: true },
+              { type: 'string', name: 'answer', label: 'Answer', required: true, ui: { component: 'textarea' } },
+            ],
+          },
+          { type: 'string', name: 'ctaHeading', label: 'Bottom Banner Heading' },
+          { type: 'string', name: 'ctaLede', label: 'Bottom Banner Lede', ui: { component: 'textarea' } },
+          { type: 'string', name: 'ctaButtonText', label: 'Bottom Banner Button Text' },
+          { type: 'string', name: 'ctaButtonHref', label: 'Bottom Banner Button Link' },
         ],
       },
     ],
