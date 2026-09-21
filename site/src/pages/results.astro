@@ -82,21 +82,24 @@ const label = (c: string) => c.replace('Top-100 Schools: Undergraduate Acceptanc
     </div>
   </section>
 
-  <section class="section section--evergreen">
+  <section class="section cta-section-wrap">
     <div class="wrap">
-      <div class="cta-banner">
-        <h2 data-tina-field={tinaField(results, 'ctaHeading') || undefined}>{results.ctaHeading || 'Start with a conversation'}</h2>
-        <p class="lede lede--dark" data-tina-field={tinaField(results, 'ctaLede') || undefined}>
-          {results.ctaLede || 'Tell Andrea where your child is applying and where you are in the application timeline. Andrea will reply personally.'}
-        </p>
-        <p>
-          <a class="btn btn--paper" href={results.ctaPrimaryHref || '/contact/'} data-tina-field={tinaField(results, 'ctaPrimaryText') || undefined}>
+      <div class="cta-floating-card">
+        <div class="cta-floating-card__content">
+          <span class="cta-floating-card__tag">Next Steps</span>
+          <h2 data-tina-field={tinaField(results, 'ctaHeading') || undefined}>{results.ctaHeading || 'Start with a conversation'}</h2>
+          <p data-tina-field={tinaField(results, 'ctaLede') || undefined}>
+            {results.ctaLede || 'Tell Andrea where your child is applying and where you are in the application timeline. Andrea will reply personally.'}
+          </p>
+        </div>
+        <div class="cta-floating-card__actions">
+          <a class="btn btn--solid" href={results.ctaPrimaryHref || '/contact/'} data-tina-field={tinaField(results, 'ctaPrimaryText') || undefined}>
             {results.ctaPrimaryText || 'Schedule a consultation'}
           </a>
-          <a class="btn" style="margin-left: 0.5rem; color: var(--paper); border-color: rgba(255,255,255,0.4);" href={results.ctaSecondaryHref || '/services/'} data-tina-field={tinaField(results, 'ctaSecondaryText') || undefined}>
+          <a class="btn" href={results.ctaSecondaryHref || '/services/'} data-tina-field={tinaField(results, 'ctaSecondaryText') || undefined}>
             {results.ctaSecondaryText || 'Explore packages'}
           </a>
-        </p>
+        </div>
       </div>
     </div>
   </section>
@@ -119,5 +122,54 @@ const label = (c: string) => c.replace('Top-100 Schools: Undergraduate Acceptanc
   .group { padding-block: 1rem; border-top: 1px dashed var(--rule); }
   .group h3 { font-size: var(--step-0); margin: 0 0 0.5rem; color: var(--evergreen); }
   .schools { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.25rem 1.5rem; font-size: var(--step--1); }
-  .cta-banner { max-width: 60ch; }
+
+  .cta-section-wrap {
+    padding: 4.5rem 0 5rem;
+    background: var(--paper);
+  }
+  .cta-floating-card {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--brass);
+    border-radius: 6px;
+    padding: 3rem clamp(1.5rem, 4vw, 3.5rem);
+    box-shadow: 0 8px 24px rgba(31, 74, 60, 0.05);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .cta-floating-card {
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 3rem;
+    }
+  }
+  .cta-floating-card__tag {
+    display: block;
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    color: var(--brass);
+    margin-bottom: 0.5rem;
+  }
+  .cta-floating-card__content h2 {
+    font-size: var(--step-3);
+    color: var(--evergreen);
+    margin: 0 0 0.5rem;
+  }
+  .cta-floating-card__content p {
+    color: #3a4a42;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 54ch;
+  }
+  .cta-floating-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
 </style>
+
