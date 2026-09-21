@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+import staticData from '../data/new-canaan.json';
+import NewCanaanContent from '../components/islands/NewCanaanContent.astro';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
+
+const isPreview = process.env.TINA_PREVIEW === 'true';
+
+let pageData = staticData;
+if (isPreview) {
+  try {
+    const { getNewCanaan } = await import('../lib/tina/data');
+    const res = await getNewCanaan();
+    if ((res as any)?.data?.newCanaan) {
+      pageData = (res as any).data.newCanaan;
+    }
+  } catch (e) {
+    console.warn('[@tinacms/astro] Failed to load preview New Canaan data, using fallback', e);
+  }
+}
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': `${Astro.site}new-canaan-ct/#webpage`,
+    url: `${Astro.site}new-canaan-ct/`,
+    name: 'College Admissions Consultant New Canaan, CT | Evergreen Admissions Consulting',
+    description:
+      'College admissions consulting and essay coaching for New Canaan families from Andrea Schiralli, Harvard M.Ed. Personalized application strategy, essay editing, and interview prep for selective colleges.',
+    isPartOf: { '@id': `${Astro.site}#website` },
+    about: { '@id': `${Astro.site}#business` },
+    author: { '@id': `${Astro.site}#andrea` },
+    breadcrumb: {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: `${Astro.site}`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'New Canaan Admissions Consulting',
+          item: `${Astro.site}new-canaan-ct/`,
+        },
+      ],
+    },
+  },
+];
+---
+
+<Base
+  title="College Admissions Consultant New Canaan, CT | Evergreen Admissions Consulting"
+  description="College admissions consulting and essay coaching for New Canaan families from Andrea Schiralli, Harvard M.Ed. Personalized application strategy, essay editing, and interview prep for selective colleges."
+  schema={schema}
+>
+  {isPreview ? (
+    <TinaIsland name="new-canaan" wrapper={{ tag: 'div', className: 'new-canaan-page' }} primary>
+      <NewCanaanContent data={pageData} />
+    </TinaIsland>
+  ) : (
+    <div class="new-canaan-page">
+      <NewCanaanContent data={pageData} />
+    </div>
+  )}
+</Base>

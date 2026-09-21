@@ -1,0 +1,273 @@
+---
+import { tinaField } from 'tinacms/dist/react';
+import defaultData from '../../data/fairfield-county.json';
+
+interface Props {
+  data?: any;
+}
+
+const { data = defaultData } = Astro.props;
+
+const {
+  eyebrow = 'Fairfield County, Connecticut',
+  heading = 'College Admissions Consulting in Fairfield County, CT',
+  lede = 'Strategic, end-to-end guidance for ambitious high school students targeting top national universities and liberal arts colleges.',
+  primaryCtaText = 'Schedule a consultation',
+  primaryCtaHref = '/contact/',
+  secondaryCtaText = 'View consulting packages',
+  secondaryCtaHref = '/services/',
+  facts = [],
+  introHeading = 'Regional admissions consulting with dedicated personal focus',
+  introParagraphs = [],
+  crossLinkText = 'Families based in New Canaan can also explore our dedicated',
+  crossLinkLabel = 'New Canaan admissions consulting',
+  crossLinkHref = '/new-canaan-ct/',
+  stagesHeading = 'The five stages of the admissions journey',
+  stagesSubtitle = 'A structured framework taking students from early planning to confident submission.',
+  stages = [],
+  packagesHeading = 'Flexible packages tailored to your school list',
+  packagesSubtitle = 'From comprehensive senior-year advisement to focused essay reviews.',
+  packages = [],
+  whyHeading = 'Why Fairfield County families choose Evergreen',
+  benefits = [],
+  whyPrimaryCtaText = 'Meet Andrea Schiralli',
+  whyPrimaryCtaHref = '/about/',
+  whySecondaryCtaText = 'Review student acceptances',
+  whySecondaryCtaHref = '/results/',
+  faqHeading = 'Frequently asked questions',
+  faqSubtitle = 'Common questions from Fairfield County families about independent admissions consulting.',
+  faqs = [],
+  ctaHeading = 'Discuss your admissions goals',
+  ctaLede = 'Connect with Andrea to discuss your student’s target colleges and where they are in the application timeline. You will receive a direct reply within one business day.',
+  ctaButtonText = 'Contact Evergreen',
+  ctaButtonHref = '/contact/',
+} = data;
+---
+
+<section class="section page-head">
+  <div class="wrap">
+    <p class="eyebrow" data-tina-field={tinaField(data, 'eyebrow') || undefined}>{eyebrow}</p>
+    <h1 data-tina-field={tinaField(data, 'heading') || undefined}>{heading}</h1>
+    <p class="lede" data-tina-field={tinaField(data, 'lede') || undefined}>{lede}</p>
+    <div class="hero-actions">
+      <a class="btn btn--solid" href={primaryCtaHref} data-tina-field={tinaField(data, 'primaryCtaText') || undefined}>{primaryCtaText}</a>
+      <a class="btn" href={secondaryCtaHref} data-tina-field={tinaField(data, 'secondaryCtaText') || undefined}>{secondaryCtaText}</a>
+    </div>
+    {facts.length > 0 && (
+      <div class="facts" aria-label="Key facts" data-tina-field={tinaField(data, 'facts') || undefined}>
+        {facts.map((f: any, i: number) => (
+          <span data-tina-field={tinaField(data, 'facts', i) || undefined}>
+            <strong>{f.number}</strong> {f.label}
+          </span>
+        ))}
+      </div>
+    )}
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap cols">
+    <div>
+      <h2 data-reveal data-tina-field={tinaField(data, 'introHeading') || undefined}>{introHeading}</h2>
+    </div>
+    <div>
+      {introParagraphs.map((p: string, i: number) => (
+        <p data-tina-field={tinaField(data, 'introParagraphs', i) || undefined}>{p}</p>
+      ))}
+      <p>
+        <span data-tina-field={tinaField(data, 'crossLinkText') || undefined}>{data.crossLinkText || crossLinkText}</span>{' '}
+        <a href={data.crossLinkHref || crossLinkHref} data-tina-field={tinaField(data, 'crossLinkLabel') || undefined}>
+          {data.crossLinkLabel || crossLinkLabel}
+        </a>{' '}
+        overview.
+      </p>
+    </div>
+  </div>
+</section>
+
+{stages.length > 0 && (
+  <section class="section section--linen">
+    <div class="wrap">
+      <div class="section-title-wrap">
+        <h2 data-reveal data-tina-field={tinaField(data, 'stagesHeading') || undefined}>{stagesHeading}</h2>
+        <p class="muted" data-tina-field={tinaField(data, 'stagesSubtitle') || undefined}>{stagesSubtitle}</p>
+      </div>
+      <div class="stages">
+        {stages.map((stage: any, i: number) => (
+          <div class="stage" data-tina-field={tinaField(data, 'stages', i) || undefined}>
+            <div class="stage__number">{stage.number}</div>
+            <div class="stage__content">
+              <h3>{stage.title}</h3>
+              <p>{stage.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+{packages.length > 0 && (
+  <section class="section">
+    <div class="wrap">
+      <div class="section-title-wrap">
+        <h2 data-reveal data-tina-field={tinaField(data, 'packagesHeading') || undefined}>{packagesHeading}</h2>
+        <p class="muted" data-tina-field={tinaField(data, 'packagesSubtitle') || undefined}>{packagesSubtitle}</p>
+      </div>
+      <div class="packages-summary">
+        {packages.map((pkg: any, i: number) => (
+          <div class="package-card" data-tina-field={tinaField(data, 'packages', i) || undefined}>
+            {pkg.meta && <span class="card__meta">{pkg.meta}</span>}
+            <h3>{pkg.title}</h3>
+            <p>{pkg.description}</p>
+            {pkg.linkHref && (
+              <a class="package-link" href={pkg.linkHref}>{pkg.linkText || 'Learn more →'}</a>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+{benefits.length > 0 && (
+  <section class="section section--linen">
+    <div class="wrap cols">
+      <div>
+        <h2 data-reveal data-tina-field={tinaField(data, 'whyHeading') || undefined}>{whyHeading}</h2>
+      </div>
+      <div>
+        {benefits.map((benefit: any, i: number) => (
+          <div class="benefit-item" data-tina-field={tinaField(data, 'benefits', i) || undefined}>
+            <h3>{benefit.title}</h3>
+            <p>{benefit.description}</p>
+          </div>
+        ))}
+        <p style="margin-top: 2rem;">
+          <a class="btn" href={data.whyPrimaryCtaHref || whyPrimaryCtaHref} data-tina-field={tinaField(data, 'whyPrimaryCtaText') || undefined}>
+            {data.whyPrimaryCtaText || whyPrimaryCtaText}
+          </a>
+          <a class="btn" style="margin-left: 0.5rem;" href={data.whySecondaryCtaHref || whySecondaryCtaHref} data-tina-field={tinaField(data, 'whySecondaryCtaText') || undefined}>
+            {data.whySecondaryCtaText || whySecondaryCtaText}
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+)}
+
+{faqs.length > 0 && (
+  <section class="section">
+    <div class="wrap cols">
+      <div>
+        <h2 data-reveal data-tina-field={tinaField(data, 'faqHeading') || undefined}>{faqHeading}</h2>
+        <p class="muted" data-tina-field={tinaField(data, 'faqSubtitle') || undefined}>{faqSubtitle}</p>
+      </div>
+      <div class="faqs">
+        {faqs.map((faq: any, i: number) => (
+          <details class="faq" open={i === 0} data-tina-field={tinaField(data, 'faqs', i) || undefined}>
+            <summary><h3>{faq.question}</h3></summary>
+            <p>{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<section class="section section--evergreen">
+  <div class="wrap">
+    <div class="cta-banner">
+      <h2 data-tina-field={tinaField(data, 'ctaHeading') || undefined}>{ctaHeading}</h2>
+      <p class="lede lede--dark" data-tina-field={tinaField(data, 'ctaLede') || undefined}>{ctaLede}</p>
+      <p>
+        <a class="btn btn--paper" href={ctaButtonHref} data-tina-field={tinaField(data, 'ctaButtonText') || undefined}>{ctaButtonText}</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .page-head { padding-bottom: 0; }
+  .eyebrow {
+    font-size: var(--step--1);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+  }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+  .facts { margin-top: 2.5rem; }
+  .section-title-wrap { margin-bottom: 2.5rem; }
+  .stages { display: flex; flex-direction: column; gap: 1.5rem; }
+  .stage {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 1.5rem;
+    align-items: baseline;
+    border-top: 1px dashed var(--rule);
+    padding-top: 1.25rem;
+  }
+  .stage:first-child { border-top: none; padding-top: 0; }
+  .stage__number {
+    font-family: var(--serif);
+    font-size: var(--step-2);
+    color: var(--evergreen);
+    line-height: 1;
+  }
+  .stage__content h3 { font-size: var(--step-0); margin-bottom: 0.35rem; color: var(--evergreen); }
+  .stage__content p { margin: 0; line-height: 1.55; }
+  .packages-summary {
+    display: grid;
+    gap: 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .packages-summary { grid-template-columns: repeat(3, 1fr); }
+  }
+  .package-card {
+    padding: 1.75rem;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+  }
+  .package-card h3 { font-size: var(--step-0); margin-bottom: 0.75rem; color: var(--evergreen); }
+  .package-card p { font-size: var(--step--1); line-height: 1.55; flex-grow: 1; margin-bottom: 1.25rem; }
+  .card__meta {
+    font-size: var(--step--2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 0.5rem;
+    display: block;
+    font-weight: 500;
+  }
+  .package-link { font-size: var(--step--1); font-weight: 500; }
+  .benefit-item {
+    border-top: 1px dashed var(--rule);
+    padding-top: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .benefit-item:first-child { border-top: none; padding-top: 0; }
+  .benefit-item h3 { font-size: var(--step-0); color: var(--evergreen); margin-bottom: 0.35rem; }
+  .benefit-item p { margin: 0; line-height: 1.55; }
+  .faqs { display: flex; flex-direction: column; }
+  .faq {
+    border-top: 1px solid var(--rule);
+    padding-block: 1rem;
+  }
+  .faq:last-child { border-bottom: 1px solid var(--rule); }
+  .faq summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary h3 { font-size: var(--step-0); margin: 0; color: var(--evergreen); }
+  .faq p { margin: 0.75rem 0 0; line-height: 1.55; color: #3a4a42; }
+  .cta-banner { max-width: 60ch; }
+</style>
