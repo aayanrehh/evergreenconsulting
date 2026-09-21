@@ -32,6 +32,7 @@ if (typeof window !== 'undefined') {
     blog: 'blog',
     reviews: 'reviews',
     newCanaan: 'new-canaan',
+    fairfieldCounty: 'fairfield-county',
   };
 
   const collectionToPreviewRoute: Record<string, string> = {
@@ -44,6 +45,7 @@ if (typeof window !== 'undefined') {
     blog: 'blog/',
     reviews: '',
     newCanaan: 'new-canaan-ct/',
+    fairfieldCounty: 'fairfield-county-ct/',
   };
 
   const previewRouteToEditPath: Record<string, string> = {
@@ -65,6 +67,8 @@ if (typeof window !== 'undefined') {
     'reviews/': 'reviews/reviews',
     'new-canaan-ct': 'newCanaan/new-canaan',
     'new-canaan-ct/': 'newCanaan/new-canaan',
+    'fairfield-county-ct': 'fairfieldCounty/fairfield-county',
+    'fairfield-county-ct/': 'fairfieldCounty/fairfield-county',
   };
 
   const handleAdminRouting = () => {
@@ -574,6 +578,100 @@ export default defineConfig({
           { type: 'string', name: 'aboutCtaHref', label: 'About Primary CTA Link' },
           { type: 'string', name: 'aboutSecondaryCtaText', label: 'About Secondary CTA Text' },
           { type: 'string', name: 'aboutSecondaryCtaHref', label: 'About Secondary CTA Link' },
+          { type: 'string', name: 'relatedPagesHeading', label: 'Related Pages Heading' },
+          {
+            type: 'object', name: 'relatedPages', label: 'Related Internal Pages', list: true,
+            ui: { itemProps: (item) => ({ label: item?.label || 'Related Page' }) },
+            fields: [
+              { type: 'string', name: 'label', label: 'Link Label / Anchor', required: true },
+              { type: 'string', name: 'href', label: 'Target URL (e.g. /services/)', required: true },
+              { type: 'string', name: 'optionalDescription', label: 'Optional Description', ui: { component: 'textarea' } },
+            ],
+          },
+          { type: 'string', name: 'faqHeading', label: 'FAQ Heading' },
+          { type: 'string', name: 'faqSubtitle', label: 'FAQ Subtitle' },
+          {
+            type: 'object', name: 'faqs', label: 'Frequently Asked Questions', list: true,
+            ui: { itemProps: (item) => ({ label: item?.question || 'FAQ' }) },
+            fields: [
+              { type: 'string', name: 'question', label: 'Question', required: true },
+              { type: 'string', name: 'answer', label: 'Answer', required: true, ui: { component: 'textarea' } },
+            ],
+          },
+          { type: 'string', name: 'ctaHeading', label: 'Bottom Banner Heading' },
+          { type: 'string', name: 'ctaLede', label: 'Bottom Banner Lede', ui: { component: 'textarea' } },
+          { type: 'string', name: 'ctaButtonText', label: 'Bottom Banner Button Text' },
+          { type: 'string', name: 'ctaButtonHref', label: 'Bottom Banner Button Link' },
+        ],
+      },
+      {
+        name: 'fairfieldCounty',
+        label: 'Fairfield County Landing Page',
+        path: 'src/data',
+        match: { include: 'fairfield-county' },
+        format: 'json',
+        ui: {
+          allowedActions: { create: false, delete: false },
+          global: false,
+          router: () => '/fairfield-county-ct/',
+        },
+        fields: [
+          { type: 'string', name: 'metaTitle', label: 'SEO Title / Browser Tab' },
+          { type: 'string', name: 'metaDescription', label: 'Meta Description', ui: { component: 'textarea' } },
+          { type: 'string', name: 'eyebrow', label: 'Eyebrow Tag' },
+          { type: 'string', name: 'heading', label: 'Page Heading', required: true },
+          { type: 'string', name: 'lede', label: 'Hero Lede', ui: { component: 'textarea' }, required: true },
+          { type: 'string', name: 'primaryCtaText', label: 'Primary CTA Text' },
+          { type: 'string', name: 'primaryCtaHref', label: 'Primary CTA Link' },
+          { type: 'string', name: 'secondaryCtaText', label: 'Secondary CTA Text' },
+          { type: 'string', name: 'secondaryCtaHref', label: 'Secondary CTA Link' },
+          {
+            type: 'object', name: 'facts', label: 'Key Facts', list: true,
+            ui: { itemProps: (item) => ({ label: `${item?.number || ''} ${item?.label || ''}`.trim() || 'Fact' }) },
+            fields: [
+              { type: 'string', name: 'number', label: 'Number / Stat', required: true },
+              { type: 'string', name: 'label', label: 'Label', required: true },
+            ],
+          },
+          { type: 'string', name: 'introHeading', label: 'Intro Heading' },
+          { type: 'string', name: 'introParagraphs', label: 'Intro Paragraphs', list: true, ui: { component: 'textarea' } },
+          { type: 'string', name: 'stagesHeading', label: 'Stages Heading' },
+          { type: 'string', name: 'stagesSubtitle', label: 'Stages Subtitle' },
+          {
+            type: 'object', name: 'stages', label: 'Admissions Stages', list: true,
+            ui: { itemProps: (item) => ({ label: `${item?.number || ''} ${item?.title || ''}`.trim() || 'Stage' }) },
+            fields: [
+              { type: 'string', name: 'number', label: 'Stage Number (e.g. 01)', required: true },
+              { type: 'string', name: 'title', label: 'Stage Title', required: true },
+              { type: 'string', name: 'description', label: 'Stage Description', required: true, ui: { component: 'textarea' } },
+            ],
+          },
+          { type: 'string', name: 'packagesHeading', label: 'Packages Section Heading' },
+          { type: 'string', name: 'packagesSubtitle', label: 'Packages Section Subtitle' },
+          {
+            type: 'object', name: 'packages', label: 'Packages Cards', list: true,
+            ui: { itemProps: (item) => ({ label: item?.title || 'Package' }) },
+            fields: [
+              { type: 'string', name: 'meta', label: 'Package Tag / Meta' },
+              { type: 'string', name: 'title', label: 'Package Title', required: true },
+              { type: 'string', name: 'description', label: 'Package Description', required: true, ui: { component: 'textarea' } },
+              { type: 'string', name: 'linkText', label: 'Link Text' },
+              { type: 'string', name: 'linkHref', label: 'Link URL' },
+            ],
+          },
+          { type: 'string', name: 'whyHeading', label: 'Why Evergreen Heading' },
+          {
+            type: 'object', name: 'benefits', label: 'Key Benefits', list: true,
+            ui: { itemProps: (item) => ({ label: item?.title || 'Benefit' }) },
+            fields: [
+              { type: 'string', name: 'title', label: 'Benefit Title', required: true },
+              { type: 'string', name: 'description', label: 'Benefit Description', required: true, ui: { component: 'textarea' } },
+            ],
+          },
+          { type: 'string', name: 'whyPrimaryCtaText', label: 'Why Section Primary CTA Text' },
+          { type: 'string', name: 'whyPrimaryCtaHref', label: 'Why Section Primary CTA Link' },
+          { type: 'string', name: 'whySecondaryCtaText', label: 'Why Section Secondary CTA Text' },
+          { type: 'string', name: 'whySecondaryCtaHref', label: 'Why Section Secondary CTA Link' },
           { type: 'string', name: 'relatedPagesHeading', label: 'Related Pages Heading' },
           {
             type: 'object', name: 'relatedPages', label: 'Related Internal Pages', list: true,

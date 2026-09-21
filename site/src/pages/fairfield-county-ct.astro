@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+import staticData from '../data/fairfield-county.json';
+import FairfieldCountyContent from '../components/islands/FairfieldCountyContent.astro';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
+
+const isPreview = process.env.TINA_PREVIEW === 'true';
+
+let pageData = staticData;
+if (isPreview) {
+  try {
+    const { getFairfieldCounty } = await import('../lib/tina/data');
+    const res = await getFairfieldCounty();
+    if ((res as any)?.data?.fairfieldCounty) {
+      pageData = (res as any).data.fairfieldCounty;
+    }
+  } catch (e) {
+    console.warn('[@tinacms/astro] Failed to load preview Fairfield County data, using fallback', e);
+  }
+}
+
+const pageTitle = pageData.metaTitle || 'College Admissions Consultant Fairfield County, CT | Evergreen Admissions Consulting';
+const pageDescription = pageData.metaDescription || 'Comprehensive college admissions consulting across Fairfield County, CT. Harvard-trained consultant Andrea Schiralli guides students through school list strategy, essay coaching, and selective college applications.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': `${Astro.site}fairfield-county-ct/#webpage`,
+    url: `${Astro.site}fairfield-county-ct/`,
+    name: pageTitle,
+    description: pageDescription,
+    isPartOf: { '@id': `${Astro.site}#website` },
+    about: { '@id': `${Astro.site}#business` },
+    author: { '@id': `${Astro.site}#andrea` },
+    breadcrumb: {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: `${Astro.site}`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Fairfield County Admissions Consulting',
+          item: `${Astro.site}fairfield-county-ct/`,
+        },
+      ],
+    },
+  },
+];
+---
+
+<Base
+  title={pageTitle}
+  description={pageDescription}
+  schema={schema}
+>
+  {isPreview ? (
+    <TinaIsland name="fairfield-county" wrapper={{ tag: 'div', className: 'fairfield-county-page' }} primary>
+      <FairfieldCountyContent data={pageData} />
+    </TinaIsland>
+  ) : (
+    <div class="fairfield-county-page">
+      <FairfieldCountyContent data={pageData} />
+    </div>
+  )}
+</Base>

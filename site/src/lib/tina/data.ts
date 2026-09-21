@@ -70,3 +70,10 @@ export const getNewCanaan = async () => {
     { priority: 'primary' }
   );
 };
+
+export const getFairfieldCounty = async () => {
+  return requestWithMetadata(
+    (client.queries as any).fairfieldCounty?.({ relativePath: 'fairfield-county.json' }),
+    { priority: 'primary' }
+  );
+};
