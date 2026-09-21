@@ -31,6 +31,9 @@ if (typeof window !== 'undefined') {
     results: 'results',
     blog: 'blog',
     reviews: 'reviews',
+    newCanaan: 'new-canaan',
+    fairfieldCounty: 'fairfield-county',
+    guidesIndex: 'guides-index',
   };
 
   const collectionToPreviewRoute: Record<string, string> = {
@@ -42,6 +45,9 @@ if (typeof window !== 'undefined') {
     results: 'results/',
     blog: 'blog/',
     reviews: '',
+    newCanaan: 'new-canaan-ct/',
+    fairfieldCounty: 'fairfield-county-ct/',
+    guidesIndex: 'guides/',
   };
 
   const previewRouteToEditPath: Record<string, string> = {
@@ -61,6 +67,12 @@ if (typeof window !== 'undefined') {
     'blog/': 'blog/blog',
     reviews: 'reviews/reviews',
     'reviews/': 'reviews/reviews',
+    'new-canaan-ct': 'newCanaan/new-canaan',
+    'new-canaan-ct/': 'newCanaan/new-canaan',
+    'fairfield-county-ct': 'fairfieldCounty/fairfield-county',
+    'fairfield-county-ct/': 'fairfieldCounty/fairfield-county',
+    guides: 'guidesIndex/guides-index',
+    'guides/': 'guidesIndex/guides-index',
   };
 
   const handleAdminRouting = () => {
@@ -97,7 +109,21 @@ if (typeof window !== 'undefined') {
         return;
       }
 
-      // 5. Singleton collections list or edit: #/collections/:name or #/collections/edit/:name/*
+      // 5. Guide collection edit: #/collections/edit/guide/:slug -> open guide in visual preview
+      const guideEditMatch = hash.match(/^collections\/edit\/guide\/(.+)$/);
+      if (guideEditMatch) {
+        const slug = guideEditMatch[1].replace(/^\/|\/$/g, '');
+        window.location.replace(window.location.pathname + window.location.search + `#/~/guides/${slug}/`);
+        return;
+      }
+
+      // 6. Guide collection list: #/collections/guide or #/collections/guide/~ -> open guides index preview
+      if (/^collections\/guide(\/|(\/~.*))?$/.test(hash)) {
+        window.location.replace(window.location.pathname + window.location.search + '#/~/guides/');
+        return;
+      }
+
+      // 7. Singleton collections list or edit: #/collections/:name or #/collections/edit/:name/*
       const collectionMatch = hash.match(/^collections(?:\/edit)?\/([^\/~]+)/);
       if (collectionMatch) {
         const colName = collectionMatch[1];
@@ -125,6 +151,11 @@ if (typeof window !== 'undefined') {
           window.location.replace(window.location.pathname + window.location.search + `#/collections/edit/post/${blogMatch[1]}`);
           return;
         }
+        const guideMatch = sub.match(/^guides\/(.+?)\/?$/);
+        if (guideMatch) {
+          window.location.replace(window.location.pathname + window.location.search + `#/collections/edit/guide/${guideMatch[1]}`);
+          return;
+        }
         if (sub in previewRouteToEditPath) {
           window.location.replace(window.location.pathname + window.location.search + `#/collections/edit/${previewRouteToEditPath[sub]}`);
           return;
@@ -136,6 +167,7 @@ if (typeof window !== 'undefined') {
         window.location.replace(window.location.pathname + window.location.search + '#/collections/edit/front/home');
         return;
       }
+
 
       // 3. Singleton collection list routes: #/collections/:name or #/collections/:name/~
       const singletonListMatch = hash.match(/^collections\/([^\/~]+)(?:\/~?)?$/);
@@ -324,6 +356,15 @@ export default defineConfig({
               { type: 'string', name: 'description', label: 'Step Description', required: true, ui: { component: 'textarea' } },
             ],
           },
+          { type: 'string', name: 'localIntro', label: 'Local Discovery Intro Text', ui: { component: 'textarea' } },
+          {
+            type: 'object', name: 'localLinks', label: 'Local Discovery Links', list: true,
+            ui: { itemProps: (item) => ({ label: item?.label || 'Link' }) },
+            fields: [
+              { type: 'string', name: 'label', label: 'Link Text', required: true },
+              { type: 'string', name: 'href', label: 'Link Target URL', required: true },
+            ],
+          },
         ],
       },
       {
@@ -412,7 +453,38 @@ export default defineConfig({
         fields: [
           { type: 'string', name: 'heading', label: 'Page Heading' },
           { type: 'string', name: 'lede', label: 'Top Blurb / Description', ui: { component: 'textarea' } },
+          {
+            type: 'object',
+            name: 'stats',
+            label: 'Track Record Statistics',
+            list: true,
+            ui: { itemProps: (item) => ({ label: `${item?.number || ''} — ${item?.label || ''}` }) },
+            fields: [
+              { type: 'string', name: 'number', label: 'Number / Stat', required: true },
+              { type: 'string', name: 'label', label: 'Description Label', required: true },
+            ],
+          },
+          {
+            type: 'object',
+            name: 'highlights',
+            label: 'Institution Groupings (Highlight Cards)',
+            list: true,
+            ui: { itemProps: (item) => ({ label: item?.tier || 'Institution Tier' }) },
+            fields: [
+              { type: 'string', name: 'tier', label: 'Category / Tier Name', required: true },
+              { type: 'string', name: 'description', label: 'Institutions List', ui: { component: 'textarea' }, required: true },
+            ],
+          },
           { type: 'string', name: 'disclaimer', label: 'Disclaimer Note', ui: { component: 'textarea' } },
+          { type: 'string', name: 'methodologyHeading', label: 'Methodology Heading' },
+          { type: 'string', name: 'methodologyText', label: 'Methodology / Ethics Statement', ui: { component: 'textarea' } },
+          { type: 'string', name: 'localDiscoveryText', label: 'Local Discovery Text / Note', ui: { component: 'textarea' } },
+          { type: 'string', name: 'ctaHeading', label: 'Bottom Banner Heading' },
+          { type: 'string', name: 'ctaLede', label: 'Bottom Banner Lede', ui: { component: 'textarea' } },
+          { type: 'string', name: 'ctaPrimaryText', label: 'Primary Button Text' },
+          { type: 'string', name: 'ctaPrimaryHref', label: 'Primary Button Link' },
+          { type: 'string', name: 'ctaSecondaryText', label: 'Secondary Button Text' },
+          { type: 'string', name: 'ctaSecondaryHref', label: 'Secondary Button Link' },
         ],
       },
       {
@@ -482,6 +554,278 @@ export default defineConfig({
           },
         ],
       },
+      {
+        name: 'newCanaan',
+        label: 'New Canaan Landing Page',
+        path: 'src/data',
+        match: { include: 'new-canaan' },
+        format: 'json',
+        ui: {
+          allowedActions: { create: false, delete: false },
+          global: false,
+          router: () => '/new-canaan-ct/',
+        },
+        fields: [
+          { type: 'string', name: 'metaTitle', label: 'SEO Title / Browser Tab' },
+          { type: 'string', name: 'metaDescription', label: 'Meta Description', ui: { component: 'textarea' } },
+          { type: 'string', name: 'eyebrow', label: 'Eyebrow Tag' },
+          { type: 'string', name: 'heading', label: 'Page Heading', required: true },
+          { type: 'string', name: 'lede', label: 'Hero Lede', ui: { component: 'textarea' }, required: true },
+          { type: 'string', name: 'primaryCtaText', label: 'Primary CTA Text' },
+          { type: 'string', name: 'primaryCtaHref', label: 'Primary CTA Link' },
+          { type: 'string', name: 'secondaryCtaText', label: 'Secondary CTA Text' },
+          { type: 'string', name: 'secondaryCtaHref', label: 'Secondary CTA Link' },
+          {
+            type: 'object', name: 'facts', label: 'Key Facts', list: true,
+            ui: { itemProps: (item) => ({ label: `${item?.number || ''} ${item?.label || ''}`.trim() || 'Fact' }) },
+            fields: [
+              { type: 'string', name: 'number', label: 'Number / Stat', required: true },
+              { type: 'string', name: 'label', label: 'Label', required: true },
+            ],
+          },
+          { type: 'string', name: 'introHeading', label: 'Intro Heading' },
+          { type: 'string', name: 'introParagraphs', label: 'Intro Paragraphs', list: true, ui: { component: 'textarea' } },
+          { type: 'string', name: 'pillarsHeading', label: 'Pillars Heading' },
+          {
+            type: 'object', name: 'pillars', label: 'Service Pillars', list: true,
+            ui: { itemProps: (item) => ({ label: item?.title || 'Pillar' }) },
+            fields: [
+              { type: 'string', name: 'tag', label: 'Pillar Tag' },
+              { type: 'string', name: 'title', label: 'Pillar Title', required: true },
+              { type: 'string', name: 'description', label: 'Pillar Description', required: true, ui: { component: 'textarea' } },
+            ],
+          },
+          { type: 'string', name: 'processHeading', label: 'Process Heading' },
+          {
+            type: 'object', name: 'processSteps', label: 'Process Steps', list: true,
+            ui: { itemProps: (item) => ({ label: item?.title || 'Step' }) },
+            fields: [
+              { type: 'string', name: 'title', label: 'Step Title', required: true },
+              { type: 'string', name: 'description', label: 'Step Description', required: true, ui: { component: 'textarea' } },
+            ],
+          },
+          { type: 'string', name: 'aboutHeading', label: 'About Heading' },
+          { type: 'string', name: 'aboutSubtitle', label: 'About Subtitle' },
+          { type: 'string', name: 'aboutParagraphs', label: 'About Bio Paragraphs', list: true, ui: { component: 'textarea' } },
+          { type: 'string', name: 'aboutCtaText', label: 'About Primary CTA Text' },
+          { type: 'string', name: 'aboutCtaHref', label: 'About Primary CTA Link' },
+          { type: 'string', name: 'aboutSecondaryCtaText', label: 'About Secondary CTA Text' },
+          { type: 'string', name: 'aboutSecondaryCtaHref', label: 'About Secondary CTA Link' },
+          { type: 'string', name: 'relatedPagesHeading', label: 'Related Pages Heading' },
+          {
+            type: 'object', name: 'relatedPages', label: 'Related Internal Pages', list: true,
+            ui: { itemProps: (item) => ({ label: item?.label || 'Related Page' }) },
+            fields: [
+              { type: 'string', name: 'label', label: 'Link Label / Anchor', required: true },
+              { type: 'string', name: 'href', label: 'Target URL (e.g. /services/)', required: true },
+              { type: 'string', name: 'optionalDescription', label: 'Optional Description', ui: { component: 'textarea' } },
+            ],
+          },
+          { type: 'string', name: 'faqHeading', label: 'FAQ Heading' },
+          { type: 'string', name: 'faqSubtitle', label: 'FAQ Subtitle' },
+          {
+            type: 'object', name: 'faqs', label: 'Frequently Asked Questions', list: true,
+            ui: { itemProps: (item) => ({ label: item?.question || 'FAQ' }) },
+            fields: [
+              { type: 'string', name: 'question', label: 'Question', required: true },
+              { type: 'string', name: 'answer', label: 'Answer', required: true, ui: { component: 'textarea' } },
+            ],
+          },
+          { type: 'string', name: 'ctaHeading', label: 'Bottom Banner Heading' },
+          { type: 'string', name: 'ctaLede', label: 'Bottom Banner Lede', ui: { component: 'textarea' } },
+          { type: 'string', name: 'ctaButtonText', label: 'Bottom Banner Button Text' },
+          { type: 'string', name: 'ctaButtonHref', label: 'Bottom Banner Button Link' },
+        ],
+      },
+      {
+        name: 'fairfieldCounty',
+        label: 'Fairfield County Landing Page',
+        path: 'src/data',
+        match: { include: 'fairfield-county' },
+        format: 'json',
+        ui: {
+          allowedActions: { create: false, delete: false },
+          global: false,
+          router: () => '/fairfield-county-ct/',
+        },
+        fields: [
+          { type: 'string', name: 'metaTitle', label: 'SEO Title / Browser Tab' },
+          { type: 'string', name: 'metaDescription', label: 'Meta Description', ui: { component: 'textarea' } },
+          { type: 'string', name: 'eyebrow', label: 'Eyebrow Tag' },
+          { type: 'string', name: 'heading', label: 'Page Heading', required: true },
+          { type: 'string', name: 'lede', label: 'Hero Lede', ui: { component: 'textarea' }, required: true },
+          { type: 'string', name: 'primaryCtaText', label: 'Primary CTA Text' },
+          { type: 'string', name: 'primaryCtaHref', label: 'Primary CTA Link' },
+          { type: 'string', name: 'secondaryCtaText', label: 'Secondary CTA Text' },
+          { type: 'string', name: 'secondaryCtaHref', label: 'Secondary CTA Link' },
+          {
+            type: 'object', name: 'facts', label: 'Key Facts', list: true,
+            ui: { itemProps: (item) => ({ label: `${item?.number || ''} ${item?.label || ''}`.trim() || 'Fact' }) },
+            fields: [
+              { type: 'string', name: 'number', label: 'Number / Stat', required: true },
+              { type: 'string', name: 'label', label: 'Label', required: true },
+            ],
+          },
+          { type: 'string', name: 'introHeading', label: 'Intro Heading' },
+          { type: 'string', name: 'introParagraphs', label: 'Intro Paragraphs', list: true, ui: { component: 'textarea' } },
+          { type: 'string', name: 'stagesHeading', label: 'Stages Heading' },
+          { type: 'string', name: 'stagesSubtitle', label: 'Stages Subtitle' },
+          {
+            type: 'object', name: 'stages', label: 'Admissions Stages', list: true,
+            ui: { itemProps: (item) => ({ label: `${item?.number || ''} ${item?.title || ''}`.trim() || 'Stage' }) },
+            fields: [
+              { type: 'string', name: 'number', label: 'Stage Number (e.g. 01)', required: true },
+              { type: 'string', name: 'title', label: 'Stage Title', required: true },
+              { type: 'string', name: 'description', label: 'Stage Description', required: true, ui: { component: 'textarea' } },
+            ],
+          },
+          { type: 'string', name: 'packagesHeading', label: 'Packages Section Heading' },
+          { type: 'string', name: 'packagesSubtitle', label: 'Packages Section Subtitle' },
+          {
+            type: 'object', name: 'packages', label: 'Packages Cards', list: true,
+            ui: { itemProps: (item) => ({ label: item?.title || 'Package' }) },
+            fields: [
+              { type: 'string', name: 'meta', label: 'Package Tag / Meta' },
+              { type: 'string', name: 'title', label: 'Package Title', required: true },
+              { type: 'string', name: 'description', label: 'Package Description', required: true, ui: { component: 'textarea' } },
+              { type: 'string', name: 'linkText', label: 'Link Text' },
+              { type: 'string', name: 'linkHref', label: 'Link URL' },
+            ],
+          },
+          { type: 'string', name: 'whyHeading', label: 'Why Evergreen Heading' },
+          {
+            type: 'object', name: 'benefits', label: 'Key Benefits', list: true,
+            ui: { itemProps: (item) => ({ label: item?.title || 'Benefit' }) },
+            fields: [
+              { type: 'string', name: 'title', label: 'Benefit Title', required: true },
+              { type: 'string', name: 'description', label: 'Benefit Description', required: true, ui: { component: 'textarea' } },
+            ],
+          },
+          { type: 'string', name: 'whyPrimaryCtaText', label: 'Why Section Primary CTA Text' },
+          { type: 'string', name: 'whyPrimaryCtaHref', label: 'Why Section Primary CTA Link' },
+          { type: 'string', name: 'whySecondaryCtaText', label: 'Why Section Secondary CTA Text' },
+          { type: 'string', name: 'whySecondaryCtaHref', label: 'Why Section Secondary CTA Link' },
+          { type: 'string', name: 'relatedPagesHeading', label: 'Related Pages Heading' },
+          {
+            type: 'object', name: 'relatedPages', label: 'Related Internal Pages', list: true,
+            ui: { itemProps: (item) => ({ label: item?.label || 'Related Page' }) },
+            fields: [
+              { type: 'string', name: 'label', label: 'Link Label / Anchor', required: true },
+              { type: 'string', name: 'href', label: 'Target URL (e.g. /services/)', required: true },
+              { type: 'string', name: 'optionalDescription', label: 'Optional Description', ui: { component: 'textarea' } },
+            ],
+          },
+          { type: 'string', name: 'faqHeading', label: 'FAQ Heading' },
+          { type: 'string', name: 'faqSubtitle', label: 'FAQ Subtitle' },
+          {
+            type: 'object', name: 'faqs', label: 'Frequently Asked Questions', list: true,
+            ui: { itemProps: (item) => ({ label: item?.question || 'FAQ' }) },
+            fields: [
+              { type: 'string', name: 'question', label: 'Question', required: true },
+              { type: 'string', name: 'answer', label: 'Answer', required: true, ui: { component: 'textarea' } },
+            ],
+          },
+          { type: 'string', name: 'ctaHeading', label: 'Bottom Banner Heading' },
+          { type: 'string', name: 'ctaLede', label: 'Bottom Banner Lede', ui: { component: 'textarea' } },
+          { type: 'string', name: 'ctaButtonText', label: 'Bottom Banner Button Text' },
+          { type: 'string', name: 'ctaButtonHref', label: 'Bottom Banner Button Link' },
+        ],
+      },
+      {
+        name: 'guidesIndex',
+        label: 'Guides Index Page',
+        path: 'src/data',
+        match: { include: 'guides-index' },
+        format: 'json',
+        ui: {
+          allowedActions: { create: false, delete: false },
+          global: false,
+          router: () => '/guides/',
+        },
+        fields: [
+          { type: 'string', name: 'metaTitle', label: 'SEO Title / Browser Tab' },
+          { type: 'string', name: 'metaDescription', label: 'Meta Description', ui: { component: 'textarea' } },
+          { type: 'string', name: 'eyebrow', label: 'Eyebrow Tag' },
+          { type: 'string', name: 'heading', label: 'Page Heading', required: true },
+          { type: 'string', name: 'lede', label: 'Page Lede / Subtitle', ui: { component: 'textarea' }, required: true },
+          { type: 'string', name: 'introParagraphs', label: 'Introductory Paragraphs', list: true, ui: { component: 'textarea' } },
+          { type: 'string', name: 'ctaHeading', label: 'Bottom Banner Heading' },
+          { type: 'string', name: 'ctaLede', label: 'Bottom Banner Lede', ui: { component: 'textarea' } },
+          { type: 'string', name: 'ctaButtonText', label: 'Bottom Banner Button Text' },
+          { type: 'string', name: 'ctaButtonHref', label: 'Bottom Banner Button Link' },
+        ],
+      },
+      {
+        name: 'guide',
+        label: 'Local Guides',
+        path: 'src/content/guides',
+        format: 'md',
+        ui: {
+          router: ({ document }) => `/guides/${document._sys.filename}/`,
+        },
+        fields: [
+          { type: 'string', name: 'title', label: 'Guide Title', isTitle: true, required: true },
+          { type: 'string', name: 'description', label: 'Short Description', required: true, ui: { component: 'textarea' } },
+          { type: 'datetime', name: 'date', label: 'Published Date', required: true },
+          { type: 'datetime', name: 'updated', label: 'Updated Date' },
+          { type: 'string', name: 'author', label: 'Author Name' },
+          { type: 'string', name: 'locality', label: 'Locality / Region (e.g. Fairfield County, CT)' },
+          { type: 'string', name: 'searchIntent', label: 'Search Intent / Topic Category' },
+          { type: 'string', name: 'readerQuestion', label: 'Primary Reader Question', ui: { component: 'textarea' } },
+          { type: 'image', name: 'image', label: 'Featured Image (optional)' },
+          { type: 'boolean', name: 'draft', label: 'Draft' },
+          {
+            type: 'object',
+            name: 'sources',
+            label: 'Visible Sources & References',
+            list: true,
+            ui: { itemProps: (item) => ({ label: item?.title || 'Source' }) },
+            fields: [
+              { type: 'string', name: 'title', label: 'Source Title', required: true },
+              { type: 'string', name: 'url', label: 'Source URL' },
+            ],
+          },
+          {
+            type: 'object',
+            name: 'faqs',
+            label: 'Frequently Asked Questions',
+            list: true,
+            ui: { itemProps: (item) => ({ label: item?.question || 'FAQ' }) },
+            fields: [
+              { type: 'string', name: 'question', label: 'Question', required: true },
+              { type: 'string', name: 'answer', label: 'Answer', required: true, ui: { component: 'textarea' } },
+            ],
+          },
+          {
+            type: 'object',
+            name: 'relatedPages',
+            label: 'Related Pages',
+            list: true,
+            ui: { itemProps: (item) => ({ label: item?.label || 'Related Page' }) },
+            fields: [
+              { type: 'string', name: 'label', label: 'Link Label', required: true },
+              { type: 'string', name: 'href', label: 'Target URL', required: true },
+              { type: 'string', name: 'optionalDescription', label: 'Optional Description', ui: { component: 'textarea' } },
+            ],
+          },
+          {
+            type: 'object',
+            name: 'cta',
+            label: 'End-of-Article Call to Action',
+            fields: [
+              { type: 'boolean', name: 'show', label: 'Display CTA Banner' },
+              { type: 'string', name: 'heading', label: 'CTA Heading' },
+              { type: 'string', name: 'text', label: 'CTA Description', ui: { component: 'textarea' } },
+              { type: 'string', name: 'buttonText', label: 'Button Text' },
+              { type: 'string', name: 'buttonHref', label: 'Button Link' },
+            ],
+          },
+          { type: 'string', name: 'metaTitle', label: 'SEO Title / Browser Tab' },
+          { type: 'string', name: 'metaDescription', label: 'Meta Description', ui: { component: 'textarea' } },
+          { type: 'rich-text', name: 'body', label: 'Guide Content', isBody: true },
+        ],
+      },
     ],
   },
 });
+

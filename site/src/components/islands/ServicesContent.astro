@@ -104,6 +104,23 @@ const rest = services.filter((s: any) => !s.tag);
   <div class="wrap">
     <h2>Fees</h2>
     <p>Pricing depends on the package, the number of schools and the timeline. Send Andrea the school list and the deadline and you will get a quote, not a sales call. Peak season runs October through early January. Juniors who start in the spring have an easier senior year, and so do their parents.</p>
+    <div class="local-discovery-block" data-tina-field={tinaField(data, 'localIntro') || undefined}>
+      <p class="small muted">
+        {data.localIntro || 'Based in New Canaan, Andrea works with students across Fairfield County and with applicants nationwide.'}{' '}
+        {data.localLinks && data.localLinks.length > 0 ? (
+          data.localLinks.map((link: any, i: number) => (
+            <span>
+              {i > 0 && ' · '}
+              <a href={link.href} data-tina-field={tinaField(data, 'localLinks', i) || undefined}>{link.label}</a>
+            </span>
+          ))
+        ) : (
+          <span>
+            Explore <a href="/new-canaan-ct/">New Canaan Admissions</a> and <a href="/fairfield-county-ct/">Fairfield County Admissions</a>.
+          </span>
+        )}
+      </p>
+    </div>
     <p><a class="btn btn--solid" href="/contact/">Ask for a quote</a></p>
   </div>
 </section>

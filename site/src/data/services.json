@@ -1,6 +1,11 @@
 {
-  "pageHeading": "Services",
-  "pageLede": "Two packages for the whole application, à la carte for one school, and editing for anyone who already has a draft. Consultants, your section is at the bottom.",
+  "pageHeading": "College Admissions Consulting Services",
+  "pageLede": "Choose comprehensive support for the full application, focused coaching for a shorter school list, or expert feedback on an existing draft. Andrea also works with educational consultants who need dependable editorial support.",
+  "localIntro": "Based in New Canaan, Andrea works with students across Fairfield County and with applicants nationwide.",
+  "localLinks": [
+    { "label": "New Canaan Admissions Consulting", "href": "/new-canaan-ct/" },
+    { "label": "Fairfield County Admissions Consulting", "href": "/fairfield-county-ct/" }
+  ],
   "processHeading": "How it works",
   "processMuted": "Two ways to work together. Both end with an essay the student wrote and can talk about in an interview.",
   "coachingSteps": [

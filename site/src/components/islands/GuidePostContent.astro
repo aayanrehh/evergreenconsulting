@@ -1,0 +1,410 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+import TinaMarkdown from '@tinacms/astro/TinaMarkdown.astro';
+
+interface Props {
+  guide: any;
+  Content?: any;
+}
+
+const { guide, Content } = Astro.props;
+
+const title = guide?.data?.title ?? guide?.title ?? '';
+const description = guide?.data?.description ?? guide?.description ?? '';
+const rawDate = guide?.data?.date ?? guide?.date;
+const dateObj = rawDate ? new Date(rawDate) : new Date();
+const rawUpdated = guide?.data?.updated ?? guide?.updated;
+const updatedObj = rawUpdated ? new Date(rawUpdated) : null;
+const author = guide?.data?.author ?? guide?.author ?? 'Andrea Schiralli';
+const locality = guide?.data?.locality ?? guide?.locality;
+const readerQuestion = guide?.data?.readerQuestion ?? guide?.readerQuestion;
+const sources = guide?.data?.sources ?? guide?.sources ?? [];
+const faqs = guide?.data?.faqs ?? guide?.faqs ?? [];
+const relatedPages = guide?.data?.relatedPages ?? guide?.relatedPages ?? [];
+const cta = guide?.data?.cta ?? guide?.cta ?? { show: true };
+const body = guide?.body;
+
+const fmt = (d: Date) =>
+  !isNaN(d.getTime())
+    ? d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    : '';
+---
+
+<div class="wrap">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li aria-hidden="true">/</li>
+      <li><a href="/guides/">Guides</a></li>
+      <li aria-hidden="true">/</li>
+      <li aria-current="page"><span class="current-crumb">{title}</span></li>
+    </ol>
+  </nav>
+
+  <header class="guide-header">
+    <div class="guide-meta">
+      {locality && (
+        <span class="locality-tag" data-tina-field={tinaField(guide, 'locality') || undefined}>
+          {locality}
+        </span>
+      )}
+      <time datetime={!isNaN(dateObj.getTime()) ? dateObj.toISOString() : undefined} data-tina-field={tinaField(guide, 'date') || undefined}>
+        Published {fmt(dateObj)}
+      </time>
+      {updatedObj && !isNaN(updatedObj.getTime()) && (
+        <span class="updated-date" data-tina-field={tinaField(guide, 'updated') || undefined}>
+          · Updated {fmt(updatedObj)}
+        </span>
+      )}
+      <span class="author-tag" data-tina-field={tinaField(guide, 'author') || undefined}>
+        · By {author}
+      </span>
+    </div>
+
+    <h1 data-tina-field={tinaField(guide, 'title') || undefined}>{title}</h1>
+    <p class="lede" data-tina-field={tinaField(guide, 'description') || undefined}>{description}</p>
+
+    {readerQuestion && (
+      <div class="question-callout" data-tina-field={tinaField(guide, 'readerQuestion') || undefined}>
+        <span class="q-label">Core Question Addressed:</span>
+        <p class="q-text">{readerQuestion}</p>
+      </div>
+    )}
+  </header>
+
+  <div class="prose" data-tina-field={tinaField(guide, 'body') || undefined}>
+    {Content ? (
+      <Content />
+    ) : body ? (
+      <TinaMarkdown content={body} />
+    ) : null}
+  </div>
+
+  {sources && sources.length > 0 && (
+    <section class="guide-sources" data-tina-field={tinaField(guide, 'sources') || undefined}>
+      <h2>Sources & Reference Guidelines</h2>
+      <ul>
+        {sources.map((src: any, i: number) => (
+          <li data-tina-field={tinaField(guide, 'sources', i) || undefined}>
+            {src.url ? (
+              <a href={src.url} target="_blank" rel="noopener noreferrer">
+                {src.title}
+              </a>
+            ) : (
+              <span>{src.title}</span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {faqs && faqs.length > 0 && (
+    <section class="guide-faqs" data-tina-field={tinaField(guide, 'faqs') || undefined}>
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-list">
+        {faqs.map((faq: any, i: number) => (
+          <details class="faq-item" data-tina-field={tinaField(guide, 'faqs', i) || undefined}>
+            <summary>
+              <span class="faq-q">{faq.question}</span>
+            </summary>
+            <div class="faq-a">
+              <p>{faq.answer}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {relatedPages && relatedPages.length > 0 && (
+    <section class="guide-related" data-tina-field={tinaField(guide, 'relatedPages') || undefined}>
+      <h2>Related Admissions Resources</h2>
+      <div class="related-grid">
+        {relatedPages.map((rp: any, i: number) => (
+          <a class="related-card" href={rp.href} data-tina-field={tinaField(guide, 'relatedPages', i) || undefined}>
+            <span class="related-label">{rp.label}</span>
+            {rp.optionalDescription && <span class="related-desc">{rp.optionalDescription}</span>}
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {cta && cta.show !== false && (
+    <footer class="guide-cta" data-tina-field={tinaField(guide, 'cta') || undefined}>
+      <div class="guide-cta__content">
+        <h3 data-tina-field={tinaField(guide, 'cta.heading') || undefined}>
+          {cta.heading || 'Work Directly With Andrea'}
+        </h3>
+        <p data-tina-field={tinaField(guide, 'cta.text') || undefined}>
+          {cta.text || 'Andrea Schiralli provides personal, 1-on-1 college admissions consulting and essay coaching for families in Fairfield County and nationwide.'}
+        </p>
+      </div>
+      <div class="guide-cta__action">
+        <a
+          class="btn btn--solid"
+          href={cta.buttonHref || '/contact/'}
+          data-tina-field={tinaField(guide, 'cta.buttonText') || undefined}
+        >
+          {cta.buttonText || 'Schedule a Consultation'}
+        </a>
+      </div>
+    </footer>
+  )}
+</div>
+
+<style>
+  .breadcrumbs {
+    margin-bottom: 2rem;
+  }
+  .breadcrumbs ol {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 0;
+    font-size: var(--step--1);
+    color: #5a6a62;
+  }
+  .breadcrumbs a {
+    color: var(--evergreen);
+    text-decoration: none;
+  }
+  .breadcrumbs a:hover {
+    text-decoration: underline;
+  }
+  .current-crumb {
+    color: #2a3a32;
+    font-weight: 500;
+  }
+  .guide-header {
+    max-width: 68ch;
+    margin-bottom: 2.5rem;
+  }
+  .guide-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--step--1);
+    color: #5a6a62;
+    margin-bottom: 1.25rem;
+  }
+  .locality-tag {
+    background: var(--linen);
+    color: var(--evergreen);
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+  .guide-header h1 {
+    font-size: var(--step-3);
+    line-height: 1.2;
+    margin: 0 0 1rem;
+    color: var(--evergreen);
+  }
+  .lede {
+    font-size: var(--step-0);
+    line-height: 1.6;
+    color: #3a4a42;
+    margin: 0 0 1.5rem;
+  }
+  .question-callout {
+    background: var(--sand, #f8f6f0);
+    border-left: 3px solid var(--brass);
+    border-radius: 4px;
+    padding: 1rem 1.25rem;
+    margin-top: 1.5rem;
+  }
+  .q-label {
+    display: block;
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    color: var(--evergreen);
+    margin-bottom: 0.35rem;
+  }
+  .q-text {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #2a3a32;
+    font-weight: 500;
+  }
+  .prose {
+    max-width: 68ch;
+    margin-top: 2rem;
+  }
+  .prose :global(h2) {
+    font-size: var(--step-2);
+    margin-top: 2.5em;
+    margin-bottom: 0.75em;
+    color: var(--evergreen);
+  }
+  .prose :global(h3) {
+    font-size: var(--step-1);
+    margin-top: 1.75em;
+    margin-bottom: 0.5em;
+  }
+  .prose :global(p),
+  .prose :global(li) {
+    line-height: 1.75;
+    color: #2a3a32;
+  }
+  .prose :global(li) {
+    margin-bottom: 0.65em;
+  }
+  .prose :global(ul) {
+    padding-left: 1.25rem;
+    margin: 1rem 0;
+  }
+  .guide-sources {
+    max-width: 68ch;
+    margin-top: 3.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+  }
+  .guide-sources h2 {
+    font-size: var(--step-1);
+    margin: 0 0 1rem;
+    color: var(--evergreen);
+  }
+  .guide-sources ul {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin: 0;
+  }
+  .guide-sources li {
+    margin-bottom: 0.5rem;
+    font-size: var(--step--1);
+    color: #4a5a52;
+  }
+  .guide-sources a {
+    color: var(--evergreen);
+  }
+  .guide-faqs {
+    max-width: 68ch;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+  }
+  .guide-faqs h2 {
+    font-size: var(--step-2);
+    margin: 0 0 1.5rem;
+    color: var(--evergreen);
+  }
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .faq-item {
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: #fff;
+    padding: 1rem 1.25rem;
+  }
+  .faq-item summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--evergreen);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-item summary::after {
+    content: '+';
+    font-size: 1.25rem;
+    line-height: 1;
+    color: var(--brass);
+    transition: transform 0.2s ease;
+  }
+  .faq-item[open] summary::after {
+    transform: rotate(45deg);
+  }
+  .faq-a {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--rule);
+    line-height: 1.65;
+    color: #3a4a42;
+    font-size: 0.95rem;
+  }
+  .faq-a p {
+    margin: 0;
+  }
+  .guide-related {
+    max-width: 68ch;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+  }
+  .guide-related h2 {
+    font-size: var(--step-1);
+    margin: 0 0 1.25rem;
+    color: var(--evergreen);
+  }
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+  .related-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1.25rem;
+    background: var(--linen);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .related-card:hover {
+    background: #fff;
+    border-color: var(--evergreen);
+  }
+  .related-label {
+    font-weight: 600;
+    color: var(--evergreen);
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+  }
+  .related-desc {
+    font-size: 0.85rem;
+    color: #5a6a62;
+    line-height: 1.45;
+  }
+  .guide-cta {
+    margin-top: 3.5rem;
+    padding: 2rem;
+    background: var(--linen);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    max-width: 68ch;
+  }
+  .guide-cta__content h3 {
+    font-size: var(--step-1);
+    margin: 0 0 0.5rem;
+    color: var(--evergreen);
+  }
+  .guide-cta__content p {
+    margin: 0;
+    color: #3a4a42;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    max-width: 45ch;
+  }
+</style>

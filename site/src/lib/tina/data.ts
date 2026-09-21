@@ -63,3 +63,32 @@ export const getBlog = async () => {
     { priority: 'primary' }
   );
 };
+
+export const getNewCanaan = async () => {
+  return requestWithMetadata(
+    (client.queries as any).newCanaan?.({ relativePath: 'new-canaan.json' }),
+    { priority: 'primary' }
+  );
+};
+
+export const getFairfieldCounty = async () => {
+  return requestWithMetadata(
+    (client.queries as any).fairfieldCounty?.({ relativePath: 'fairfield-county.json' }),
+    { priority: 'primary' }
+  );
+};
+
+export const getGuidesIndex = async () => {
+  return requestWithMetadata(
+    (client.queries as any).guidesIndex?.({ relativePath: 'guides-index.json' }),
+    { priority: 'primary' }
+  );
+};
+
+export const getGuidePost = async (id: string) => {
+  return requestWithMetadata(
+    (client.queries as any).guide?.({ relativePath: `${id}.md` }),
+    { priority: 'primary' }
+  );
+};
+

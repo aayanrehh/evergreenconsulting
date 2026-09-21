@@ -1,0 +1,77 @@
+---
+import Base from '../../layouts/Base.astro';
+import staticGuidesIndex from '../../data/guides-index.json';
+import GuidesIndexContent from '../../components/islands/GuidesIndexContent.astro';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
+import { getCollection } from 'astro:content';
+
+const isPreview = process.env.TINA_PREVIEW === 'true';
+
+let previewData: any = null;
+if (isPreview) {
+  try {
+    const { getGuidesIndex } = await import('../../lib/tina/data');
+    previewData = await getGuidesIndex();
+  } catch (e) {
+    console.warn('[@tinacms/astro] Failed to load preview guides index data, using static fallback', e);
+  }
+}
+
+const data = isPreview && previewData?.data?.guidesIndex ? previewData.data.guidesIndex : staticGuidesIndex;
+
+const allGuides = await getCollection('guides');
+const guides = allGuides
+  .filter((g) => (isPreview ? true : !g.data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const title = data?.metaTitle || 'Local College Admissions Guides | Evergreen Admissions Consulting';
+const description =
+  data?.metaDescription ||
+  'Practical, problem-aware admissions guidance and application strategy for Fairfield County families, written by Andrea Schiralli.';
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': `${canonicalUrl}#webpage`,
+    url: canonicalUrl,
+    name: title,
+    description: description,
+    isPartOf: { '@id': `${Astro.site}#website` },
+    breadcrumb: { '@id': `${canonicalUrl}#breadcrumb` },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    '@id': `${canonicalUrl}#breadcrumb`,
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: Astro.site?.toString(),
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Guides',
+        item: canonicalUrl,
+      },
+    ],
+  },
+];
+---
+
+<Base title={title} description={description} schema={schema}>
+  {isPreview ? (
+    <TinaIsland name="guides-index" wrapper={{ tag: 'div', className: 'guides-index-wrap' }} primary>
+      <GuidesIndexContent data={data} guides={guides} />
+    </TinaIsland>
+  ) : (
+    <div class="guides-index-wrap">
+      <GuidesIndexContent data={data} guides={guides} />
+    </div>
+  )}
+</Base>

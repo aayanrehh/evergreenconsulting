@@ -41,7 +41,7 @@ const business = {
   '@type': 'ProfessionalService',
   '@id': `${Astro.site}#business`,
   name: siteName,
-  alternateName: 'Evergreen Consulting',
+  alternateName: ['Evergreen Consulting', "Andie's Consulting"],
   description:
     'College admissions essay consulting and editing by Andrea Schiralli, a Harvard-trained educator. Personal statements, supplemental essays, résumés, and interview preparation for undergraduate and graduate applicants worldwide.',
   url: Astro.site?.toString(),
@@ -157,6 +157,8 @@ const isPreview = process.env.TINA_PREVIEW === 'true';
         <nav aria-label="Footer">
           {nav.map(([href, label]) => <a href={href}>{label}</a>)}
           <a href="/services/#b2b">Partner with Andrea</a>
+          <a href="/new-canaan-ct/">New Canaan Admissions</a>
+          <a href="/fairfield-county-ct/">Fairfield County Admissions</a>
         </nav>
         <div class="small">
           <p>Andrea Schiralli, M.Ed. (Harvard), B.A. (Cornell)</p>

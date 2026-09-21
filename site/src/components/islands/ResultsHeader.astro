@@ -5,25 +5,72 @@ interface Props {
   results: {
     heading?: string;
     lede?: string;
+    stats?: { number: string; label: string }[];
+    highlights?: { tier: string; description: string }[];
     disclaimer?: string;
   };
 }
 
-const { results } = Astro.props;
+const { results = {} } = Astro.props;
+const {
+  heading = 'Results',
+  lede = '',
+  stats = [],
+  highlights = [],
+  disclaimer = '',
+} = results || {};
 ---
 
 <section class="section page-head">
   <div class="wrap">
-    <h1 data-tina-field={tinaField(results, 'heading') || undefined}>{results?.heading || 'Results'}</h1>
-    <p class="lede" data-tina-field={tinaField(results, 'lede') || undefined}>{results?.lede}</p>
-    {results?.disclaimer && (
-      <p class="small muted" data-tina-field={tinaField(results, 'disclaimer') || undefined}>
-        {results.disclaimer}
+    <h1 data-tina-field={tinaField(results, 'heading') || undefined}>{heading}</h1>
+    <p class="lede" data-tina-field={tinaField(results, 'lede') || undefined}>{lede}</p>
+
+    {stats && stats.length > 0 && (
+      <div class="facts" aria-label="Admissions Track Record" data-tina-field={tinaField(results, 'stats') || undefined}>
+        {stats.map((stat, i) => (
+          <span data-tina-field={tinaField(results, 'stats', i) || undefined}>
+            <strong>{stat.number}</strong> {stat.label}
+          </span>
+        ))}
+      </div>
+    )}
+
+    {disclaimer && (
+      <p class="small muted disclaimer" data-tina-field={tinaField(results, 'disclaimer') || undefined}>
+        {disclaimer}
       </p>
     )}
   </div>
 </section>
 
+
 <style>
   .page-head { padding-bottom: 0; }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem 1.5rem;
+    margin-top: 1.75rem;
+    margin-bottom: 2rem;
+    font-size: var(--step--1);
+  }
+
+  @media (min-width: 768px) {
+    .facts {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  .facts span { display: flex; flex-direction: column; gap: 0.25rem; }
+  .facts strong { font-size: var(--step-1); font-family: var(--serif); color: var(--evergreen); line-height: 1.1; }
+
+  .disclaimer {
+    margin-top: 1.5rem;
+    max-width: 70ch;
+    line-height: 1.5;
+  }
+
 </style>
