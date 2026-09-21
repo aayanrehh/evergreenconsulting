@@ -412,7 +412,38 @@ export default defineConfig({
         fields: [
           { type: 'string', name: 'heading', label: 'Page Heading' },
           { type: 'string', name: 'lede', label: 'Top Blurb / Description', ui: { component: 'textarea' } },
+          {
+            type: 'object',
+            name: 'stats',
+            label: 'Track Record Statistics',
+            list: true,
+            ui: { itemProps: (item) => ({ label: `${item?.number || ''} — ${item?.label || ''}` }) },
+            fields: [
+              { type: 'string', name: 'number', label: 'Number / Stat', required: true },
+              { type: 'string', name: 'label', label: 'Description Label', required: true },
+            ],
+          },
+          {
+            type: 'object',
+            name: 'highlights',
+            label: 'Institution Groupings (Highlight Cards)',
+            list: true,
+            ui: { itemProps: (item) => ({ label: item?.tier || 'Institution Tier' }) },
+            fields: [
+              { type: 'string', name: 'tier', label: 'Category / Tier Name', required: true },
+              { type: 'string', name: 'description', label: 'Institutions List', ui: { component: 'textarea' }, required: true },
+            ],
+          },
           { type: 'string', name: 'disclaimer', label: 'Disclaimer Note', ui: { component: 'textarea' } },
+          { type: 'string', name: 'methodologyHeading', label: 'Methodology Heading' },
+          { type: 'string', name: 'methodologyText', label: 'Methodology / Ethics Statement', ui: { component: 'textarea' } },
+          { type: 'string', name: 'localDiscoveryText', label: 'Local Discovery Text / Note', ui: { component: 'textarea' } },
+          { type: 'string', name: 'ctaHeading', label: 'Bottom Banner Heading' },
+          { type: 'string', name: 'ctaLede', label: 'Bottom Banner Lede', ui: { component: 'textarea' } },
+          { type: 'string', name: 'ctaPrimaryText', label: 'Primary Button Text' },
+          { type: 'string', name: 'ctaPrimaryHref', label: 'Primary Button Link' },
+          { type: 'string', name: 'ctaSecondaryText', label: 'Secondary Button Text' },
+          { type: 'string', name: 'ctaSecondaryHref', label: 'Secondary Button Link' },
         ],
       },
       {

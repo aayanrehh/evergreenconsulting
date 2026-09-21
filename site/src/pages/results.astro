@@ -6,6 +6,8 @@ import ResultsHeader from '../components/islands/ResultsHeader.astro';
 import TinaIsland from '@tinacms/astro/TinaIsland.astro';
 import LogoWall from '../components/LogoWall.astro';
 
+import { tinaField } from 'tinacms/dist/react';
+
 const isPreview = process.env.TINA_PREVIEW === 'true';
 let resultsData: any = null;
 if (isPreview) {
@@ -39,9 +41,11 @@ const label = (c: string) => c.replace('Top-100 Schools: Undergraduate Acceptanc
     <ResultsHeader results={results} />
   )}
 
-  <section class="section">
+  <section class="section results-body">
     <div class="wrap">
-      <LogoWall />
+      <div class="logos-wrap">
+        <LogoWall />
+      </div>
       {years.map((y) => (
         <details class="year">
           <summary><h2>{y}</h2><span class="year__count">{Object.values((acceptances as any)[y]).flat().length} acceptances</span></summary>
@@ -57,9 +61,55 @@ const label = (c: string) => c.replace('Top-100 Schools: Undergraduate Acceptanc
       ))}
     </div>
   </section>
+
+  <section class="section section--linen">
+    <div class="wrap cols">
+      <div>
+        <h2 data-tina-field={tinaField(results, 'methodologyHeading') || undefined}>{results.methodologyHeading || 'Honest admissions guidance, zero manufactured guarantees'}</h2>
+      </div>
+      <div>
+        <p data-tina-field={tinaField(results, 'methodologyText') || undefined}>{results.methodologyText}</p>
+        <p class="small muted" data-tina-field={tinaField(results, 'localDiscoveryText') || undefined}>
+          {results.localDiscoveryText ? (
+            results.localDiscoveryText
+          ) : (
+            <>
+              Andrea advises students locally in <a href="/new-canaan-ct/">New Canaan</a>, across <a href="/fairfield-county-ct/">Fairfield County</a>, and nationwide through comprehensive packages and per-school coaching.
+            </>
+          )}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--evergreen">
+    <div class="wrap">
+      <div class="cta-banner">
+        <h2 data-tina-field={tinaField(results, 'ctaHeading') || undefined}>{results.ctaHeading || 'Start with a conversation'}</h2>
+        <p class="lede lede--dark" data-tina-field={tinaField(results, 'ctaLede') || undefined}>
+          {results.ctaLede || 'Tell Andrea where your child is applying and where you are in the application timeline. Andrea will reply personally.'}
+        </p>
+        <p>
+          <a class="btn btn--paper" href={results.ctaPrimaryHref || '/contact/'} data-tina-field={tinaField(results, 'ctaPrimaryText') || undefined}>
+            {results.ctaPrimaryText || 'Schedule a consultation'}
+          </a>
+          <a class="btn" style="margin-left: 0.5rem; color: var(--paper); border-color: rgba(255,255,255,0.4);" href={results.ctaSecondaryHref || '/services/'} data-tina-field={tinaField(results, 'ctaSecondaryText') || undefined}>
+            {results.ctaSecondaryText || 'Explore packages'}
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
 </Base>
 
 <style>
+  .results-body {
+    border-top: none !important;
+    padding-top: 2rem;
+  }
+  .logos-wrap {
+    margin-bottom: 2.5rem;
+  }
   .year { border-top: 1px solid var(--rule); }
   .year:last-child { border-bottom: 1px solid var(--rule); }
   .year summary { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding-block: 1.25rem; cursor: pointer; list-style: none; }
@@ -69,4 +119,5 @@ const label = (c: string) => c.replace('Top-100 Schools: Undergraduate Acceptanc
   .group { padding-block: 1rem; border-top: 1px dashed var(--rule); }
   .group h3 { font-size: var(--step-0); margin: 0 0 0.5rem; color: var(--evergreen); }
   .schools { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.25rem 1.5rem; font-size: var(--step--1); }
+  .cta-banner { max-width: 60ch; }
 </style>
